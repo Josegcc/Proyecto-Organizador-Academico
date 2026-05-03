@@ -1,66 +1,80 @@
 #include <stdio.h>
+#include <string.h>
+#define ARRAY_LENGTH(x) (sizeof(x)/sizeof((x)[0]))
+
+void preguntarHorario(int hora[], int minutos[], size_t);
+void formatearArchivo();
+void leerArchivo(char *nombre_archivo);
 
 int main()
 {
-    char materia[30];
-    //int dia;
-    int hora;
-    int minutos;
+    char materias[50];
+    int hora[10];
+    int minutos[10];
     int clases;
 
-    FILE *archivo;
+    FILE *temps;
 
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
     "Viernes", "Sabado", "Domingo"
     };
 
-    /*int total;
-    printf("Introduzca el número de clientes ");
-    scanf("%d", &total);*/
+    size_t cantHoras = ARRAY_LENGTH(hora);
+    int counter = 0;
+        do{
+        printf("Introduzca la hora: ");
+        scanf("%d", &hora[counter]);
 
-    archivo =fopen("horarios.csv", "w");
+        printf("Introduzca los minutos: ");
+        scanf("%d", &minutos[counter]);
 
-    if (archivo == NULL) {
+        counter++;
+        }while(counter < cantHoras);
+    counter = 0;
+
+    temps = fopen("temps.txt", "w");
+
+    if (temps == NULL) {
         printf("ERROR: The file is not opened.");
         return 1;
-    }
-
-    fprintf(archivo, "Horario,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo\n");
-    for(int i = 0; i < 5; i++){
+                        }
 
 
-    printf("Introducir el número de clases correspondiente a el día %s: ", dias[i]);
-    scanf("%d", &clases);
+        //int cantHoras = ARRAY_LENGTH(hora);
+        for(int i = 0; i < 5; i++){
 
-    /*printf("Introducir dia de la semana (1 = lunes, 2 = martes... 7 = domingo): ");
-    scanf("%d", &dia);*/
+        printf("Introducir el número de clases correspondiente a el día %s: ", dias[i]);
+        scanf("%d", &clases);
+        fprintf(temps, "%s,", dias[i]);
 
-    for(int j = 0; j < clases; j++){
+        //preguntarHorario(hora, minutos, cantHoras);
 
-    printf("Introduzca la asignatura: ");
-    scanf("%s", &materia[0]);
+                for(int j = 0; j < clases; j++){
+                        printf("Introduzca la asignatura: ");
+                        scanf("%s", &materias[0]);
+                        fprintf(temps, "%s,%d : %d,", &materias[0], hora[j], minutos[j]);
+                                               }
+                fprintf(temps, "\n");
+                                  }
+    fclose(temps);
 
-    printf("Introduzca la hora: ");
-    scanf("%d", &hora);
+    leerArchivo("temps.txt");
 
-    printf("Introduzca los minutos: ");
-    scanf("%d", &minutos);
-
-    fprintf(archivo, "%d : %d,",hora, minutos);
-
-    for(int m = 0; m < i; m++){
-    fprintf(archivo,",");
-    }
-    fprintf(archivo, "%s\n",materia);
-    }
-                                    }
-    fclose(archivo);
-
-    /*archivo = fopen("io.txt", "r");
-    while (fgets(data, 50, archivo) != NULL) {
-              printf("%s", data);
-        }
-    fclose(archivo);*/
     return 0;
 }
+
+void preguntarHorario(int hora[], int minutos[], size_t cantHoras){
+
+    char op1, op2;
+
+    for(int i = 0; i < cantHoras; i++){
+        printf("Desde %d : %d = %d\n", hora[i], minutos[i], i);
+                                      }
+        scanf(" %c", &op1);
+    for(int i = 0; i < cantHoras; i++){
+        printf("Hasta %d : %d = %d\n", hora[i], minutos[i], i);
+                                      }
+        scanf(" %c", &op2);
+}
+
