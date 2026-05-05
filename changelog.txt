@@ -1,0 +1,18 @@
+04/05/26
+VERSION 0.1 ORGANIZADOR ACADÉMICO
+GIT: El nombre del commit o la versión ahora es  0.1, la anterior versión 1.0 fue un typo, por lo que la numeración ahora empezará desde ese decimal (futuras versiones 0.1, 0.2...)
+
+Se elimina la función leerArchivo y se escribe todo el archivo a través de una arreglos, en lugar de leer un archivo temporal
+
+Por lo tanto la función formatearArchivo ahora tiene los arreglos y demás datos como parámetros. Estos se leen en la función main que es la que hace la llamada a la función formatearArchivo.
+
+"nombre_arch" es una constante que contiene el nombre del archivo, en este caso "horarios.csv".
+"materias" es un arreglo de cadenas bidimensional que contiene la entrada del usuario correspondiente a las materias de cada dia. El primer subíndice, o las filas, delimita el día de la semana, y el segundo subíndice o las columnas representa las horas, primera, segunda, etc.
+"hora" es un arreglo que contiene todas las horas académicas introducidas por el usuario
+"tamaño_mat" contiene el tamaño de el arreglo "materias"
+
+El programa ahora no pide al usuario la hora y los minutos separadamente, sino en una misma entrada, por lo que el valor se almacena en una cadena
+
+Se elimina la función "preguntarHorario" del código, se usará más adelante
+
+Por lo demás, la funcionalidad es la misma
