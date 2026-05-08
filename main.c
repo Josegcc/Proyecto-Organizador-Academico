@@ -1,36 +1,40 @@
 #include <stdio.h>
-#define ARRAY_LENGTH(x) (sizeof(x)/sizeof((x)[0]))
-#define ARRAY_COLS(x) (sizeof(x)[0]/sizeof((x)[0][0]))
+#include <stdlib.h>
+#define TAM_MATERIAS 6
+#define TAM_HORA 7
 
-void preguntarHorario(int hora[], int minutos[], size_t);
-void formatearArchivo(const char *nombre_arch, const char materias[7][12][50], const char hora[7][20], size_t tam_mat);
+void calcHora(int hora[2][TAM_HORA]);
+void menuHora(int cont, char op, int hora[2][TAM_HORA]);
+void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], int Hora[2][TAM_HORA]);
 
 const char* nombre_archivo= "horarios.csv";
 
 int main()
 {
-    char materias[7][12][50] = {0};
-    char hora[7][20];
+    char materias[7][TAM_MATERIAS][50] = {0};
+    int hora[2][TAM_HORA] = {0};
     int clases;
 
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
     "Viernes", "Sabado", "Domingo"
-    };
+                         };
 
-    size_t tam_mat = ARRAY_LENGTH(materias); //Tamaño de los arreglos
-    size_t tam_hora = ARRAY_LENGTH(hora);
+    /*const char *ordinales[] = {"Primera","Segunda","Tercera",
+    "Cuarta","Quinta","Sexta","Septima","Octava","Novena","Decima"};*/
 
-    int counter = 0;
-        do{
-        printf("Introduzca la hora: ");
-        scanf("%s", hora[counter]);
+        printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
 
-        counter++;
-        }while(counter < tam_hora);
-    counter = 0;
+        for(int i = 0; i < 2; i++){
+            menuHora(i, '0', hora);
+            scanf("%d:%d", &hora[0][i], &hora[1][i]);
+                                  }
 
-        //PROBLEMA AL ESCRIBIR MAS DE 7 (En la función formatear archivo)
+        calcHora(hora);
+        menuHora(0,'1',hora);
+
+
+
         for(int i = 0; i < 5; i++){
 
             printf("Introducir el número de clases correspondiente a el día %s: ", dias[i]);
@@ -38,11 +42,12 @@ int main()
 
                 for(int j = 0; j < clases; j++){
                         printf("Introduzca la asignatura: ");
-                        scanf("%s", materias[i][j]);
+                        scanf("%s", materias[j][i]);
                                                }
                                   }
 
-    formatearArchivo(nombre_archivo, materias, hora, tam_mat);
+
+    formatearArchivo(nombre_archivo, materias, hora);
 
     return 0;
 }
