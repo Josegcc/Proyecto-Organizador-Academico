@@ -4,10 +4,9 @@
 #define TAM_HORA 7
 
 void calcHora(int hora[2][TAM_HORA]);
-void menuHora(int cont, char op, int hora[2][TAM_HORA]);
 void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], int Hora[2][TAM_HORA]);
-
-const char* nombre_archivo= "horarios.csv";
+char menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
+void menuHorario(char op, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);
 
 int main()
 {
@@ -15,38 +14,72 @@ int main()
     int hora[2][TAM_HORA] = {0};
     int clases;
 
+    const char* nombre_archivo= "horarios.csv";
+
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
     "Viernes", "Sabado", "Domingo"
                          };
 
-    /*const char *ordinales[] = {"Primera","Segunda","Tercera",
-    "Cuarta","Quinta","Sexta","Septima","Octava","Novena","Decima"};*/
+    const char *ordinales[] = {"primera","segunda","tercera",
+    "cuarta","quinta","sexta","septima","octava","novena","decima"};
 
+        char op1 = 'N';
+        char opHoras = '\0';
+
+        printf("Primero debemos saber tú horario académico\n");
+        menuHoras(100,'0',hora);
+
+        do
+        {
+
+        printf("Opcion 1: Escribir cada hora manualmente\t ----> 1\n");
+        printf("Opcion 2: Calcular usando las dos primeras horas ----> 2\n");
+        scanf(" %c", &opHoras);
         printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
 
-        for(int i = 0; i < 2; i++){
-            menuHora(i, '0', hora);
-            scanf("%d:%d", &hora[0][i], &hora[1][i]);
-                                  }
+        switch(opHoras)
+            {
+            case '1':
+                for(int i = 0; i < TAM_HORA; i++){
 
-        calcHora(hora);
-        menuHora(0,'1',hora);
+                menuHoras(i, '0', hora);
+                printf("\nIntroduzca la hora indicada: ");
+                scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
+                                                 }
+            break;
+
+            case '2':
+                for(int i = 0; i < 2; i++){
+
+                menuHoras(i, '0', hora);
+                printf("\nIntroduzca la hora indicada: ");
+                scanf("%d:%d", &hora[0][i], &hora[1][i]);
+                calcHora(hora);
+
+                                          }
+            break;
+            }
+
+         op1 = menuHoras(0,'1',hora);
+        }while(op1 == 'N');
 
 
         for(int i = 0; i < 5; i++){
 
-            printf("Introducir el número de clases correspondiente a el día %s: ", dias[i]);
+            printf("Introducir la cantidad de clases correspondiente a el día %s: ", dias[i]);
             scanf("%d", &clases);
 
                 for(int j = 0; j < clases; j++){
-                        printf("Introduzca la asignatura: ");
+
+                        printf("Introduzca la %s asignatura: ", ordinales[j]);
                         scanf("%s", materias[j][i]);
+
                                                }
                                   }
 
-
+    menuHorario('0', materias, hora);
     formatearArchivo(nombre_archivo, materias, hora);
 
     return 0;
