@@ -11,22 +11,17 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
         FILE *archivo;
         archivo = fopen(nombre_arch, "w");
 
-        if (archivo == NULL) {
-            perror("ERROR: The file is not opened.");
-            return;
-                             }
-
         fprintf(archivo, "Horario,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo\n"); //PRIMERA FILA
 
-        for(int i = 0; i < TAM_HORA; i++){
-            fprintf(archivo, "%02d:%02d",hora[0][i], hora[1][i]);
+        for(int i = 1; i < TAM_HORA; i++){
+            fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
 
-            for (int j = 0; j < 7; j++){
+            for (int j = 0; j < 5; j++){
 
                 fprintf(archivo, ",");
 
-                if (*materias[i][j] != '\0' || strlen(materias[i][j]) > 0){
-                    fprintf(archivo, "%s",materias[i][j]);  //Escribe la materia si la hay en ese arrelgo, ese dia
+                if (*materias[i-1][j] != '\0' || strlen(materias[i-1][j]) > 0){
+                    fprintf(archivo, "%s",materias[i-1][j]);  //Escribe la materia si la hay en ese arrelgo, ese dia
                                                                          }
                                                   }
             fprintf(archivo,"\n");
@@ -44,13 +39,12 @@ void calcHora(int hora[2][TAM_HORA])
             horaDif = abs(hora[1][1] - hora[1][0]);
         break;
 
-        case 1: //default: NO FUNCIONA SI HAY MAS DE 1 HORA DE DIFERENCIA
+        default: //default: NO FUNCIONA SI HAY MAS DE 1 HORA DE DIFERENCIA
             horaDif = abs((hora[1][1] - hora[1][0]) + 60);
-            //printf("%d", horaDif);
         break;
                                }
 
-    for(int i = 1; i < TAM_HORA-1; i++){
+    for(int i = 0; i < TAM_HORA-1; ++i){
 
         if((horaDif + hora[1][i]) >= 60)
         {
