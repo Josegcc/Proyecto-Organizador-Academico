@@ -1,9 +1,10 @@
 El programa crea un archivo horarios.csv organizando las entradas del usuario y correspondientes a su horario académico
 
-Versión 0.2
-Primera version funcional del programa organizador académico
+Versión 0.2.1
 
 Funcionamiento:
+El programa primero verificará si ya existe un archivo "horarios.csv", esto a través de la función "leerArchivo". En caso de que el archivo ya exista el programa lo lee y muestra en pantalla, entonces se pide una confirmación al usuario de que ese horario sea el correcto. En caso de que el archivo no exista se le notifica al usuario y el programa  procede a pedir los horarios desde 0:
+
 La función "main" en el archivo "main.c" se encarga de recibir la entrada de datos del usuario. Primero se pide el horario:
 El programa le dará al usuario la opción de introducir cada hora manualmente, o introducir sólo las dos primeras horas y automáticamente calcular las demás. Estos datos se almacenan en un arreglo bidimensional llamado "hora"
 

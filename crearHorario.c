@@ -5,7 +5,9 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA])
+bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);
+
+void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
 {
 
         FILE *archivo;
@@ -29,9 +31,83 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
       fclose(archivo);
 }
 
+bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]){
+
+    FILE *archivo;
+    archivo = fopen(nombre_archivo, "r");
+
+    if (archivo == NULL) {
+
+        printf("No se encontró un archivo de horario");
+        return false;
+                         }
+
+    char buffer[1024];
+    int j = 0;
+
+    while(fgets(buffer, 1024, archivo))
+    {
+        int i = 0; /*   i = columnas:  j = filas   */
+
+        char *line_ptr = buffer;
+        char *next_comma;
+
+        while (line_ptr && *line_ptr != '\0')
+        {
+            // Clean up trailing newlines/returns if they are at the end of the line
+            if (*line_ptr == '\n' || *line_ptr == '\r')
+            {
+                break;
+            }
+
+            // Find the next delimiter
+            next_comma = strchr(line_ptr, ',');
+            if (next_comma != NULL)
+            {
+                *next_comma = '\0'; // Temporarily turn the comma into a string terminator
+            }
+
+            // 'line_ptr' now points to the current token, even if it's "" (empty)!
+
+            // CONDITION FOR EMPTY SPACE
+            if (strlen(line_ptr) == 0)
+            {
+                if (i > 0 && j > 0)
+                {
+                    strcpy(materias[j-1][i-1], ""); // Save as empty string
+                }
+            }
+            else if (j == 0){}
+
+            else if (i == 0)
+            {
+                sscanf(line_ptr, "%d:%d-%d:%d", &hora[0][j-1], &hora[1][j-1], &hora[0][j], &hora[1][j]);
+            }
+            else
+            {
+                strcpy(materias[j-1][i-1], line_ptr);
+            }
+
+            // Move the pointer past the comma we just processed
+            if (next_comma != NULL)
+            {
+                line_ptr = next_comma + 1;
+            } else
+            {
+                line_ptr = NULL; // No more commas, end the loop
+            }
+        i++;
+        }
+    j++;
+    }
+
+    fclose(archivo);
+
+    return menuHorario(materias, hora);
+}
+
 void calcHora(int hora[2][TAM_HORA])
 {
-
     int horaDif;
 
     switch(hora[0][1] - hora[0][0]){

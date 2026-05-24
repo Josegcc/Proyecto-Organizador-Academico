@@ -1,3 +1,11 @@
+24/05/26
+VERSION 0.2.1 ORGANIZADOR ACADÉMICO
+*Se creó la función 'leerArchivo' en el archivo 'crearHorario.c'
+Esta función se encarga primero, de verificar si ya existe un archivo de horarios, si este archivo no existe devuelve un valor 'false', si ya existe un archivo de horarios, la función se encarga de leer todo el archivo y guardar los respectivos datos en cada arreglo correspondiente. 
+
+*Se modificó el archivo 'menu.c'
+Ahora ambas funciones contenidas en este archivo devuelven un valor booleano. La función primero muestra al usuario los cambios realizados en el horario y luego pide una confirmación.
+
 23/05/26
 VERSION 0.2 ORGANIZADOR ACADÉMICO
 *Se creó el archivo menu.c
@@ -18,4 +26,5 @@ Sobre esto último la misma función devuelve opcionalmente un valor de tipo car
 
 *Archivo crearHorario.c
 -Se creó la función calcHora, que es la encargada de calcular el horario académico cuando el usuario introduce sólo las 2 primeras horas. Nótese que esta es la única función que recibe un arreglo sin este ser constante.
+
 
