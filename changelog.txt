@@ -1,18 +1,21 @@
-04/05/26
-VERSION 0.1 ORGANIZADOR ACADÉMICO
-GIT: El nombre del commit o la versión ahora es  0.1, la anterior versión 1.0 fue un typo, por lo que la numeración ahora empezará desde ese decimal (futuras versiones 0.1, 0.2...)
+23/05/26
+VERSION 0.2 ORGANIZADOR ACADÉMICO
+*Se creó el archivo menu.c
+Este contiene dos funciones: menuHoras y menuHorario
 
-Se elimina la función leerArchivo y se escribe todo el archivo a través de una arreglos, en lugar de leer un archivo temporal
+-menuHoras se utiliza para mostrar los horarios a el usuario cuando este esté introduciéndolos. 
+Esta funcion recibe primero un contador, que le indica en qué punto del ciclo, o del arreglo 'horas' se encuentra el programa, opExt representa la opción externa, vendría a ser si ya se busca la confirmación del usuario o si aún se están introduciendo los horarios.
+Sobre esto último la misma función devuelve opcionalmente un valor de tipo caracter, que representa la opción del usuario para confirmar si su horario fué correcto o no.
 
-Por lo tanto la función formatearArchivo ahora tiene los arreglos y demás datos como parámetros. Estos se leen en la función main que es la que hace la llamada a la función formatearArchivo.
+-menuHorario se utiliza luego de que el usuario introduce todos sus horarios y materias correspondientes para mostrarle como se formateó el archivo horarios.csv
 
-"nombre_arch" es una constante que contiene el nombre del archivo, en este caso "horarios.csv".
-"materias" es un arreglo de cadenas bidimensional que contiene la entrada del usuario correspondiente a las materias de cada dia. El primer subíndice, o las filas, delimita el día de la semana, y el segundo subíndice o las columnas representa las horas, primera, segunda, etc.
-"hora" es un arreglo que contiene todas las horas académicas introducidas por el usuario
-"tamaño_mat" contiene el tamaño de el arreglo "materias"
+*Lectura de datos mejorada en el archivo main.c
+-Al leer las horas, el programa da dos opciones, introducirlas todas manualmente o introducir solo las dos primeras horas y calcular el resto (Utilizando ese primer bloque horario). Esto está representado a través de un switch-case
 
-El programa ahora no pide al usuario la hora y los minutos separadamente, sino en una misma entrada, por lo que el valor se almacena en una cadena
+-El formato para introducir la hora es diferente, scanf espera que el usuario introduzca cada hora separada de dos puntos: 'hora1:hora2'
 
-Se elimina la función "preguntarHorario" del código, se usará más adelante
+-Se cambió la manera en que se introducen las materias, ahora el programa pide además de el número de materias de ese día, el horario que tiene esa materia. De manera que en cada uno de los bloques que corresponden a esa materia se coloca la materia. Por ejemplo, si una materia está en el horario por cuatro horas consecutivas, se repetirá el nombre de esa materia cuatro veces en el arreglo 'materias'
 
-Por lo demás, la funcionalidad es la misma
+*Archivo crearHorario.c
+-Se creó la función calcHora, que es la encargada de calcular el horario académico cuando el usuario introduce sólo las 2 primeras horas. Nótese que esta es la única función que recibe un arreglo sin este ser constante.
+
