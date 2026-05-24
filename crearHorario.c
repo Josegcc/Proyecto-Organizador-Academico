@@ -16,7 +16,7 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
         fprintf(archivo, "Horario,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo\n"); //PRIMERA FILA
 
         for(int i = 1; i < TAM_HORA; i++){
-            fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+            fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
 
             for (int j = 0; j < 5; j++){
 
@@ -38,7 +38,7 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int h
 
     if (archivo == NULL) {
 
-        printf("No se encontró un archivo de horario");
+        printf("No se encontró un archivo de horario\n");
         return false;
                          }
 

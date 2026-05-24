@@ -61,7 +61,7 @@ bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM
 
                     printf("\t|");
 
-                    if(*materias[i-1][j] != '\0' || strlen(materias[i-1][j]) <= 1){printf("%.3s", materias[i-1][j]);    }
+                    if(strlen(materias[i-1][j]) != 0){printf("%.5s", materias[i-1][j]);    }
 
                                            }
                 printf("\n\t-------------------------------------------------\n");
@@ -84,4 +84,17 @@ bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM
         }
 
     return false;
+}
+
+void menuPrincipal(){
+
+    printf("Opcion 1:  -----> Registrar una Actividad/Tarea");
+    printf("Introduzca su opción: ");
+
+}
+
+void menuTareas(){
+
+
+
 }
