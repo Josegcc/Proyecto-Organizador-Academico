@@ -49,7 +49,11 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
+<<<<<<< Updated upstream
 bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
+=======
+bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
+>>>>>>> Stashed changes
 {
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
@@ -89,6 +93,7 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][50], const int
     return false;
 }
 
+<<<<<<< Updated upstream
 
 void menuTareas(const char materias[7][TAM_MATERIAS][50])
 {
@@ -122,6 +127,62 @@ void menuTareas(const char materias[7][TAM_MATERIAS][50])
                     }
                 }
         }
+=======
+>>>>>>> Stashed changes
 
+void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50])
+{
+    int counter = 0;
+    int op = 0;
+
+    for(int i = 0; i < TAM_HORA; i++)
+        {
+                for (int j = 0; j < 7; j++)
+                {
+                    bool elem_repet = false;
+
+                    if(strlen(materias[i][j]) != 0)
+                    {
+                        for(int m = 0; m <= i; m++)
+                        {
+                            for (int n = 0; n < 7; n++)
+                            {
+                                if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
+                                {
+                                elem_repet = true;
+                                break;
+                                }
+                            }
+                            if(elem_repet){break;}          //Los break; cierran el ciclo cuando se encuentra una coincidencia
+                        }
+                        if(!elem_repet)
+                        {
+                            counter++;
+                            printf("\n%-10s\t--------------------> %d", materias[i][j], counter);
+                            strcpy(tareas[1][j], materias[i][j]);
+                        }
+                    }
+                }
+        }
+
+        printf("\nIntroduzca la materia a la que corresponde la actividad: ");
+        scanf("%d", &op-1);
+
+        printf("Introduzca la actividad: ");
+        scanf("%s", tareas[0][op]);
+        //fgets(tareas[0][op], sizeof(tareas[0][op]), stdin);
+
+        printf("%s - %s\n", tareas[1][op], tareas[0][op]);
+        printf("Es correcta la actividad introducida?\n");
+
+        //Mostrar Actividades
+        for (int i = 0; i < TAM_HORA; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+
+            }
+
+        }
 
 }

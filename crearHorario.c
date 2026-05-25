@@ -5,9 +5,13 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
+<<<<<<< Updated upstream
 bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
+=======
+bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
+>>>>>>> Stashed changes
 
-void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
+void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
 {
 
         FILE *archivo;
@@ -33,7 +37,11 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
 
 
 
+<<<<<<< Updated upstream
 bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]){
+=======
+bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA]){
+>>>>>>> Stashed changes
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "r");
