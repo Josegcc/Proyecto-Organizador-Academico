@@ -1,4 +1,10 @@
 24/05/26
+VERSION 0.2.2 ORGANIZADOR ACADEMICO
+*Version en construccion de la función para introducir actividades académicas.
+-La funcion "menuTareas" del archivo "menu.c" se encarga de mostrar cada materia que el estudiante cursa en su horario, y en un futuro esta función preguntará la actividad y a que materia corresponde.
+-La función "main" ahora contiene un prototipo del menu principal del programa
+
+24/05/26
 VERSION 0.2.1 ORGANIZADOR ACADÉMICO
 *Se creó la función 'leerArchivo' en el archivo 'crearHorario.c'
 Esta función se encarga primero, de verificar si ya existe un archivo de horarios, si este archivo no existe devuelve un valor 'false', si ya existe un archivo de horarios, la función se encarga de leer todo el archivo y guardar los respectivos datos en cada arreglo correspondiente. 

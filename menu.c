@@ -4,6 +4,7 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
+
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
     //printf("Letras acentuadas en UTF-8: \xC3\xA1, \xC3\xA9, \xC3\xAD, \xC3\xB3, \xC3\xBA");
@@ -48,7 +49,7 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
-bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
+bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
 {
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
@@ -57,7 +58,7 @@ bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM
 
             printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
 
-                for (int j = 0; j < 7; j++){
+                for (int j = 0; j < TAM_MATERIAS; j++){
 
                     printf("\t|");
 
@@ -68,6 +69,8 @@ bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM
                                           }
 
     char op = '\0'; //OPCION INTRODUCIDA POR EL USUARIO
+    if(opExt)
+    {
     printf("¿Es correcto el horario%c\nN = NO\tS = SI\n", 63);
     scanf(" %c", &op);
     op = toupper(op);
@@ -82,19 +85,43 @@ bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM
                 return true;
             break;
         }
-
+    }
     return false;
 }
 
-void menuPrincipal(){
 
-    printf("Opcion 1:  -----> Registrar una Actividad/Tarea");
-    printf("Introduzca su opción: ");
+void menuTareas(const char materias[7][TAM_MATERIAS][50])
+{
+    int counter = 0;
 
-}
+    for(int i = 0; i < TAM_HORA; i++)
+        {
+                for (int j = 0; j < 7; j++)
+                {
+                    bool elem_repet = false;
 
-void menuTareas(){
-
+                    if(strlen(materias[i][j]) != 0)
+                    {
+                        for(int m = 0; m <= i; m++)
+                        {
+                            for (int n = 0; n < 7; n++)
+                            {
+                                if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
+                                {
+                                elem_repet = true;
+                                break;
+                                }
+                            }
+                            if(elem_repet){break;}          //Los break; cierran el ciclo cuando se encuentra una coincidencia
+                        }
+                        if(!elem_repet)
+                        {
+                            counter++;
+                            printf("\n%-10s\t--------------------> %d", materias[i][j], counter);
+                        }
+                    }
+                }
+        }
 
 
 }

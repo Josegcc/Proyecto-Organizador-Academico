@@ -5,7 +5,7 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-bool menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);
+bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
 
 void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
 {
@@ -18,18 +18,20 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
         for(int i = 1; i < TAM_HORA; i++){
             fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
 
-            for (int j = 0; j < 5; j++){
+            for (int j = 0; j < 7; j++){
 
-                fprintf(archivo, ",");
+                fprintf(archivo, ",");  //Poner una coma al inicio de cada columna (Despues de la hora, etc)
 
                 if (*materias[i-1][j] != '\0' || strlen(materias[i-1][j]) > 0){
                     fprintf(archivo, "%s",materias[i-1][j]);  //Escribe la materia si la hay en ese arrelgo, ese dia
-                                                                         }
-                                                  }
+                                                                              }
+                                       }
             fprintf(archivo,"\n");
-                                   }
+                                         }
       fclose(archivo);
 }
+
+
 
 bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]){
 
@@ -103,7 +105,7 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int h
 
     fclose(archivo);
 
-    return menuHorario(materias, hora);
+    return menuHorario(true, materias, hora);
 }
 
 void calcHora(int hora[2][TAM_HORA])

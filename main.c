@@ -6,9 +6,49 @@
 
 void calcHora(int hora[2][TAM_HORA]);
 bool leerArchivo(const char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]);
+void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]);
 void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][50], const int Hora[2][TAM_HORA]);
 bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
-void menuHorario(const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);
+bool menuHorario(bool opExt,const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);
+void menuTareas(const char materias[7][TAM_MATERIAS][50]);
+
+int main()
+{
+    char materias[7][TAM_MATERIAS][50] = {0};
+    int hora[2][TAM_HORA] = {0};
+    const char* nombre_archivo= "horarios.csv";
+
+        if (!leerArchivo(nombre_archivo, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
+        {                                                   //El usuario confirma si es correcto el archivo existente
+        leerHorario(nombre_archivo, materias, hora);        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
+        }
+
+    //Una vez lleno el horario, se entra al menu principal
+    char op = '\0';
+
+    while(op != '4')
+    {
+    printf("--------------MENU PRINCIPAL--------------\n");
+    printf("Opcion 1: Registrar una Actividad/Tarea\t\t -----> 1\n");
+    printf("Opcion 2: Ver mi horario\t\t\t -----> 2\n");
+    printf("Opcion 3: Ver mi calendario de actividades\t -----> 3\n");
+    printf("Opcion 4: Salir de la aplicación\t\t -----> 4\n");
+    printf("Introduzca su opción: ");
+    scanf(" %c", &op);
+
+        switch(op)
+        {
+            case '1':
+                menuTareas(materias);
+            break;
+
+            case '2':
+                menuHorario(false, materias, hora);
+            break;
+        }
+    }
+    return 0;
+}
 
 void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA])
 {
@@ -63,6 +103,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][50],
         }while(!menuHoras(0,'1',hora));
 
 
+    do{
         for(int i = 0; i < 5; i++)
         {
             int clases;
@@ -94,20 +135,6 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][50],
                }
         }
 
-            menuHorario(materias, hora);
-            formatearArchivo(nombre_archivo, materias, hora);
-}
-
-int main()
-{
-    char materias[7][TAM_MATERIAS][50] = {0};
-    int hora[2][TAM_HORA] = {0};
-    const char* nombre_archivo= "horarios.csv";
-
-        if (!leerArchivo(nombre_archivo, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
-        {                                                   //El usuario confirma si es correcto el archivo existente
-        leerHorario(nombre_archivo, materias, hora);        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
-        }
-
-    return 0;
+      }while(!menuHorario(true, materias, hora));
+    formatearArchivo(nombre_archivo, materias, hora);
 }
