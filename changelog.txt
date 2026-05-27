@@ -1,4 +1,15 @@
 27/05/26
+VERSION 0.2.4 ORGANIZADOR ACADEMICO
+*Creacion de multiples funciones relacionadas con el modulo de actividades o tareas academicas.
+-"leerTareas" y "mostrarTareas" del archivo "menu.c" se encargan de leer y pedir los datos de las actividades académicas, y de mostrar todas las actividades registradas en pantalla, respectivamente
+-"formatearTareas" del archivo "crearHorario.c" se encarga de crear un archivo llamado "Actividades.csv" con la informacion de las actividades registradas por el usuario.
+*Funcion "pregunta" para preguntar al usuario por su confirmacion de algun dato introducido
+*Ahora el programa puede leer cadenas con espacios en blanco para los arreglos de "materias" y "tareas"
+
+Falta una función para leer este último archivo (Entre muchas otras cosas)
+También actualizar el archivo readme.txt con las nuevas funcionalidades
+
+27/05/26
 VERSION 0.2.3 ORGANIZADOR ACADEMICO
 *Actualizacion minima de formato y validacion
 -Se crea la macro "LIMPIAR_PANTALLA" para eliminar impresiones anteriores de la consola y dar un mejor formato

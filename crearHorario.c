@@ -5,13 +5,13 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
+bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
 
-void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
+void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
 
         FILE *archivo;
-        archivo = fopen(nombre_arch, "w");
+        archivo = fopen(nombre_archivo, "w");
 
         fprintf(archivo, "Horario,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo\n"); //PRIMERA FILA
 
@@ -31,9 +31,28 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
       fclose(archivo);
 }
 
+void formatearTareas(const char* nombre_archivo, const char tareas[5][10][50])
+{
 
+    FILE *archivo;
+    archivo = fopen(nombre_archivo, "w");
 
-bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA]){
+    for (int i = 1; i < 5; i++)
+    {
+        fprintf(archivo, "\nSemana %d\n", i);
+        fprintf(archivo, "Materia,Actividad\n");
+            for (int j = 1; j < TAM_MATERIAS; j++)
+            {
+                fprintf(archivo, "%s,%s\n", tareas[0][j], tareas[i][j]);
+            }
+    }
+
+    fclose(archivo);
+
+    printf("Archivo creado con éxito!\n");
+}
+
+bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]){
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "r");
@@ -102,7 +121,7 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int h
     return menuHorario(true, materias, hora);
 }
 
-void limpiarArreglo(char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
+void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
 {
     for (int i = 0; i < TAM_HORA; i++)
     {

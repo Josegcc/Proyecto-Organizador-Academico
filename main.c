@@ -7,26 +7,27 @@
 #define TAM_HORA 7
 
 //crearHorario.c - Operaciones logicas y manejo de archivos
-void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][20], const int Hora[2][TAM_HORA]);
-bool leerArchivo(const char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA]);
-void limpiarArreglo(char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);
+void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int Hora[2][TAM_HORA]);
+bool leerArchivo(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
+void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);
 void calcHora(int hora[2][TAM_HORA]);
 
 //menu.c - Diferentes menus y entrada de datos
 bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
-bool menuHorario(bool opExt,const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA]);
-void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50]);
+bool menuHorario(bool opExt,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
+void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]);
+void mostrarTareas(const char tareas[2][10][50]);
 
 //main.c - Lectura de datos
-void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA]);
+void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 bool validarHora(const int hora[2][TAM_HORA]);
 
 
 int main()
 {
-    char materias[7][TAM_MATERIAS][20] = {0};   //Filas son los dias de la semana, columnas las materias
+    char materias[7][TAM_MATERIAS][30] = {0};   //Filas son los dias de la semana, columnas las materias
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
-    char tareas[2][10][50] = {0};
+    char tareas[5][10][50] = {0};
     const char* nombre_archivo= "horarios.csv";
 
         if (!leerArchivo(nombre_archivo, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
@@ -55,12 +56,24 @@ int main()
         switch(op)
         {
             case '1':
-                leerTareas(materias, tareas);
+
+            leerTareas(materias, tareas);
             break;
 
+
             case '2':
-                menuHorario(false, materias, hora);
+
+            menuHorario(false, materias, hora);
+
             break;
+
+            case '3':
+
+            mostrarTareas(tareas);
+
+            break;
+
+            case '4': break;
 
             default:
 
@@ -72,7 +85,7 @@ int main()
     return 0;
 }
 
-void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA])
+void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA])
 {
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
@@ -148,7 +161,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][20],
         {
             int clases;
             int op1 = 0, op2 = 0;
-            char temp[50];
+            char temp[30];
             LIMPIAR_PANTALLA;
 
             printf("Introducir la cantidad de clases correspondiente a el día %s: ", dias[i]);
@@ -157,7 +170,10 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][20],
                 for(int j = 0; j < clases; j++)
                 {
                     printf("Introduzca la %s asignatura: ", ordinales[j]);
-                    scanf("%s", temp);
+                    while (getchar() != '\n');        //Eliminar el salto de linea en buffer
+                    fgets(temp, 30, stdin);
+                    temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea
+                    //scanf("%s", temp);
 
                     for(int m = op2; m < TAM_HORA; m++){
                         printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);

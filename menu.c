@@ -6,6 +6,9 @@
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
+void formatearTareas(const char* nombre_archivo, const char tareas[5][10][50]);
+bool pregunta();
+
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
 
@@ -27,29 +30,18 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
                                          }
             printf("\n");
 
-            char op = '\0'; //OPCION INTRODUCIDA POR EL USUARIO
             if(opExt == '1')
             {
+
             printf("¿Es correcto el horario%c\nN = NO\tS = SI\n", 63);
-            scanf(" %c", &op);
-            op = toupper(op);
+            return pregunta();
 
-                switch(op)
-                {
-                case 'N':
-                return false;
-                break;
-
-                case 'S':
-                return true;
-                break;
-                }
             }
 
     return false;
 }
 
-bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
+bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
@@ -68,32 +60,23 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int
                 printf("\n\t-------------------------------------------------\n");
                                           }
 
-    char op = '\0'; //OPCION INTRODUCIDA POR EL USUARIO
     if(opExt)
     {
+
     printf("¿Es correcto el horario%c\nN = NO\tS = SI\n", 63);
-    scanf(" %c", &op);
-    op = toupper(op);
+    return pregunta();
 
-        switch(op)
-        {
-            case 'N':
-                return false;
-            break;
-
-            case 'S':
-                return true;
-            break;
-        }
     }
+
     return false;
 }
 
 
-void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50])
+void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50])
 {
     int counter = 0;
     int op = 0;
+    LIMPIAR_PANTALLA;
 
     for(int i = 0; i < TAM_HORA; i++)
         {
@@ -119,30 +102,90 @@ void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50]
                         {
                             counter++;
                             printf("\n%-10s\t--------------------> %d", materias[i][j], counter);
-                            strcpy(tareas[1][j], materias[i][j]);
+                            strcpy(tareas[0][counter], materias[i][j]);
                         }
                     }
                 }
         }
-
+        do
+        {
         printf("\nIntroduzca la materia a la que corresponde la actividad: ");
-        scanf("%d", &op-1);
+        scanf("%d", &op);
 
         printf("Introduzca la actividad: ");
-        scanf("%s", tareas[0][op]);
-        //fgets(tareas[0][op], sizeof(tareas[0][op]), stdin);
+        while (getchar() != '\n');
+        fgets(tareas[1][op], 50, stdin);
+        tareas[1][op][strcspn(tareas[1][op], "\n")] = '\0';
 
-        printf("Es correcta la actividad introducida?\n");
-        printf("%s - %s\n", tareas[1][op], tareas[0][op]);
+        LIMPIAR_PANTALLA;
 
-        //Mostrar Actividades
-        for (int i = 0; i < TAM_HORA; i++)
-        {
-            for (int j = 0; j < 7; j++)
-            {
-
-            }
-
-        }
+        printf("Materia\t\tActividad\n");
+        printf("%.5s\t-----\t%.5s\n", tareas[0][op], tareas[1][op]);
+        printf("Es correcta la actividad introducida%c\nN = NO\tS = SI\n", 63);
+                                                //  ^ Contador
+                                                // CONTADOR SEMANAL / ACTIVIDADES POR SEMANA
+        }while(!pregunta());
 
 }
+
+void mostrarTareas(const char tareas[10][10][50])
+{
+    LIMPIAR_PANTALLA;
+
+    printf("Actividades semanales registradas por materia:\n");
+    printf("Materia\t\tActividad\n");
+
+            for (int i = 1; i < TAM_MATERIAS; i++)
+            {
+                printf("%.5s\t-----\t%.5s\n", tareas[0][i], tareas[1][i]);
+            }
+
+    char* nombre_archivo = "Actividades.csv";
+
+    LIMPIAR_PANTALLA
+
+    printf("¿Desea exportar el archivo de actividades pendientes%c\nN = NO\tS = SI\n", 63);
+
+    if(pregunta())
+    {
+    /*printf("Introduzca el nombre del archivo: ");
+    scanf("%s", nombre_archivo);*/
+    formatearTareas(nombre_archivo, tareas);
+    }
+
+}
+
+bool pregunta()
+{
+    bool datoIncorrecto = false;
+    char op = '\0';
+
+    do
+    {
+
+    scanf(" %c", &op);  //OPCION INTRODUCIDA POR EL USUARIO
+    op = toupper(op);
+
+        switch(op)
+        {
+            case 'N':
+                return false;
+            break;
+
+            case 'S':
+                return true;
+            break;
+
+            default:
+            printf("Dato incorrecto");
+            datoIncorrecto = true;
+            break;
+        }
+
+    }while(datoIncorrecto);
+
+    return false;
+}
+
+
+
