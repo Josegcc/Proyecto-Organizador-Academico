@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include <stdbool.h>
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-<<<<<<< Updated upstream
-bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
-=======
 bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
->>>>>>> Stashed changes
 
 void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
 {
@@ -37,11 +33,7 @@ void formatearArchivo(const char* nombre_arch, const char materias[7][TAM_MATERI
 
 
 
-<<<<<<< Updated upstream
-bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][50], int hora[2][TAM_HORA]){
-=======
 bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA]){
->>>>>>> Stashed changes
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "r");
@@ -64,27 +56,22 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int h
 
         while (line_ptr && *line_ptr != '\0')
         {
-            // Clean up trailing newlines/returns if they are at the end of the line
             if (*line_ptr == '\n' || *line_ptr == '\r')
             {
                 break;
             }
 
-            // Find the next delimiter
             next_comma = strchr(line_ptr, ',');
             if (next_comma != NULL)
             {
-                *next_comma = '\0'; // Temporarily turn the comma into a string terminator
+                *next_comma = '\0';
             }
 
-            // 'line_ptr' now points to the current token, even if it's "" (empty)!
-
-            // CONDITION FOR EMPTY SPACE
             if (strlen(line_ptr) == 0)
             {
                 if (i > 0 && j > 0)
                 {
-                    strcpy(materias[j-1][i-1], ""); // Save as empty string
+                    strcpy(materias[j-1][i-1], "");
                 }
             }
             else if (j == 0){}
@@ -98,13 +85,12 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int h
                 strcpy(materias[j-1][i-1], line_ptr);
             }
 
-            // Move the pointer past the comma we just processed
             if (next_comma != NULL)
             {
                 line_ptr = next_comma + 1;
             } else
             {
-                line_ptr = NULL; // No more commas, end the loop
+                line_ptr = NULL;
             }
         i++;
         }
@@ -116,6 +102,26 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][20], int h
     return menuHorario(true, materias, hora);
 }
 
+void limpiarArreglo(char materias[7][TAM_MATERIAS][20], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
+{
+    for (int i = 0; i < TAM_HORA; i++)
+    {
+        if(elimHoras)
+        {
+            hora[0][i] = 0;
+            hora[1][i] = 0;
+        }
+
+        if(elimMaterias)
+        {
+            for(int j = 0; j < 7; j++)
+            {
+                materias[i][j][0] = '\0';
+            }
+        }
+    }
+}
+
 void calcHora(int hora[2][TAM_HORA])
 {
     int horaDif;
@@ -125,8 +131,16 @@ void calcHora(int hora[2][TAM_HORA])
             horaDif = abs(hora[1][1] - hora[1][0]);
         break;
 
-        default: //default: NO FUNCIONA SI HAY MAS DE 1 HORA DE DIFERENCIA
+        case 1:
             horaDif = abs((hora[1][1] - hora[1][0]) + 60);
+        break;
+
+        case 2:
+            horaDif = abs((hora[1][1] - hora[1][0]) + 120);
+        break;
+
+        case 3:
+            horaDif = abs((hora[1][1] - hora[1][0]) + 180);
         break;
                                }
 

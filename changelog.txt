@@ -1,3 +1,11 @@
+27/05/26
+VERSION 0.2.3 ORGANIZADOR ACADEMICO
+*Actualizacion minima de formato y validacion
+-Se crea la macro "LIMPIAR_PANTALLA" para eliminar impresiones anteriores de la consola y dar un mejor formato
+-Se realizan validaciones en la entrada de datos de las horas/minutos
+-Se resolvió el problema de la función "calcHora" cuando se introducían datos con más de 1 hora de diferencia
+-Se crea la función limpiarArreglo, que se utiliza para vaciar o eliminar todos los elementos tanto de los dos arreglos principales, "hora" y "materias"
+
 24/05/26
 VERSION 0.2.2 ORGANIZADOR ACADEMICO
 *Version en construccion de la función para introducir actividades académicas.

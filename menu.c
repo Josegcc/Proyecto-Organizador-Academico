@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
+#define LIMPIAR_PANTALLA printf("\033[H\033[2J\n");
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
-    //printf("Letras acentuadas en UTF-8: \xC3\xA1, \xC3\xA9, \xC3\xAD, \xC3\xB3, \xC3\xBA");
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
 
@@ -49,11 +49,7 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
-<<<<<<< Updated upstream
-bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][50], const int hora[2][TAM_HORA])
-=======
 bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int hora[2][TAM_HORA])
->>>>>>> Stashed changes
 {
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
@@ -62,7 +58,7 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int
 
             printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
 
-                for (int j = 0; j < TAM_MATERIAS; j++){
+                for (int j = 0; j < 7; j++){
 
                     printf("\t|");
 
@@ -93,42 +89,6 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][20], const int
     return false;
 }
 
-<<<<<<< Updated upstream
-
-void menuTareas(const char materias[7][TAM_MATERIAS][50])
-{
-    int counter = 0;
-
-    for(int i = 0; i < TAM_HORA; i++)
-        {
-                for (int j = 0; j < 7; j++)
-                {
-                    bool elem_repet = false;
-
-                    if(strlen(materias[i][j]) != 0)
-                    {
-                        for(int m = 0; m <= i; m++)
-                        {
-                            for (int n = 0; n < 7; n++)
-                            {
-                                if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
-                                {
-                                elem_repet = true;
-                                break;
-                                }
-                            }
-                            if(elem_repet){break;}          //Los break; cierran el ciclo cuando se encuentra una coincidencia
-                        }
-                        if(!elem_repet)
-                        {
-                            counter++;
-                            printf("\n%-10s\t--------------------> %d", materias[i][j], counter);
-                        }
-                    }
-                }
-        }
-=======
->>>>>>> Stashed changes
 
 void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50])
 {
@@ -137,7 +97,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50]
 
     for(int i = 0; i < TAM_HORA; i++)
         {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < TAM_MATERIAS; j++)
                 {
                     bool elem_repet = false;
 
@@ -145,7 +105,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50]
                     {
                         for(int m = 0; m <= i; m++)
                         {
-                            for (int n = 0; n < 7; n++)
+                            for (int n = 0; n < TAM_MATERIAS; n++)
                             {
                                 if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
                                 {
@@ -172,8 +132,8 @@ void leerTareas(const char materias[7][TAM_MATERIAS][20], char tareas[2][10][50]
         scanf("%s", tareas[0][op]);
         //fgets(tareas[0][op], sizeof(tareas[0][op]), stdin);
 
-        printf("%s - %s\n", tareas[1][op], tareas[0][op]);
         printf("Es correcta la actividad introducida?\n");
+        printf("%s - %s\n", tareas[1][op], tareas[0][op]);
 
         //Mostrar Actividades
         for (int i = 0; i < TAM_HORA; i++)
