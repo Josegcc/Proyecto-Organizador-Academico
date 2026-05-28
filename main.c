@@ -22,6 +22,8 @@ void mostrarTareas(const char tareas[2][10][50]);
 void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 bool validarHora(const int hora[2][TAM_HORA]);
 
+void calendario();
+
 
 int main()
 {
@@ -43,13 +45,14 @@ int main()
     char op = '\0';
     LIMPIAR_PANTALLA;
 
-    while(op != '4')
+    while(op != '5')
     {
     printf("--------------MENU PRINCIPAL--------------\n");
     printf("Opcion 1: Registrar una Actividad/Tarea\t\t -----> 1\n");
     printf("Opcion 2: Ver mi horario\t\t\t -----> 2\n");
-    printf("Opcion 3: Ver mi calendario de actividades\t -----> 3\n");
-    printf("Opcion 4: Salir de la aplicación\t\t -----> 4\n");
+    printf("Opcion 3: Ver mi calendario academico\t\t -----> 3\n");
+    printf("Opcion 4: Ver mis actividades pendientes\t -----> 3\n");
+    printf("Opcion 5: Salir de la aplicación\t\t -----> 4\n");
     printf("Introduzca su opción: ");
     scanf(" %c", &op);
 
@@ -69,11 +72,17 @@ int main()
 
             case '3':
 
+            calendario();
+
+            break;
+
+            case '4':
+
             mostrarTareas(tareas);
 
             break;
 
-            case '4': break;
+            case '5': break;
 
             default:
 
@@ -173,7 +182,6 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                     while (getchar() != '\n');        //Eliminar el salto de linea en buffer
                     fgets(temp, 30, stdin);
                     temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea
-                    //scanf("%s", temp);
 
                     for(int m = op2; m < TAM_HORA; m++){
                         printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
