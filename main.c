@@ -1,27 +1,41 @@
+/*ORGANIZADOR ACADEMICO
+COMPILAR USANDO GCC 14 o MINGW*/
+
+#ifdef WIN32
+#include <conio.h>
+#else
+#include <unistd.h>
+#include <termios.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#define LIMPIAR_PANTALLA printf("\033[H\033[2J\n");
+#define COLOR "\033[0;100m"
+#define COLOR_RESET "\033[0m"
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
 //crearHorario.c - Operaciones logicas y manejo de archivos
 void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int Hora[2][TAM_HORA]);
-bool leerArchivo(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
+bool leerArchivo(const char* nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);
 void calcHora(int hora[2][TAM_HORA]);
 
 //menu.c - Diferentes menus y entrada de datos
 bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
 bool menuHorario(bool opExt,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
-void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]);
-void mostrarTareas(const char tareas[2][10][50]);
+void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
+void mostrarTareas(const char tareas[10][10][200]);
 
 //main.c - Lectura de datos
 void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 bool validarHora(const int hora[2][TAM_HORA]);
+char leerTecla();
+void limpiarPantalla();
 
+//Calendario.c
 void calendario();
 
 
@@ -29,68 +43,93 @@ int main()
 {
     char materias[7][TAM_MATERIAS][30] = {0};   //Filas son los dias de la semana, columnas las materias
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
-    char tareas[5][10][50] = {0};
-    const char* nombre_archivo= "horarios.csv";
+    char tareas[10][10][200] = {0};
+    const char* nombre_archivo = "horarios.csv";
 
         if (!leerArchivo(nombre_archivo, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
         {                                                   //El usuario confirma si es correcto el archivo existente
 
-        LIMPIAR_PANTALLA;                                   //Si no lo es, se procede a leer los datos y crear el archivo desde 0
+        limpiarPantalla();                                   //Si no lo es, se procede a leer los datos y crear el archivo desde 0
         limpiarArreglo(materias, hora, true, true);
         leerHorario(nombre_archivo, materias, hora);
 
         }
 
     //Una vez lleno el horario, se entra al menu principal
+    const char *menuPrinc[] = {
+        "Opcion 1: Registrar una Actividad/Tarea\t\t-----> 1",
+        "Opcion 2: Ver mi horario\t\t\t-----> 2",
+        "Opcion 3: Ver mi calendario academico\t\t-----> 3",
+        "Opcion 4: Ver mis actividades pendientes\t-----> 4",
+        "Opcion 5: Salir de la aplicacion\t\t-----> 5"
+                              };
     char op = '\0';
-    LIMPIAR_PANTALLA;
+    int i = 0;
 
-    while(op != '5')
+    while(op != '\n')
     {
-    printf("--------------MENU PRINCIPAL--------------\n");
-    printf("Opcion 1: Registrar una Actividad/Tarea\t\t -----> 1\n");
-    printf("Opcion 2: Ver mi horario\t\t\t -----> 2\n");
-    printf("Opcion 3: Ver mi calendario academico\t\t -----> 3\n");
-    printf("Opcion 4: Ver mis actividades pendientes\t -----> 3\n");
-    printf("Opcion 5: Salir de la aplicación\t\t -----> 4\n");
-    printf("Introduzca su opción: ");
-    scanf(" %c", &op);
+    limpiarPantalla();
+    //int opciones = sizeof(menuPrinc) / sizeof(menuPrinc[0]);
+
+    for (int j = 0; j < 5; j++)
+    {
+        if (j == i)
+        {
+            printf("%s%s%s\n", COLOR, menuPrinc[j], COLOR_RESET);
+        }else
+        {
+            printf("%s\n", menuPrinc[j]);
+        }
+    }
+
+    op = leerTecla();
 
         switch(op)
         {
-            case '1':
 
-            leerTareas(materias, tareas);
+            case 'B':
+                if(i < 4){i++;}
             break;
 
-
-            case '2':
-
-            menuHorario(false, materias, hora);
-
+            case 'A':
+                if(i > 0){i--;}
             break;
 
-            case '3':
+            case '\n':
 
-            calendario();
+                switch(i)
+                {
+                case 0:
 
-            break;
+                leerTareas(materias, tareas);
 
-            case '4':
+                break;
 
-            mostrarTareas(tareas);
+                case 1:
 
-            break;
+                menuHorario(false, materias, hora);
 
-            case '5': break;
+                break;
 
-            default:
+                case 2:
 
-            printf("Opcion introducida invalida, intente nuevamente\n");
+                calendario();
 
+                break;
+
+                case 3:
+
+                mostrarTareas(tareas);
+
+                break;
+
+                case 4: break;
+
+                }
             break;
         }
     }
+
     return 0;
 }
 
@@ -110,7 +149,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
         char opHoras = '\0';
         bool invalida = false;
 
-        printf("Primero debemos saber tú horario académico\n");
+        printf("Primero debemos saber t%c horario acad%cmico\n ", 163, 130);
 
         do  //op verificacion horario correcto?
         {
@@ -128,7 +167,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                 case '1':
                     for(int i = 0; i < TAM_HORA; i++){
 
-                    LIMPIAR_PANTALLA;
+                    limpiarPantalla();
                     menuHoras(i, '0', hora);
                     printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
                     printf("\nIntroduzca la hora indicada: ");
@@ -140,7 +179,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                 case '2':
                     for(int i = 0; i < 2; i++){
 
-                    LIMPIAR_PANTALLA;
+                    limpiarPantalla();
                     menuHoras(i, '0', hora);
                     printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n");
                     printf("\nIntroduzca la hora indicada: ");
@@ -158,7 +197,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                 break;
             }
 
-            LIMPIAR_PANTALLA;
+            limpiarPantalla();
 
         }while(validarHora(hora) || invalida || !menuHoras(0,'1',hora));
 
@@ -171,9 +210,9 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
             int clases;
             int op1 = 0, op2 = 0;
             char temp[30];
-            LIMPIAR_PANTALLA;
+            limpiarPantalla();
 
-            printf("Introducir la cantidad de clases correspondiente a el día %s: ", dias[i]);
+            printf("Introducir la cantidad de clases correspondiente a el d%ca %s: ",161 , dias[i]);
             scanf("%d", &clases);
 
                 for(int j = 0; j < clases; j++)
@@ -218,4 +257,68 @@ bool validarHora(const int hora[2][TAM_HORA])
     }
 
     return false;
+}
+
+char leerTecla()
+{
+
+    char buf = '\0';
+
+
+#ifdef WIN32
+    int ch;
+
+    while ((ch = _getch()) != 'q')
+    {
+        if (ch == 0 || ch == 224)
+        {
+            int arrow = _getch();
+            switch (arrow)
+            {
+                case 72:
+                buf = 'A';
+                return (buf);
+                break;
+
+                case 80:
+                buf = 'B';
+                return (buf);
+                break;
+            }
+        }else if (ch == 13)
+        {
+        buf = '\n';
+        return (buf);
+        }
+
+    }
+#else
+        struct termios old = {0};
+        if (tcgetattr(0, &old) < 0)
+                perror("tcsetattr()");
+        old.c_lflag &= ~ICANON;
+        old.c_lflag &= ~ECHO;
+        old.c_cc[VMIN] = 1;
+        old.c_cc[VTIME] = 0;
+        if (tcsetattr(0, TCSANOW, &old) < 0)
+                perror("tcsetattr ICANON");
+        if (read(0, &buf, 1) < 0)
+                perror ("read()");
+        old.c_lflag |= ICANON;
+        old.c_lflag |= ECHO;
+        if (tcsetattr(0, TCSADRAIN, &old) < 0)
+                perror ("tcsetattr ~ICANON");
+#endif
+
+    return (buf);
+
+}
+
+void limpiarPantalla()
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    printf("\033[H\033[2J\n");
+#endif
 }

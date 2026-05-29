@@ -6,6 +6,7 @@
 #define TAM_HORA 7
 
 bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
+void limpiarPantalla();
 
 void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
@@ -13,12 +14,18 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
         FILE *archivo;
         archivo = fopen(nombre_archivo, "w");
 
+    if (archivo == NULL) {
+
+        printf("No se encontr%c un archivo de horario\n", 162);
+        return;
+                         }
+
         fprintf(archivo, "Horario,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo\n"); //PRIMERA FILA
 
         for(int i = 1; i < TAM_HORA; i++){
             fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
 
-            for (int j = 0; j < 7; j++){
+            for (int j = 0; j < 5; j++){
 
                 fprintf(archivo, ",");  //Poner una coma al inicio de cada columna (Despues de la hora, etc)
 
@@ -31,7 +38,7 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
       fclose(archivo);
 }
 
-void formatearTareas(const char* nombre_archivo, const char tareas[5][10][50])
+void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200])
 {
 
     FILE *archivo;
@@ -59,7 +66,7 @@ bool leerArchivo(char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int h
 
     if (archivo == NULL) {
 
-        printf("No se encontró un archivo de horario\n");
+        printf("No se encontr%c un archivo de horario\n", 162);
         return false;
                          }
 

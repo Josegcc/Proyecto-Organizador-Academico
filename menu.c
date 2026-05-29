@@ -2,11 +2,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
-#define LIMPIAR_PANTALLA printf("\033[H\033[2J\n");
+#define COLOR "\033[0;101m"
+#define COLOR_RESET "\033[0m"
 #define TAM_MATERIAS 6
 #define TAM_HORA 7
 
-void formatearTareas(const char* nombre_archivo, const char tareas[5][10][50]);
+void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
+void limpiarPantalla();
 bool pregunta();
 
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
@@ -21,7 +23,7 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 
             if(cont == i-1 && cont % 2 == 0 && opExt == '0')
             {
-                printf("\n\t^");
+                printf("\n\t%s^%s", COLOR, COLOR_RESET);
             }
             else if(cont == i && cont % 2 != 0 && opExt == '0')
             {
@@ -43,14 +45,14 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 
 bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
-
+    limpiarPantalla();
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
 
         for(int i = 1; i < TAM_HORA; i++){
 
             printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
 
-                for (int j = 0; j < 7; j++){
+                for (int j = 0; j < TAM_MATERIAS; j++){
 
                     printf("\t|");
 
@@ -63,7 +65,7 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int
     if(opExt)
     {
 
-    printf("¿Es correcto el horario%c\nN = NO\tS = SI\n", 63);
+    printf("%cEs correcto el horario%c\nN = NO\tS = SI\n",168, 63);
     return pregunta();
 
     }
@@ -72,12 +74,13 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int
 }
 
 
-void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50])
+void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200])
 {
     int counter = 0;
     int op = 0;
-    LIMPIAR_PANTALLA;
+    limpiarPantalla();
 
+    printf("\nMateria\t--------------------- Codigo");
     for(int i = 0; i < TAM_HORA; i++)
         {
                 for (int j = 0; j < TAM_MATERIAS; j++)
@@ -101,7 +104,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]
                         if(!elem_repet)
                         {
                             counter++;
-                            printf("\n%-10s\t--------------------> %d", materias[i][j], counter);
+                            printf("\n%-10.6s--------------------> %d", materias[i][j], counter);
                             strcpy(tareas[0][counter], materias[i][j]);
                         }
                     }
@@ -109,7 +112,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]
         }
         do
         {
-        printf("\nIntroduzca la materia a la que corresponde la actividad: ");
+        printf("\nIntroduzca el codigo de la materia a la que corresponde la actividad: ");
         scanf("%d", &op);
 
         printf("Introduzca la actividad: ");
@@ -117,7 +120,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]
         fgets(tareas[1][op], 50, stdin);
         tareas[1][op][strcspn(tareas[1][op], "\n")] = '\0';
 
-        LIMPIAR_PANTALLA;
+        limpiarPantalla();
 
         printf("Materia\t\tActividad\n");
         printf("%.5s\t-----\t%.5s\n", tareas[0][op], tareas[1][op]);
@@ -128,9 +131,9 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[5][10][50]
 
 }
 
-void mostrarTareas(const char tareas[10][10][50])
+void mostrarTareas(const char tareas[10][10][200])
 {
-    LIMPIAR_PANTALLA;
+    limpiarPantalla();
 
     printf("Actividades semanales registradas por materia:\n");
     printf("Materia\t\tActividad\n");
@@ -142,7 +145,7 @@ void mostrarTareas(const char tareas[10][10][50])
 
     char* nombre_archivo = "Actividades.csv";
 
-    LIMPIAR_PANTALLA
+    limpiarPantalla();
 
     printf("¿Desea exportar el archivo de actividades pendientes%c\nN = NO\tS = SI\n", 63);
 
@@ -186,6 +189,3 @@ bool pregunta()
 
     return false;
 }
-
-
-

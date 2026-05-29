@@ -1,3 +1,14 @@
+28/05/26
+VERSION 0.2.5 ORGANIZADOR ACADEMICO
+*Menu principal mas interactivo
+-Se controla con las flechas del teclado y la tecla enter
+-Se crearon macros con los codigos de colores para destacar las opciones a elegir en este menu principal
+-Tambien se utiliza un color distinto en la funcion "menuHoras" del archivo "menu.c", para resaltar la opcion que debe introducir el usuario
+*La macro constante de "LIMPIAR_PANTALLA" se reemplazó por la función "limpiarPantalla" del archivo "main.c", esta es mas portable, funciona tanto en windows como en linux
+*Se crea la funcion "leerTecla" en el archivo "main.c"
+-Esta funcion devuelve la tecla presionada por el usuario sin esperar a que este presione enter
+-Esta funcion es modular y funciona en Windows y en Linux
+
 27/05/26
 VERSION 0.2.4 ORGANIZADOR ACADEMICO
 *Creacion de multiples funciones relacionadas con el modulo de actividades o tareas academicas.

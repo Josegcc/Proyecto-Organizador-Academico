@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
-#define LIMPIAR_PANTALLA printf("\033[H\033[2J\n");
+
+void limpiarPantalla();
 
 bool bisiesto(int year)
 {
@@ -73,7 +74,7 @@ int primerDia(int year, int mes)
 
 void calendario()
 {
-    LIMPIAR_PANTALLA;
+    limpiarPantalla();
     int mes, diaMes, diaInicial, opMes;
 
     char *meses[] =     {
@@ -112,7 +113,7 @@ void calendario()
     printf("Introduzca el dia en particular: ");
     scanf("%d", &diaMes);
 
-    LIMPIAR_PANTALLA;
+    limpiarPantalla();
     printf("- - - - - - - - - - - %s - - - - - - - - - - -\n\n ", meses[mes-1]);
     for(int i = 0; i < 7; i++)
     {
