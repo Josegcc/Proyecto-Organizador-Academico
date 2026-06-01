@@ -1,4 +1,4 @@
-/*ORGANIZADOR ACADEMICO
+/*ORGANIZADOR ACADEMICO - VERSION 0.2.6
 COMPILAR USANDO GCC 14 o MINGW*/
 
 #ifdef WIN32
@@ -12,10 +12,8 @@ COMPILAR USANDO GCC 14 o MINGW*/
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#define COLOR "\033[0;100m"
-#define COLOR_RESET "\033[0m"
 #define TAM_MATERIAS 6
-#define TAM_HORA 7
+#define TAM_HORA 8
 
 //crearHorario.c - Operaciones logicas y manejo de archivos
 void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int Hora[2][TAM_HORA]);
@@ -23,20 +21,21 @@ bool leerArchivo(const char* nombre_archivo, char materias[7][TAM_MATERIAS][30],
 void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);
 void calcHora(int hora[2][TAM_HORA]);
 
-//menu.c - Diferentes menus y entrada de datos
+//menu.c - Diferentes menus y entrada de datos de tareas
+void menuPricipal(int i);
 bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
-bool menuHorario(bool opExt,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
-void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
+bool menuHorario(bool verific,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
+void leerTareas(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
 void mostrarTareas(const char tareas[10][10][200]);
 
-//main.c - Lectura de datos
+//main.c - Lectura de datos y menu principal
 void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 bool validarHora(const int hora[2][TAM_HORA]);
 char leerTecla();
 void limpiarPantalla();
 
 //Calendario.c
-void calendario();
+void calendario(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
 
 
 int main()
@@ -44,76 +43,66 @@ int main()
     char materias[7][TAM_MATERIAS][30] = {0};   //Filas son los dias de la semana, columnas las materias
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
     char tareas[10][10][200] = {0};
-    const char* nombre_archivo = "horarios.csv";
+    const char* nombre_archivo_horario = "Horario.csv";
+    const char* nombre_archivo_tareas = "Actividades.csv";
 
-        if (!leerArchivo(nombre_archivo, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
-        {                                                   //El usuario confirma si es correcto el archivo existente
 
-        limpiarPantalla();                                   //Si no lo es, se procede a leer los datos y crear el archivo desde 0
-        limpiarArreglo(materias, hora, true, true);
-        leerHorario(nombre_archivo, materias, hora);
+        if (!leerArchivo(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
+        {                                                           //El usuario confirma si es correcto el archivo existente
+
+        limpiarArreglo(materias, hora, true, true);         //Si no lo es, se procede a leer los datos y crear el archivo desde 0
+        limpiarPantalla();
+        printf("Primero debemos saber t%c horario acad%cmico\n ", 163, 130);
+        leerHorario(nombre_archivo_horario, materias, hora);
 
         }
 
     //Una vez lleno el horario, se entra al menu principal
-    const char *menuPrinc[] = {
-        "Opcion 1: Registrar una Actividad/Tarea\t\t-----> 1",
-        "Opcion 2: Ver mi horario\t\t\t-----> 2",
-        "Opcion 3: Ver mi calendario academico\t\t-----> 3",
-        "Opcion 4: Ver mis actividades pendientes\t-----> 4",
-        "Opcion 5: Salir de la aplicacion\t\t-----> 5"
-                              };
+
     char op = '\0';
     int i = 0;
 
-    while(op != '\n')
+    while(true)
     {
     limpiarPantalla();
-    //int opciones = sizeof(menuPrinc) / sizeof(menuPrinc[0]);
 
-    for (int j = 0; j < 5; j++)
-    {
-        if (j == i)
-        {
-            printf("%s%s%s\n", COLOR, menuPrinc[j], COLOR_RESET);
-        }else
-        {
-            printf("%s\n", menuPrinc[j]);
-        }
-    }
+    menuPricipal(i);
 
     op = leerTecla();
 
         switch(op)
         {
-
-            case 'B':
+            case 'B':   //Flecha abajo
                 if(i < 4){i++;}
             break;
 
-            case 'A':
+            case 'A':   //Flecha 'arriba'
                 if(i > 0){i--;}
             break;
 
-            case '\n':
+            case '\n':  //Tecla 'enter'
 
                 switch(i)
                 {
                 case 0:
 
-                leerTareas(materias, tareas);
+                leerTareas(nombre_archivo_tareas, materias, tareas);
 
                 break;
 
                 case 1:
 
                 menuHorario(false, materias, hora);
+                printf("Presione una tecla para continuar...\r\n");
+                leerTecla();
 
                 break;
 
                 case 2:
 
-                calendario();
+                calendario(materias, tareas);
+                printf("Presione una tecla para continuar...\r\n");
+                leerTecla();
 
                 break;
 
@@ -123,7 +112,11 @@ int main()
 
                 break;
 
-                case 4: break;
+                case 4: //Opcion de salir de la aplicacion
+
+                return 0;
+
+                break;
 
                 }
             break;
@@ -149,8 +142,6 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
         char opHoras = '\0';
         bool invalida = false;
 
-        printf("Primero debemos saber t%c horario acad%cmico\n ", 163, 130);
-
         do  //op verificacion horario correcto?
         {
             invalida = false;
@@ -159,7 +150,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
             menuHoras(100,'0',hora);
             printf("Opcion 1: Escribir cada hora manualmente\t ----> 1\n");
             printf("Opcion 2: Calcular usando las dos primeras horas ----> 2\n");
-            scanf(" %c", &opHoras);
+            opHoras = leerTecla();
 
             //LECTURA DE HORARIOS
             switch(opHoras)
@@ -167,11 +158,11 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                 case '1':
                     for(int i = 0; i < TAM_HORA; i++){
 
-                    limpiarPantalla();
-                    menuHoras(i, '0', hora);
-                    printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
-                    printf("\nIntroduzca la hora indicada: ");
-                    scanf("%d:%d", &hora[0][i], &hora[1][i]);
+                        limpiarPantalla();
+                        menuHoras(i, '0', hora);
+                        printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
+                        printf("\nIntroduzca la hora indicada: ");
+                        scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
                                                         }
                 break;
@@ -179,11 +170,11 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                 case '2':
                     for(int i = 0; i < 2; i++){
 
-                    limpiarPantalla();
-                    menuHoras(i, '0', hora);
-                    printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n");
-                    printf("\nIntroduzca la hora indicada: ");
-                    scanf("%d:%d", &hora[0][i], &hora[1][i]);
+                        limpiarPantalla();
+                        menuHoras(i, '0', hora);
+                        printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n");
+                        printf("\nIntroduzca la hora indicada: ");
+                        scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
                                                 }
                     calcHora(hora);
@@ -220,7 +211,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
                     printf("Introduzca la %s asignatura: ", ordinales[j]);
                     while (getchar() != '\n');        //Eliminar el salto de linea en buffer
                     fgets(temp, 30, stdin);
-                    temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea
+                    temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea de la variable
 
                     for(int m = op2; m < TAM_HORA; m++){
                         printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
@@ -268,30 +259,35 @@ char leerTecla()
 #ifdef WIN32
     int ch;
 
-    while ((ch = _getch()) != 'q')
+    while (buf == '\0')
     {
-        if (ch == 0 || ch == 224)
+        ch = _getch();
+
+        if (ch == 0 || ch == 224)   //Teclas especiales (flechas)
         {
             int arrow = _getch();
             switch (arrow)
             {
                 case 72:
                 buf = 'A';
-                return (buf);
                 break;
 
                 case 80:
                 buf = 'B';
-                return (buf);
                 break;
+
+
             }
-        }else if (ch == 13)
+        }else if (ch == 13) //Tecla Enter
         {
         buf = '\n';
-        return (buf);
+        }else           //Cualquier otra tecla. Usado para la funcion "pregunta", la cual tiene un validador
+        {
+        buf = ch;
         }
 
     }
+
 #else
         struct termios old = {0};
         if (tcgetattr(0, &old) < 0)

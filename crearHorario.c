@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #define TAM_MATERIAS 6
-#define TAM_HORA 7
+#define TAM_HORA 8
 
 bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);    //Para pedir confirmacion del horario
 void limpiarPantalla();
@@ -16,7 +16,7 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
 
     if (archivo == NULL) {
 
-        printf("No se encontr%c un archivo de horario\n", 162);
+        //printf("No se encontr%c un archivo de horario\n", 162);
         return;
                          }
 

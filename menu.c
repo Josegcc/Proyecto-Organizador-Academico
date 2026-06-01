@@ -2,14 +2,39 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
-#define COLOR "\033[0;101m"
+#define ROJO "\033[0;101m"
+#define GRIS "\033[0;100m"
 #define COLOR_RESET "\033[0m"
 #define TAM_MATERIAS 6
-#define TAM_HORA 7
+#define TAM_HORA 8
 
 void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
+char leerTecla();
 void limpiarPantalla();
 bool pregunta();
+
+void menuPricipal(int i)
+{
+    const char *menuPrinc[] = {
+        "Opcion 1: Registrar una Actividad/Tarea\t\t-----> 1",
+        "Opcion 2: Ver mi horario\t\t\t-----> 2",
+        "Opcion 3: Ver mi calendario academico\t\t-----> 3",
+        "Opcion 4: Ver mis actividades pendientes\t-----> 4",
+        "Opcion 5: Salir de la aplicacion\t\t-----> 5"
+                              };
+
+    for (int j = 0; j < 5; j++)
+    {
+        if (j == i)
+        {
+            printf("%s%s%s\n", GRIS, menuPrinc[j], COLOR_RESET);
+        }else
+        {
+            printf("%s\n", menuPrinc[j]);
+        }
+    }
+
+}
 
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
@@ -23,11 +48,11 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 
             if(cont == i-1 && cont % 2 == 0 && opExt == '0')
             {
-                printf("\n\t%s^%s", COLOR, COLOR_RESET);
+                printf("\n\t%s^%s", ROJO, COLOR_RESET);
             }
             else if(cont == i && cont % 2 != 0 && opExt == '0')
             {
-                printf("\n\t\t^");
+                printf("\n\t\t%s^%s", ROJO, COLOR_RESET);
             }
                                          }
             printf("\n");
@@ -43,7 +68,7 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
-bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
+bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
     limpiarPantalla();
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
@@ -59,10 +84,10 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int
                     if(strlen(materias[i-1][j]) != 0){printf("%.5s", materias[i-1][j]);    }
 
                                            }
-                printf("\n\t-------------------------------------------------\n");
+                printf("\n\t---------------------------------------------------------\n");
                                           }
 
-    if(opExt)
+    if(verific)
     {
 
     printf("%cEs correcto el horario%c\nN = NO\tS = SI\n",168, 63);
@@ -74,7 +99,7 @@ bool menuHorario(bool opExt, const char materias[7][TAM_MATERIAS][30], const int
 }
 
 
-void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200])
+void leerTareas(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200])
 {
     int counter = 0;
     int op = 0;
@@ -85,11 +110,13 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][20
         {
                 for (int j = 0; j < TAM_MATERIAS; j++)
                 {
+
                     bool elem_repet = false;
 
                     if(strlen(materias[i][j]) != 0)
                     {
-                        for(int m = 0; m <= i; m++)
+
+                        for(int m = 0; m < TAM_HORA; m++)
                         {
                             for (int n = 0; n < TAM_MATERIAS; n++)
                             {
@@ -108,8 +135,9 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][20
                             strcpy(tareas[0][counter], materias[i][j]);
                         }
                     }
-                }
-        }
+                }   //QUE LA FUNCION QUE LEE EL ARCHIVO DE TAREAS TAMBIEN LO
+        }   //CREAR UNA FUNCION QUE PIDA EL INDICE DE LA MATERIA USANDO EL ARREGLO tareas, Y COMPARE ESA MATERIA EN ESE ARREGLO CON LAS DE EL ARREGLO materias, PARA DETERMINAR EN QUÉ DIA TOCA ESA MATERIA
+
         do
         {
         printf("\nIntroduzca el codigo de la materia a la que corresponde la actividad: ");
@@ -131,7 +159,7 @@ void leerTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][20
 
 }
 
-void mostrarTareas(const char tareas[10][10][200])
+void mostrarTareas(const char* nombre_archivo, const char tareas[10][10][200])
 {
     limpiarPantalla();
 
@@ -143,16 +171,12 @@ void mostrarTareas(const char tareas[10][10][200])
                 printf("%.5s\t-----\t%.5s\n", tareas[0][i], tareas[1][i]);
             }
 
-    char* nombre_archivo = "Actividades.csv";
-
     limpiarPantalla();
 
     printf("¿Desea exportar el archivo de actividades pendientes%c\nN = NO\tS = SI\n", 63);
 
     if(pregunta())
     {
-    /*printf("Introduzca el nombre del archivo: ");
-    scanf("%s", nombre_archivo);*/
     formatearTareas(nombre_archivo, tareas);
     }
 
@@ -166,7 +190,7 @@ bool pregunta()
     do
     {
 
-    scanf(" %c", &op);  //OPCION INTRODUCIDA POR EL USUARIO
+    op = leerTecla();  //Lee el valor hasta que sea correcto
     op = toupper(op);
 
         switch(op)
@@ -180,12 +204,11 @@ bool pregunta()
             break;
 
             default:
-            printf("Dato incorrecto");
             datoIncorrecto = true;
             break;
         }
 
-    }while(datoIncorrecto);
+    }while(datoIncorrecto); //Validador
 
     return false;
 }

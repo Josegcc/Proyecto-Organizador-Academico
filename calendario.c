@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
+#define TAM_MATERIAS 6
 
 void limpiarPantalla();
 
@@ -10,6 +11,32 @@ bool bisiesto(int year)
         return false;
     else
         return true;
+}
+
+int primerDia(int year, int mes)
+{
+    int siglo = 20;
+    year = year % 100;
+
+    if(mes == 1)
+    {
+        year -= 1;
+        mes = 13;
+
+    }else if(mes == 2)
+    {
+        year -= 1;
+        mes = 14;
+    }
+
+    int diaSem = ( (1 + (13 * (mes + 1)/5) + year + (year / 4) + (siglo/4) - 2 * siglo) % 7)-1;
+
+    if(diaSem <= 0)
+    {
+        diaSem = 7;
+    }
+
+    return diaSem;
 }
 
 void mostrarMes(int diasMes, int diaInicial, int diaEleg)
@@ -46,33 +73,7 @@ void mostrarMes(int diasMes, int diaInicial, int diaEleg)
     printf("\n");
 }
 
-int primerDia(int year, int mes)
-{
-    int siglo = 20;
-    year = year % 100;
-
-    if(mes == 1)
-    {
-        year -= 1;
-        mes = 13;
-
-    }else if(mes == 2)
-    {
-        year -= 1;
-        mes = 14;
-    }
-
-    int diaSem = ( (1 + (13 * (mes + 1)/5) + year + (year / 4) + (siglo/4) - 2 * siglo) % 7)-1;
-
-    if(diaSem <= 0)
-    {
-        diaSem = 7;
-    }
-
-    return diaSem;
-}
-
-void calendario()
+void calendario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200])
 {
     limpiarPantalla();
     int mes, diaMes, diaInicial, opMes;
@@ -106,12 +107,19 @@ void calendario()
         printf("\n");
     }
 
-    printf("Introduzca el mes que desea visualizar: \n");
+    printf("Introduzca el numero del mes que desea visualizar y presione enter: \n");
     scanf("%d", &opMes);
     mes = mes + opMes;
 
-    printf("Introduzca el dia en particular: ");
+    for(int i = 0; i < 7; i++)
+    {
+        printf("%.5s\t----->\t%d\n", dias[i], i+1);
+    }
+
+    printf("Introduzca el numero del dia en particular: ");
     scanf("%d", &diaMes);
+
+
 
     limpiarPantalla();
     printf("- - - - - - - - - - - %s - - - - - - - - - - -\n\n ", meses[mes-1]);
@@ -139,5 +147,7 @@ void calendario()
             mostrarMes(30, diaInicial, diaMes);
     }
     else {  mostrarMes(31, diaInicial, diaMes);   }
+
+
 
 }
