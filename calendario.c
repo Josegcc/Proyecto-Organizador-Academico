@@ -4,6 +4,7 @@
 #define TAM_MATERIAS 6
 
 void limpiarPantalla();
+void leerTecla();
 
 bool bisiesto(int year)
 {
@@ -148,6 +149,8 @@ void calendario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][
     }
     else {  mostrarMes(31, diaInicial, diaMes);   }
 
+    printf("Presione una tecla para continuar...\r\n");
+    leerTecla();
 
 
 }

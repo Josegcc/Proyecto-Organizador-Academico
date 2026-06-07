@@ -1,3 +1,18 @@
+07/06/26
+VERSION 0.3.0 ORGANIZADOR ACADEMICO
+*Creacion de archivo utils.c para mejor organizacion del programa
+-Este archivo contiene funciones comunes utilizadas en casi todos los demas archivos del programa. Este archivo a futuro podría convertirse en una libreria con todos los includes del programa completo, para hacer más legible el programa
+-Entre ellas, las funciones "tamanoPantalla" y "gotoxy" para mejorar la apariencia del programa
+*Se renombró el archivo "crearHorario.c" a "archivos.c"
+*Se cambió drásticamente el menú principal del programa: 
+-Ahora el usuario interactúa con cada materia directamente a través del horario, utilizando las flechas del teclado y las teclas Enter, ESC
+*Se crean las funciones "menuPrincipal" y "menuSecundario"
+-La funcion "menuPrincipal" contendrá todas las acciones que el usuario puede realizar cuando presiona 'Enter' en alguna de las materias, o casillas del horario
+-La funcion "menuSecundario" funciona como un display de las actividades que se tienen para esa materia en particular
+*Funciones respectivas de "leerArchivoTareas" y "formatearArchivoTareas" (En el archivo archivos.c), para el manejo de un nuevo archivo llamado Actividades.csv
+-La función "llenarTareas", se encarga de llenar la parte de las materias (el primer indice=0) del arreglo "tareas"
+*Funcion "leerTarea" en el archivo "menu.c" se encarga de leer las actividades
+
 28/05/26
 VERSION 0.2.5 ORGANIZADOR ACADEMICO
 *Menu principal mas interactivo

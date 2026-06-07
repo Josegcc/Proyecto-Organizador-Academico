@@ -2,6 +2,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+
+#ifdef WIN32
+#include <windows.h>
+#endif // WIN32
+
 #define ROJO "\033[0;101m"
 #define GRIS "\033[0;100m"
 #define COLOR_RESET "\033[0m"
@@ -9,32 +14,12 @@
 #define TAM_HORA 8
 
 void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
+void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
+void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y);
 char leerTecla();
 void limpiarPantalla();
 bool pregunta();
-
-void menuPricipal(int i)
-{
-    const char *menuPrinc[] = {
-        "Opcion 1: Registrar una Actividad/Tarea\t\t-----> 1",
-        "Opcion 2: Ver mi horario\t\t\t-----> 2",
-        "Opcion 3: Ver mi calendario academico\t\t-----> 3",
-        "Opcion 4: Ver mis actividades pendientes\t-----> 4",
-        "Opcion 5: Salir de la aplicacion\t\t-----> 5"
-                              };
-
-    for (int j = 0; j < 5; j++)
-    {
-        if (j == i)
-        {
-            printf("%s%s%s\n", GRIS, menuPrinc[j], COLOR_RESET);
-        }else
-        {
-            printf("%s\n", menuPrinc[j]);
-        }
-    }
-
-}
+void gotoxy(int x, int y);
 
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
@@ -68,29 +53,45 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
-bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
+bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], int posX, int posY)
 {
     limpiarPantalla();
-    printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
+    const char* semana[] ={"Hora", "\tLun", "Mar",
+                            "Miér", "Jue", "Vie"};
+
+        for(int j = 0; j < 6; j++)
+        {
+        if(posX == j && posY == 0){
+        printf("\t%s%s%s", ROJO, semana[j], COLOR_RESET);
+                                  }
+        else{
+        printf("\t%s", semana[j]);
+            }
+        }
 
         for(int i = 1; i < TAM_HORA; i++){
 
-            printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+            if(posX == 0 && posY == i){
+            printf("\n\t%s%02d:%02d-%02d:%02d%s",ROJO, hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i], COLOR_RESET);
+                                      }
+            else{
+                printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+                }
 
                 for (int j = 0; j < TAM_MATERIAS; j++){
 
-                    printf("\t|");
+                    if(posX-1 == j && posY == i){    printf("%s\t|%.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   }
+                    else                        {    printf("\t|%.5s", materias[i-1][j]);                          }
 
-                    if(strlen(materias[i-1][j]) != 0){printf("%.5s", materias[i-1][j]);    }
 
-                                           }
-                printf("\n\t---------------------------------------------------------\n");
+                                                      }
+                printf("\n\t---------------------------------------------------------\r\n");
                                           }
 
     if(verific)
     {
 
-    printf("%cEs correcto el horario%c\nN = NO\tS = SI\n",168, 63);
+    printf("%cEs correcto el horario%c\nN = NO\tS = SI\r\n",168, 63);
     return pregunta();
 
     }
@@ -98,117 +99,135 @@ bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const i
     return false;
 }
 
-
-void leerTareas(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200])
+int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY)
 {
-    int counter = 0;
-    int op = 0;
-    limpiarPantalla();
-
-    printf("\nMateria\t--------------------- Codigo");
-    for(int i = 0; i < TAM_HORA; i++)
-        {
-                for (int j = 0; j < TAM_MATERIAS; j++)
-                {
-
-                    bool elem_repet = false;
-
-                    if(strlen(materias[i][j]) != 0)
-                    {
-
-                        for(int m = 0; m < TAM_HORA; m++)
-                        {
-                            for (int n = 0; n < TAM_MATERIAS; n++)
-                            {
-                                if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
-                                {
-                                elem_repet = true;
-                                break;
-                                }
-                            }
-                            if(elem_repet){break;}          //Los break; cierran el ciclo cuando se encuentra una coincidencia
-                        }
-                        if(!elem_repet)
-                        {
-                            counter++;
-                            printf("\n%-10.6s--------------------> %d", materias[i][j], counter);
-                            strcpy(tareas[0][counter], materias[i][j]);
-                        }
-                    }
-                }   //QUE LA FUNCION QUE LEE EL ARCHIVO DE TAREAS TAMBIEN LO
-        }   //CREAR UNA FUNCION QUE PIDA EL INDICE DE LA MATERIA USANDO EL ARREGLO tareas, Y COMPARE ESA MATERIA EN ESE ARREGLO CON LAS DE EL ARREGLO materias, PARA DETERMINAR EN QUÉ DIA TOCA ESA MATERIA
-
-        do
-        {
-        printf("\nIntroduzca el codigo de la materia a la que corresponde la actividad: ");
-        scanf("%d", &op);
-
-        printf("Introduzca la actividad: ");
-        while (getchar() != '\n');
-        fgets(tareas[1][op], 50, stdin);
-        tareas[1][op][strcspn(tareas[1][op], "\n")] = '\0';
-
-        limpiarPantalla();
-
-        printf("Materia\t\tActividad\n");
-        printf("%.5s\t-----\t%.5s\n", tareas[0][op], tareas[1][op]);
-        printf("Es correcta la actividad introducida%c\nN = NO\tS = SI\n", 63);
-                                                //  ^ Contador
-                                                // CONTADOR SEMANAL / ACTIVIDADES POR SEMANA
-        }while(!pregunta());
-
-}
-
-void mostrarTareas(const char* nombre_archivo, const char tareas[10][10][200])
-{
-    limpiarPantalla();
-
-    printf("Actividades semanales registradas por materia:\n");
-    printf("Materia\t\tActividad\n");
-
-            for (int i = 1; i < TAM_MATERIAS; i++)
-            {
-                printf("%.5s\t-----\t%.5s\n", tareas[0][i], tareas[1][i]);
-            }
-
-    limpiarPantalla();
-
-    printf("¿Desea exportar el archivo de actividades pendientes%c\nN = NO\tS = SI\n", 63);
-
-    if(pregunta())
-    {
-    formatearTareas(nombre_archivo, tareas);
-    }
-
-}
-
-bool pregunta()
-{
-    bool datoIncorrecto = false;
+    int y = 0;
     char op = '\0';
-
+    const char *menuPrinc[] = {
+        "\tMenu de actividades",
+        "\tVer mi calendario academico",
+        "\tPresione ESC para volver"
+                              };
     do
     {
 
-    op = leerTecla();  //Lee el valor hasta que sea correcto
-    op = toupper(op);
+    limpiarPantalla();
+
+    menuHorario(false, materias, hora, posX, posY);
+    menuSecundario(materias, tareas, posX, posY);
+
+    gotoxy(0,23);
+
+    //Imprimir menu principal
+    for (int j = 0; j < 3; j++)
+    {
+        if (y == j)
+        {
+            printf("%s%s%s\n", ROJO, menuPrinc[j], COLOR_RESET);
+        }else
+        {
+            printf("%s\n", menuPrinc[j]);
+        }
+    }
+
+    //Cambiar la posicion del cursor
+    op = leerTecla();
 
         switch(op)
         {
-            case 'N':
-                return false;
+            case 'B':   //Flecha abajo
+                if(y < 3){y++;}
             break;
 
-            case 'S':
-                return true;
+            case 'A':   //Flecha arriba
+                if(y > 0){y--;}
             break;
 
-            default:
-            datoIncorrecto = true;
+            case '\n':  //Tecla 'enter'
+
+                switch(y)
+                {
+                default:
+
+                    return y;
+
+                break;
+
+                case 2:
+
+                    return -1;
+
+                break;
+
+                }
+
             break;
         }
 
-    }while(datoIncorrecto); //Validador
+    }while(op != 27);//Al presionar Escape se sale del ciclo, para volver al menu de horario
 
-    return false;
+
+    return -1;
+}
+
+void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y)
+{
+
+    gotoxy(70,1);
+    printf("\t\t%s\r\n", materias[y-1][x-1]);
+    gotoxy(70,2);
+    printf("Actividades para la materia: \r\n");
+    for(int i = 0; i < 10; i++)
+    {
+        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
+        {
+
+
+        for(int j = 1; j < 10; j++)
+            {
+                gotoxy(70, 3+j);
+                if(strlen(tareas[j][i]) != 0)
+                {
+                printf("%s\r\n", tareas[j][i]);
+                }
+
+            }
+        }
+    }
+    gotoxy(70, 10);
+    printf("X: %d Y: %d\r\n", x, y);
+
+    //printf("\033[2J");
+}
+
+void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200], int x, int y)
+{
+    char temp[200];
+    llenarTareas(materias, tareas);
+
+    for(int i = 0; i < 10; i++)
+    {
+        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
+        {
+        gotoxy(70, 4);
+        printf("Introduzca la actividad para esta materia: ");
+
+        gotoxy(70,7);
+        //while (getchar() != '\n');
+        fgets(temp, 30, stdin);
+        temp[strcspn(temp, "\r\n")] = '\0';
+
+            for(int j = 1; j < 10; j++)
+            {
+
+                if(strlen(tareas[j][i]) == 0)
+                {
+                strcpy(tareas[j][i], temp);
+                break;
+                }
+
+            }
+
+        }
+    }
 }
