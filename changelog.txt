@@ -1,3 +1,10 @@
+08/06/26
+VERSION 0.3.1 ORGANIZADOR ACADEMICO
+*Añadida una funcion para la creacion de casillas o recuadros
+-Esta es la funcion "casilla" en el archivo "utiles.c"
+-Recibe un valor de base y altura del recuadro, y las coordenadas donde se va a crear
+-Hasta ahora solo se la utiliza en el menu principal
+
 07/06/26
 VERSION 0.3.0 ORGANIZADOR ACADEMICO
 *Creacion de archivo utils.c para mejor organizacion del programa

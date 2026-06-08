@@ -249,6 +249,35 @@ void tamanoPantalla()
 
 }
 
+void casilla(int base, int altura, int posX, int posY)
+{
+
+    for(int i = 0; i <= altura; i++)
+    {
+        gotoxy(posX, posY+i);
+
+        printf("|");
+
+        if(i == 0 || i == altura)
+        {
+            for(int j = 0; j < base; j ++)
+            {
+            printf("-");
+            }
+        }else
+        {
+            for(int j = 0; j < base; j ++)
+            {
+            printf(" ");
+            }
+        }
+
+        printf("|");
+        printf("\n");
+    }
+
+}
+
 void limpiarPantalla()
 {
 #ifdef _WIN32

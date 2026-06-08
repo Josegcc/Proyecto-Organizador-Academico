@@ -29,7 +29,6 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
 void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
 bool leerArchivoHorario(const char* nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
 void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200]);
-void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200], int x, int y);
 void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
 void calcHora(int hora[2][TAM_HORA]);
 
@@ -38,6 +37,7 @@ bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
 bool menuHorario(bool verific,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], int posX, int posY);
 void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y);
 int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], char tareas[10][10][200], int posX, int posY);
+void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200], int x, int y);
 
 
 /*main.c - Lectura de datos*/

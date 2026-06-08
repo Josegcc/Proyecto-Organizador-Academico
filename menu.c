@@ -16,6 +16,7 @@
 void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
 void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
 void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y);
+void casilla(int base, int altura, int posX, int posY);
 char leerTecla();
 void limpiarPantalla();
 bool pregunta();
@@ -57,7 +58,8 @@ bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const i
 {
     limpiarPantalla();
     const char* semana[] ={"Hora", "\tLun", "Mar",
-                            "Miér", "Jue", "Vie"};
+                            "Miér", "Jue", "Vie",
+                            "Sab", "Dom"};
 
         for(int j = 0; j < 6; j++)
         {
@@ -116,7 +118,10 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
     menuHorario(false, materias, hora, posX, posY);
     menuSecundario(materias, tareas, posX, posY);
 
-    gotoxy(0,23);
+
+    gotoxy(0, 24);
+    casilla(30, 7, 6, 24);
+    gotoxy(0,25);
 
     //Imprimir menu principal
     for (int j = 0; j < 3; j++)
@@ -130,7 +135,7 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
         }
     }
 
-    //Cambiar la posicion del cursor
+    //Cambiar la posicion de la seleccion
     op = leerTecla();
 
         switch(op)
@@ -173,9 +178,9 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
 void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y)
 {
 
-    gotoxy(70,1);
+    gotoxy(73,1);
     printf("\t\t%s\r\n", materias[y-1][x-1]);
-    gotoxy(70,2);
+    gotoxy(73,2);
     printf("Actividades para la materia: \r\n");
     for(int i = 0; i < 10; i++)
     {
@@ -185,7 +190,7 @@ void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[
 
         for(int j = 1; j < 10; j++)
             {
-                gotoxy(70, 3+j);
+                gotoxy(73, 3+j);
                 if(strlen(tareas[j][i]) != 0)
                 {
                 printf("%s\r\n", tareas[j][i]);
@@ -194,7 +199,7 @@ void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[
             }
         }
     }
-    gotoxy(70, 10);
+    gotoxy(73, 10);
     printf("X: %d Y: %d\r\n", x, y);
 
     //printf("\033[2J");
