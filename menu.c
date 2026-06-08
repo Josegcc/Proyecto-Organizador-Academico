@@ -107,7 +107,7 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
     char op = '\0';
     const char *menuPrinc[] = {
         "\tMenu de actividades",
-        "\tVer mi calendario academico",
+        "\tModificar materias para este dia",
         "\tPresione ESC para volver"
                               };
     do
@@ -120,7 +120,7 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
 
 
     gotoxy(0, 24);
-    casilla(30, 7, 6, 24);
+    casilla(35, 7, 6, 24);
     gotoxy(0,25);
 
     //Imprimir menu principal

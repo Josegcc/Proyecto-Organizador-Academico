@@ -1,4 +1,9 @@
 08/06/26
+Version 0.3.1.1 ORGANIZADOR ACADEMICO
+*Añadida una opcion para que el usuario modifique el horario ya hecho a través del menú principal
+-Para esto se modularizó el procedimiento de leer las materias en una nueva funcion llamada "leerMaterias" en el archivo "main.c"
+
+08/06/26
 VERSION 0.3.1 ORGANIZADOR ACADEMICO
 *Añadida una funcion para la creacion de casillas o recuadros
 -Esta es la funcion "casilla" en el archivo "utiles.c"

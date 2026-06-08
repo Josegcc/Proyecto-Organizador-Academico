@@ -42,6 +42,7 @@ void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200
 
 /*main.c - Lectura de datos*/
 void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
+void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
 bool validarHora(const int hora[2][TAM_HORA]);
 
 /*calendario.c*/
@@ -121,7 +122,13 @@ int main()
 
                 case 1:
 
-                    calendario(materias, tareas);
+                    for (int i = 0; i < TAM_MATERIAS; i++)
+                    {
+                            materias[i][x-1][0] = '\0';
+                    }
+
+                    leerMaterias(x-1, materias, hora);
+                    formatearArchivo(nombre_archivo_horario, materias, hora);
 
                 break;
                 }
@@ -135,7 +142,7 @@ int main()
     return 0;
 }
 
-void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA])
+void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
 {
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
@@ -148,6 +155,39 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
     "septima","octava","novena","decima"
                               };
 
+    int clases;
+    int op1 = 0, op2 = 0;
+    char temp[30];
+    limpiarPantalla();
+
+        printf("Introducir la cantidad de clases correspondiente a el d%ca %s: ",161 , dias[dia]);
+        scanf("%d", &clases);
+
+            for(int j = 0; j < clases; j++)
+            {
+                printf("Introduzca la %s asignatura: ", ordinales[j]);
+                while (getchar() != '\n');        //Eliminar el salto de linea en buffer
+                fgets(temp, 30, stdin);
+                temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea de la variable
+
+                for(int m = op2; m < TAM_HORA; m++){
+                    printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
+                                                       }
+                scanf("%d", &op1);
+
+                for(int m = op1+1; m < TAM_HORA; m++){
+                    printf("Hasta %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
+                                                         }
+                scanf("%d", &op2);
+
+                for(; op1 < op2; op1++){
+                    strcpy(materias[op1][dia], temp);
+                                       }
+            }
+}
+
+void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA])
+{
         char opHoras = '\0';
         bool invalida = false;
 
@@ -207,35 +247,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
 
         for(int i = 0; i < 5; i++)      //LECTURA DE MATERIAS
         {
-            int clases;
-            int op1 = 0, op2 = 0;
-            char temp[30];
-            limpiarPantalla();
-
-            printf("Introducir la cantidad de clases correspondiente a el d%ca %s: ",161 , dias[i]);
-            scanf("%d", &clases);
-
-                for(int j = 0; j < clases; j++)
-                {
-                    printf("Introduzca la %s asignatura: ", ordinales[j]);
-                    while (getchar() != '\n');        //Eliminar el salto de linea en buffer
-                    fgets(temp, 30, stdin);
-                    temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea de la variable
-
-                    for(int m = op2; m < TAM_HORA; m++){
-                        printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
-                                                       }
-                    scanf("%d", &op1);
-
-                    for(int m = op1+1; m < TAM_HORA; m++){
-                        printf("Hasta %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
-                                                         }
-                    scanf("%d", &op2);
-
-                    for(; op1 < op2; op1++){
-                        strcpy(materias[op1][i], temp);
-                                           }
-                }
+            leerMaterias(i, materias, hora);
         }
 
       }while(!menuHorario(true, materias, hora, 100, 100));
