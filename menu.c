@@ -1,38 +1,17 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
-
-#ifdef WIN32
-#include <windows.h>
-#endif // WIN32
-
-#define ROJO "\033[0;101m"
-#define GRIS "\033[0;100m"
-#define COLOR_RESET "\033[0m"
-#define TAM_MATERIAS 6
-#define TAM_HORA 8
-
-void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
-void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
-void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y);
-void casilla(int base, int altura, int posX, int posY);
-char leerTecla();
-void limpiarPantalla();
-bool pregunta();
-void gotoxy(int x, int y);
+#include "organizador_academico.h"
 
 bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
 {
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
+    printf("\n\t_________________________________________________________\r\n");
 
         for(int i = 1; i < TAM_HORA; i++){
 
             printf("\n\t%02d:%02d-%02d:%02d\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
-            printf("\t---------------------------------------------------------");
+            printf("\n\t_________________________________________________________\r\n");
 
-            if(cont == i-1 && cont % 2 == 0 && opExt == '0')
+            if(cont == i-1 && cont % 2 == 0 && opExt == '0')        //CAMBIAR ESTO, NO FLECHA SINO COLOR
             {
                 printf("\n\t%s^%s", ROJO, COLOR_RESET);
             }
@@ -46,7 +25,7 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
             if(opExt == '1')
             {
 
-            printf("¿Es correcto el horario%c\nN = NO\tS = SI\n", 63);
+            printf("%cEs correcto el horario%c\t(S / N)\n", 168, 63);
             return pregunta();
 
             }
@@ -54,12 +33,20 @@ bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
     return false;
 }
 
-bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], int posX, int posY)
+bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], int posX, int posY)
 {
     limpiarPantalla();
     const char* semana[] ={"Hora", "\tLun", "Mar",
-                            "Miér", "Jue", "Vie",
+                            "Mi\x82", "Jue", "Vie",
                             "Sab", "Dom"};
+
+
+    casilla(58,3,8,0);
+    gotoxy(28,2);
+    printf("HORARIO ACADEMICO\n");
+
+    printf("\n\n\n");
+
 
         for(int j = 0; j < 6; j++)
         {
@@ -71,6 +58,8 @@ bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const i
             }
         }
 
+        printf("\n\t_________________________________________________________\r\n");
+
         for(int i = 1; i < TAM_HORA; i++){
 
             if(posX == 0 && posY == i){
@@ -80,14 +69,14 @@ bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const i
                 printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
                 }
 
-                for (int j = 0; j < TAM_MATERIAS; j++){
+                for (int j = 0; j < 5; j++){
 
-                    if(posX-1 == j && posY == i){    printf("%s\t|%.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   }
-                    else                        {    printf("\t|%.5s", materias[i-1][j]);                          }
+                    if(posX-1 == j && posY == i){    printf("%s\t| %.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   }
+                    else                        {    printf("\t| %.5s", materias[i-1][j]);                          }
 
 
                                                       }
-                printf("\n\t---------------------------------------------------------\r\n");
+                printf("\n\t_________________________________________________________\r\n");
                                           }
 
     if(verific)
@@ -101,14 +90,14 @@ bool menuHorario(bool verific, const char materias[7][TAM_MATERIAS][30], const i
     return false;
 }
 
-int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY)
+int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY)
 {
     int y = 0;
     char op = '\0';
     const char *menuPrinc[] = {
-        "\tMenu de actividades",
-        "\tModificar materias para este dia",
-        "\tPresione ESC para volver"
+        "Menu de actividades",
+        "Modificar materias para este dia",
+        "Presione ESC para volver"
                               };
     do
     {
@@ -118,14 +107,13 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
     menuHorario(false, materias, hora, posX, posY);
     menuSecundario(materias, tareas, posX, posY);
 
-
-    gotoxy(0, 24);
-    casilla(35, 7, 6, 24);
-    gotoxy(0,25);
+    casilla(35, 6, 20, 29);
 
     //Imprimir menu principal
     for (int j = 0; j < 3; j++)
     {
+        gotoxy(23,31+j);
+
         if (y == j)
         {
             printf("%s%s%s\n", ROJO, menuPrinc[j], COLOR_RESET);
@@ -141,7 +129,7 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
         switch(op)
         {
             case 'B':   //Flecha abajo
-                if(y < 3){y++;}
+                if(y < 2){y++;}
             break;
 
             case 'A':   //Flecha arriba
@@ -175,12 +163,16 @@ int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM
     return -1;
 }
 
-void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y)
+void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200], int x, int y)
 {
 
-    gotoxy(73,1);
-    printf("\t\t%s\r\n", materias[y-1][x-1]);
-    gotoxy(73,2);
+    int posicion = 4;
+
+    casilla(44,15,71,posicion);
+
+    gotoxy(73,posicion+2);
+    printf("\t%.12s\r\n", materias[y-1][x-1]);
+    gotoxy(73,posicion+3);
     printf("Actividades para la materia: \r\n");
     for(int i = 0; i < 10; i++)
     {
@@ -190,49 +182,14 @@ void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[
 
         for(int j = 1; j < 10; j++)
             {
-                gotoxy(73, 3+j);
+                gotoxy(73, posicion+3+j);
                 if(strlen(tareas[j][i]) != 0)
                 {
                 printf("%s\r\n", tareas[j][i]);
                 }
 
             }
-        }
-    }
-    gotoxy(73, 10);
-    printf("X: %d Y: %d\r\n", x, y);
-
-    //printf("\033[2J");
-}
-
-void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200], int x, int y)
-{
-    char temp[200];
-    llenarTareas(materias, tareas);
-
-    for(int i = 0; i < 10; i++)
-    {
-        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
-        {
-        gotoxy(70, 4);
-        printf("Introduzca la actividad para esta materia: ");
-
-        gotoxy(70,7);
-        //while (getchar() != '\n');
-        fgets(temp, 30, stdin);
-        temp[strcspn(temp, "\r\n")] = '\0';
-
-            for(int j = 1; j < 10; j++)
-            {
-
-                if(strlen(tareas[j][i]) == 0)
-                {
-                strcpy(tareas[j][i], temp);
-                break;
-                }
-
-            }
-
+            break;
         }
     }
 }

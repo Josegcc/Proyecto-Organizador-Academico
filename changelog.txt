@@ -1,3 +1,11 @@
+11/06/26
+VERSION 0.3.2 ORGANIZADOR ACADEMICO
+*Creado un solo archivo de cabecera llamado "organizador_academico.h", este contiene la declaracion de todas las funciones y macros usadas por todos los archivos del programa. Este archivo se incluye en cada archivo .c del programa
+*Arreglos menores de bugs
+-Ya no se utiliza la funcion system("cls") para limpiar la consola en windows, puesto que esta era ineficiente y causaba un parpadeo en la pantalla
+-Error logico en la forma de el arreglo materias, ahora las columnas son los dias de la semana y las filas corresponden a las horas. Esto de acuerdo a la forma en que se escribe y lee este arreglo a lo largo del programa.
+*Mejorada la apariencia general del programa, con modificaciones al archivo "menu.c"
+
 08/06/26
 Version 0.3.1.1 ORGANIZADOR ACADEMICO
 *Añadida una opcion para que el usuario modifique el horario ya hecho a través del menú principal

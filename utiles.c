@@ -1,24 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdbool.h>
+#include "organizador_academico.h"
 
-#ifdef WIN32
-#include <conio.h>
-#include <windows.h>
-
-#else
-#include <unistd.h>
-#include <termios.h>
-#include <fcntl.h>
-
-#endif // WIN32
-
-#define TAM_MATERIAS 6
-#define TAM_HORA 8
-
-void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
+void limpiarArreglo(char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
 {
     for (int i = 0; i < TAM_HORA; i++)
     {
@@ -76,14 +58,14 @@ void calcHora(int hora[2][TAM_HORA])
                                        }
 }
 
-char leerTecla()
+char leerTecla()        //ARREGLAR LECTURA DE A B C D
 {
 
     char buf[8];
     char tecla = '\0';
 
 
-#ifdef WIN32
+#ifdef _WIN32
     int ch;
 
     while (tecla == '\0')
@@ -120,7 +102,7 @@ char leerTecla()
         tecla = 27;
         }
 
-        else           //Cualquier otra tecla. Usado para la funcion "pregunta", la cual tiene un validador
+        else if (ch == 115 || ch == 110 || buf[0] == 83 || buf[0] == 78)      //Teclas 's' o 'n'. Usado para la funcion "pregunta", la cual tiene un validador
         {
         tecla = ch;
         }
@@ -159,8 +141,9 @@ char leerTecla()
                 // buf[1] will typically be '[', and buf[2] will be 'A', 'B', 'C', or 'D'
                 tecla = buf[2];
             }
-        } else {
-            //printf("Result: Other key pressed (ASCII: %d)\n", buf[0]);
+        } else if (buf[0] == 115 || buf[0] == 110 || buf[0] == 83 || buf[0] == 78){//Letras 's' o 'n'
+            tecla = buf[0];
+        }else if (buf[0] == '\n'){   //Tecla Enter;
             tecla = buf[0];
         }
     }
@@ -231,14 +214,11 @@ void tamanoPantalla()
 
    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    // Define the new window size coordinates (Columns, Rows)
     COORD bufferSize = {120, 50};
-    SMALL_RECT windowSize = {0, 0, 119, 49}; // 0-indexed, so 1 less than COORD
+    SMALL_RECT windowSize = {0, 0, 119, 49};
 
-    // Set buffer size first to ensure it's larger than or equal to window size
     SetConsoleScreenBufferSize(hConsole, bufferSize);
 
-    // Set the actual physical window size
     SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
 
 #else
@@ -252,17 +232,17 @@ void tamanoPantalla()
 void casilla(int base, int altura, int posX, int posY)
 {
 
-    for(int i = 0; i <= altura; i++)
+    for(int i = 1; i <= altura; i++)
     {
         gotoxy(posX, posY+i);
 
         printf("|");
 
-        if(i == 0 || i == altura)
+        if(i == 1 || i == altura)
         {
             for(int j = 0; j < base; j ++)
             {
-            printf("-");
+            printf("—");
             }
         }else
         {
@@ -281,7 +261,19 @@ void casilla(int base, int altura, int posX, int posY)
 void limpiarPantalla()
 {
 #ifdef _WIN32
-    system("cls");
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coord = {0, 0};
+    DWORD count;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    GetConsoleScreenBufferInfo(hStdOut, &csbi);
+    DWORD cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+    FillConsoleOutputCharacter(hStdOut, (TCHAR)' ', cellCount, coord, &count);
+
+    FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, cellCount, coord, &count);
+
+    SetConsoleCursorPosition(hStdOut, coord);
 #else
     printf("\033[H\033[2J\n");
 #endif

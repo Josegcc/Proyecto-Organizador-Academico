@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <time.h>
-#define TAM_MATERIAS 6
-
-void limpiarPantalla();
-void leerTecla();
+#include "organizador_academico.h"
 
 bool bisiesto(int year)
 {
@@ -74,7 +68,7 @@ void mostrarMes(int diasMes, int diaInicial, int diaEleg)
     printf("\n");
 }
 
-void calendario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200])
+void calendario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200])
 {
     limpiarPantalla();
     int mes, diaMes, diaInicial, opMes;

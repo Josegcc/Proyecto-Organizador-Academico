@@ -1,57 +1,11 @@
-/*ORGANIZADOR ACADEMICO - VERSION 0.2.6
-COMPILAR USANDO GCC 14 o MINGW*/
+/*ORGANIZADOR ACADEMICO - VERSION 0.3.2
+  COMPILAR USANDO GCC 14 o MINGW          */
 
-#ifdef WIN32
-#include <conio.h>
-#include <windows.h>
-#else
-#include <unistd.h>
-#include <termios.h>
-#include <fcntl.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#define TAM_MATERIAS 6
-#define TAM_HORA 8
-
-/*utiles.c - Funciones de uso muy general utilizadas en casi todo el programa*/
-void limpiarArreglo(char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);
-void limpiarPantalla();
-void tamanoPantalla();
-char leerTecla();
-void gotoxy(int x, int y);
-
-/*archivos.c - Operaciones logicas y manejo de archivos*/
-void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int Hora[2][TAM_HORA]);
-void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200]);
-bool leerArchivoHorario(const char* nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
-void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200]);
-void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200]);
-void calcHora(int hora[2][TAM_HORA]);
-
-/*menu.c - Diferentes menus y entrada de datos de tareas*/
-bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
-bool menuHorario(bool verific,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], int posX, int posY);
-void menuSecundario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200], int x, int y);
-int menuPricipal(const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], char tareas[10][10][200], int posX, int posY);
-void leerTarea(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200], int x, int y);
-
-
-/*main.c - Lectura de datos*/
-void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]);
-void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA]);
-bool validarHora(const int hora[2][TAM_HORA]);
-
-/*calendario.c*/
-void calendario(const char materias[7][TAM_MATERIAS][30], const char tareas[10][10][200]);
-
+#include "organizador_academico.h"
 
 int main()
 {
-    char materias[7][TAM_MATERIAS][30] = {0};   //Filas son los dias de la semana, columnas las materias
+    char materias[TAM_MATERIAS][7][30] = {0};   //Filas son las materias, columnas los dias de la semana
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
     char tareas[10][10][200] = {0};
     const char* nombre_archivo_horario = "Horario.csv";
@@ -106,9 +60,9 @@ int main()
 
             case '\n':  //Tecla 'enter'
 
-                if(x < 1 || y < 1 || strlen(materias[y-1][x-1]) == 0){
+                if(x < 1 && y < 1 && strlen(materias[y-1][x-1]) == 0){
                 break;
-                                                                }
+                                                                     }
 
                 switch(menuPricipal(materias, hora, tareas, x, y))
                 {
@@ -116,19 +70,19 @@ int main()
                 case 0: //Intoducir tarea (por ahora)
 
                     leerTarea(materias, tareas, x, y);
-                    formatearTareas(nombre_archivo_tareas, tareas);
+                    formatearArchivoTareas(nombre_archivo_tareas, tareas);
 
                 break;
 
-                case 1:
+                case 1: //Modificar materia del horario
 
-                    for (int i = 0; i < TAM_MATERIAS; i++)
+                    for (int i = 0; i < 7; i++)
                     {
                             materias[i][x-1][0] = '\0';
                     }
 
                     leerMaterias(x-1, materias, hora);
-                    formatearArchivo(nombre_archivo_horario, materias, hora);
+                    formatearArchivoHorario(nombre_archivo_horario, materias, hora);
 
                 break;
                 }
@@ -142,7 +96,7 @@ int main()
     return 0;
 }
 
-void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
+void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA])
 {
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
@@ -168,7 +122,7 @@ void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2
                 printf("Introduzca la %s asignatura: ", ordinales[j]);
                 while (getchar() != '\n');        //Eliminar el salto de linea en buffer
                 fgets(temp, 30, stdin);
-                temp[strcspn(temp, "\n")] = '\0'; //Eliminar el salto de linea de la variable
+                temp[strcspn(temp, "\r\n")] = '\0'; //Eliminar el salto de linea de la variable
 
                 for(int m = op2; m < TAM_HORA; m++){
                     printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
@@ -186,7 +140,39 @@ void leerMaterias(int dia , char materias[7][TAM_MATERIAS][30], const int hora[2
             }
 }
 
-void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA])
+void leerTarea(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200], int x, int y)
+{
+    char temp[200];
+    llenarTareas(materias, tareas);
+
+    for(int i = 0; i < 10; i++)
+    {
+        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
+        {
+        gotoxy(73, 15);
+        printf("Introduzca la actividad para esta materia: ");
+
+        gotoxy(73,16);
+        //while (getchar() != '\n');
+        fgets(temp, 30, stdin);
+        temp[strcspn(temp, "\r\n")] = '\0';
+
+            for(int j = 1; j < 10; j++)
+            {
+                if(strlen(tareas[j][i]) == 0)
+                {
+                strcpy(tareas[j][i], temp);
+                break;
+                }
+
+                break;
+            }
+
+        }
+    }
+}
+
+void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA])
 {
         char opHoras = '\0';
         bool invalida = false;
@@ -252,7 +238,7 @@ void leerHorario(const char *nombre_archivo, char materias[7][TAM_MATERIAS][30],
 
       }while(!menuHorario(true, materias, hora, 100, 100));
 
-    formatearArchivo(nombre_archivo, materias, hora);
+    formatearArchivoHorario(nombre_archivo, materias, hora);
 }
 
 bool validarHora(const int hora[2][TAM_HORA])

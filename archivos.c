@@ -1,14 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#define TAM_MATERIAS 6
-#define TAM_HORA 8
+#include "organizador_academico.h"
 
-bool menuHorario(bool opExt ,const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA], int posX, int posY);    //Para pedir confirmacion del horario
-void limpiarPantalla();
-
-void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MATERIAS][30], const int hora[2][TAM_HORA])
+void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA])
 {
 
         FILE *archivo;
@@ -25,7 +17,7 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
         for(int i = 1; i < TAM_HORA; i++){
             fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
 
-            for (int j = 0; j < 5; j++){
+            for (int j = 0; j < TAM_MATERIAS; j++){
 
                 fprintf(archivo, ",");  //Poner una coma al inicio de cada columna (Despues de la hora, etc)
 
@@ -38,7 +30,7 @@ void formatearArchivo(const char* nombre_archivo, const char materias[7][TAM_MAT
       fclose(archivo);
 }
 
-void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][200])
+void llenarTareas(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200])
 {
     int counter = 0;
 
@@ -74,7 +66,7 @@ void llenarTareas(const char materias[7][TAM_MATERIAS][30], char tareas[10][10][
 
 }
 
-void formatearTareas(const char* nombre_archivo, const char tareas[10][10][200])
+void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10][200])
 {
 
     FILE *archivo;
@@ -163,7 +155,7 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200])
     fclose(archivo);
 }
 
-bool leerArchivoHorario(char *nombre_archivo, char materias[7][TAM_MATERIAS][30], int hora[2][TAM_HORA]){
+bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA]){
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "r");
