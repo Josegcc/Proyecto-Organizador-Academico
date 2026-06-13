@@ -165,6 +165,8 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
 {
         char opHoras = '\0';
         bool invalida = false;
+        int posicionX = 73;
+        int posicionY = 4;
 
         do  //op verificacion horario correcto?
         {
@@ -172,8 +174,16 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
             limpiarArreglo(materias, hora, false, true);
 
             menuHoras(100, 0, hora);
-            printf("Opcion 1: Escribir cada hora manualmente\t ----> 1\n");
-            printf("Opcion 2: Calcular usando las dos primeras horas ----> 2\n");
+
+            casilla(46,20, posicionX-2, posicionY-2);
+
+            gotoxy(posicionX, posicionY);
+            printf("Opcion 1: Escribir cada hora manualmente\n");
+            gotoxy(posicionX, posicionY+1);
+            printf("Opcion 2: Calcular usando las dos\n");
+            gotoxy(posicionX, posicionY+2);
+            printf("\t  primeras horas\n");
+            gotoxy(posicionX, posicionY+3);
             opHoras = leerTecla();
 
             //LECTURA DE HORAS
@@ -184,8 +194,14 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
 
                         limpiarPantalla();
                         menuHoras(i, 0, hora);
-                        printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
-                        printf("\nIntroduzca la hora indicada: ");
+                        casilla(46,20, posicionX-2, posicionY-2);
+
+                        gotoxy(posicionX, posicionY);
+                        printf("Formato de la hora\thora:minutos\n");
+                        gotoxy(posicionX, posicionY+1);
+                        printf("Ejemplo:\t\t  12:30\n");
+                        gotoxy(posicionX, posicionY+3);
+                        printf("Introduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
                                                         }
@@ -196,8 +212,14 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
 
                         limpiarPantalla();
                         menuHoras(i, 0, hora);
-                        printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n");
-                        printf("\nIntroduzca la hora indicada: ");
+                        casilla(46,20, posicionX-2, posicionY-2);
+
+                        gotoxy(posicionX, posicionY);
+                        printf("Formato de la hora\thora:minutos\n");
+                        gotoxy(posicionX, posicionY+1);
+                        printf("Ejemplo:\t\t  12:30\n");
+                        gotoxy(posicionX, posicionY+3);
+                        printf("Introduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
                                                 }
@@ -206,6 +228,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
 
                 default:
 
+                    gotoxy(posicionX, posicionY+3);
                     printf("Opcion introducida invalida, intente nuevamente\n");
                     invalida = true;
 
