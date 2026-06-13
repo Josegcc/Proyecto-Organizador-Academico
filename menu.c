@@ -1,28 +1,39 @@
 #include "organizador_academico.h"
 
-bool menuHoras(int cont, char opExt, const int hora[2][TAM_HORA])
+bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA])
 {
+    limpiarPantalla();
+
+    casilla(58,3,8,0);
+    gotoxy(28,2);
+    printf("HORARIO ACADEMICO\n");
+
+    printf("\n\n\n");
+
 
     printf("\tHora\t\tLun\tMar\tMi%cr\tJue\tVie", 130);
     printf("\n\t_________________________________________________________\r\n");
 
         for(int i = 1; i < TAM_HORA; i++){
 
-            printf("\n\t%02d:%02d-%02d:%02d\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
-            printf("\n\t_________________________________________________________\r\n");
+            if(cont == i-1 && cont % 2 == 0 && verific == 0)
+            {
+                printf("\n\t%s%02d:%02d%s-%02d:%02d\t|\t|\t|\t|\t|\t|\n", ROJO, hora[0][i-1], hora[1][i-1], COLOR_RESET, hora[0][i], hora[1][i]);
+            }
+            else if(cont == i && cont % 2 != 0 && verific == 0)
+            {
+                printf("\n\t%02d:%02d-%s%02d:%02d%s\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], ROJO, hora[0][i], hora[1][i], COLOR_RESET);
+            }
+            else
+            {
+                printf("\n\t%02d:%02d-%02d:%02d\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+            }
 
-            if(cont == i-1 && cont % 2 == 0 && opExt == '0')        //CAMBIAR ESTO, NO FLECHA SINO COLOR
-            {
-                printf("\n\t%s^%s", ROJO, COLOR_RESET);
-            }
-            else if(cont == i && cont % 2 != 0 && opExt == '0')
-            {
-                printf("\n\t\t%s^%s", ROJO, COLOR_RESET);
-            }
+            printf("\t_________________________________________________________\r\n");
                                          }
             printf("\n");
 
-            if(opExt == '1')
+            if(verific == 1)
             {
 
             printf("%cEs correcto el horario%c\t(S / N)\n", 168, 63);
@@ -82,7 +93,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
     if(verific)
     {
 
-    printf("%cEs correcto el horario%c\nN = NO\tS = SI\r\n",168, 63);
+    printf("%cEs correcto el horario%c\t(S / N)\r\n",168, 63);
     return pregunta();
 
     }
@@ -166,13 +177,15 @@ int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM
 void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200], int x, int y)
 {
 
-    int posicion = 4;
+    int posicionX = 73;
+    int posicionY = 4;
 
-    casilla(44,15,71,posicion);
 
-    gotoxy(73,posicion+2);
+    casilla(44,20,posicionX-2,posicionY-2);
+
+    gotoxy(posicionX,posicionY);
     printf("\t%.12s\r\n", materias[y-1][x-1]);
-    gotoxy(73,posicion+3);
+    gotoxy(posicionX,posicionY+1);
     printf("Actividades para la materia: \r\n");
     for(int i = 0; i < 10; i++)
     {
@@ -182,7 +195,7 @@ void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[
 
         for(int j = 1; j < 10; j++)
             {
-                gotoxy(73, posicion+3+j);
+                gotoxy(posicionX, posicionY+3+j);
                 if(strlen(tareas[j][i]) != 0)
                 {
                 printf("%s\r\n", tareas[j][i]);

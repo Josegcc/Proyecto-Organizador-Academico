@@ -58,7 +58,7 @@ void calcHora(int hora[2][TAM_HORA])
                                        }
 }
 
-char leerTecla()        //ARREGLAR LECTURA DE A B C D
+char leerTecla()
 {
 
     char buf[8];
@@ -102,7 +102,9 @@ char leerTecla()        //ARREGLAR LECTURA DE A B C D
         tecla = 27;
         }
 
-        else if (ch == 115 || ch == 110 || buf[0] == 83 || buf[0] == 78)      //Teclas 's' o 'n'. Usado para la funcion "pregunta", la cual tiene un validador
+        else if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D')
+        {}
+        else    //Cualquier otra tecla
         {
         tecla = ch;
         }
@@ -141,9 +143,8 @@ char leerTecla()        //ARREGLAR LECTURA DE A B C D
                 // buf[1] will typically be '[', and buf[2] will be 'A', 'B', 'C', or 'D'
                 tecla = buf[2];
             }
-        } else if (buf[0] == 115 || buf[0] == 110 || buf[0] == 83 || buf[0] == 78){//Letras 's' o 'n'
-            tecla = buf[0];
-        }else if (buf[0] == '\n'){   //Tecla Enter;
+        }else if(tecla == 'A' || tecla == 'B' || tecla == 'C' || tecla == 'D'){}
+        else{   //Cualquier otra tecla
             tecla = buf[0];
         }
     }

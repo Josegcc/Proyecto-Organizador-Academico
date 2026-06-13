@@ -1,3 +1,7 @@
+13/06/26
+VERSION 0.3.3 ORGANIZADOR ACADEMICO
+*Pequeñas mejoras a la lectura de datos, agregados recuadros y menus interactivos a la lectura de materias, y colores en lugar de una flecha a la lectura de horas
+
 11/06/26
 VERSION 0.3.2 ORGANIZADOR ACADEMICO
 *Creado un solo archivo de cabecera llamado "organizador_academico.h", este contiene la declaracion de todas las funciones y macros usadas por todos los archivos del programa. Este archivo se incluye en cada archivo .c del programa

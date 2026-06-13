@@ -41,7 +41,7 @@ void llenarTareas(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][
 void calcHora(int hora[2][TAM_HORA]);
 
 /*menu.c - Diferentes menus y entrada de datos de tareas*/
-bool menuHoras(int cont, char op, const int hora[2][TAM_HORA]);
+bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA]);
 bool menuHorario(bool verific,const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], int posX, int posY);
 void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200], int x, int y);
 int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY);

@@ -5,7 +5,7 @@
 
 int main()
 {
-    char materias[TAM_MATERIAS][7][30] = {0};   //Filas son las materias, columnas los dias de la semana
+    char materias[TAM_MATERIAS][7][30] = {0};   //Para almacenar las materias. Filas son las horas, columnas los dias de la semana
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
     char tareas[10][10][200] = {0};
     const char* nombre_archivo_horario = "Horario.csv";
@@ -109,29 +109,48 @@ void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2
     "septima","octava","novena","decima"
                               };
 
-    int clases;
-    int op1 = 0, op2 = 0;
-    char temp[30];
-    limpiarPantalla();
 
-        printf("Introducir la cantidad de clases correspondiente a el d%ca %s: ",161 , dias[dia]);
+    int posicionX = 73;
+    int posicionY = 4;
+    int clases, op1 = 0, op2 = 0;
+    char temp[20];
+
+    limpiarPantalla();
+    menuHorario(false, materias, hora, 100, 100);
+
+        casilla(46,20, posicionX-2, posicionY-2);
+
+        gotoxy(posicionX, posicionY);
+        printf("Introducir la cantidad de clases");
+        gotoxy(posicionX, posicionY+1);
+        printf("correspondientes a el d%ca %s: ",161 , dias[dia]);
         scanf("%d", &clases);
 
             for(int j = 0; j < clases; j++)
             {
+                gotoxy(posicionX, posicionY+2);
+
                 printf("Introduzca la %s asignatura: ", ordinales[j]);
                 while (getchar() != '\n');        //Eliminar el salto de linea en buffer
-                fgets(temp, 30, stdin);
+                fgets(temp, 20, stdin);
                 temp[strcspn(temp, "\r\n")] = '\0'; //Eliminar el salto de linea de la variable
 
                 for(int m = op2; m < TAM_HORA; m++){
+
+                    gotoxy(posicionX, posicionY+3+m);
                     printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
-                                                       }
+
+                                                   }
+                gotoxy(posicionX, posicionY+3+TAM_HORA);
                 scanf("%d", &op1);
 
                 for(int m = op1+1; m < TAM_HORA; m++){
+
+                    gotoxy(posicionX, posicionY+3+m);
                     printf("Hasta %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
-                                                         }
+
+                                                     }
+                gotoxy(posicionX, posicionY+3+TAM_HORA);
                 scanf("%d", &op2);
 
                 for(; op1 < op2; op1++){
@@ -140,37 +159,7 @@ void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2
             }
 }
 
-void leerTarea(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200], int x, int y)
-{
-    char temp[200];
-    llenarTareas(materias, tareas);
 
-    for(int i = 0; i < 10; i++)
-    {
-        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
-        {
-        gotoxy(73, 15);
-        printf("Introduzca la actividad para esta materia: ");
-
-        gotoxy(73,16);
-        //while (getchar() != '\n');
-        fgets(temp, 30, stdin);
-        temp[strcspn(temp, "\r\n")] = '\0';
-
-            for(int j = 1; j < 10; j++)
-            {
-                if(strlen(tareas[j][i]) == 0)
-                {
-                strcpy(tareas[j][i], temp);
-                break;
-                }
-
-                break;
-            }
-
-        }
-    }
-}
 
 void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA])
 {
@@ -182,7 +171,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
             invalida = false;
             limpiarArreglo(materias, hora, false, true);
 
-            menuHoras(100,'0',hora);
+            menuHoras(100, 0, hora);
             printf("Opcion 1: Escribir cada hora manualmente\t ----> 1\n");
             printf("Opcion 2: Calcular usando las dos primeras horas ----> 2\n");
             opHoras = leerTecla();
@@ -194,7 +183,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
                     for(int i = 0; i < TAM_HORA; i++){
 
                         limpiarPantalla();
-                        menuHoras(i, '0', hora);
+                        menuHoras(i, 0, hora);
                         printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n\n");
                         printf("\nIntroduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
@@ -206,7 +195,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
                     for(int i = 0; i < 2; i++){
 
                         limpiarPantalla();
-                        menuHoras(i, '0', hora);
+                        menuHoras(i, 0, hora);
                         printf("Formato de la hora\thora:minutos\n\t\t\tEjemplo: 12:30\n");
                         printf("\nIntroduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
@@ -241,6 +230,8 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
     formatearArchivoHorario(nombre_archivo, materias, hora);
 }
 
+
+
 bool validarHora(const int hora[2][TAM_HORA])
 {
     for (int i = 0; i < TAM_HORA; i++)
@@ -255,4 +246,36 @@ bool validarHora(const int hora[2][TAM_HORA])
     }
 
     return false;
+}
+
+void leerTarea(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200], int x, int y)
+{
+    char temp[200];
+    llenarTareas(materias, tareas);
+
+    for(int i = 0; i < 10; i++)
+    {
+        if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
+        {
+        gotoxy(73, 15);
+        printf("Introduzca la actividad para esta materia: ");
+
+        gotoxy(73,16);
+        //while (getchar() != '\n');
+        fgets(temp, 30, stdin);
+        temp[strcspn(temp, "\r\n")] = '\0';
+
+            for(int j = 1; j < 10; j++)
+            {
+                if(strlen(tareas[j][i]) == 0)
+                {
+                strcpy(tareas[j][i], temp);
+                break;
+                }
+
+                break;
+            }
+
+        }
+    }
 }
