@@ -1,4 +1,8 @@
 14/06/26
+VERSION 0.3.5 ORGANIZADOR ACADEMICO
+*Documentado el código en el archivo de cabecera "organizador_académico.h"
+
+14/06/26
 VERSION 0.3.4.1 ORGANIZADOR ACADEMICO
 *Se cambió la lógica con respecto al tamaño de el arreglo "materias", ahora las filas, que representan las horas, vienen dadas por el tamaño del arreglo horas ("TAM_HORA"), y las columnas según una macro llamada "DIAS_SEM", que indica el número de días de la semana (5 o 7)
 
