@@ -1,6 +1,6 @@
 #include "organizador_academico.h"
 
-void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA])
+void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA])
 {
 
         FILE *archivo;
@@ -17,7 +17,7 @@ void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM
         for(int i = 1; i < TAM_HORA; i++){
             fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
 
-            for (int j = 0; j < TAM_MATERIAS; j++){
+            for (int j = 0; j < DIAS_SEM; j++){
 
                 fprintf(archivo, ",");  //Poner una coma al inicio de cada columna (Despues de la hora, etc)
 
@@ -30,21 +30,21 @@ void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM
       fclose(archivo);
 }
 
-void llenarTareas(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200])
+void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][200])
 {
     int counter = 0;
 
-        for(int i = 1; i < 7; i++)
+        for(int i = 1; i < TAM_HORA; i++)
         {
-                for (int j = 0; j < TAM_MATERIAS; j++)
+                for (int j = 0; j < DIAS_SEM; j++)
                 {
                     bool elem_repet = false;
 
                     if(strlen(materias[i][j]) > 0)
                     {
-                        for(int m = i; m < 7; m++)
+                        for(int m = i; m < TAM_HORA; m++)
                         {
-                            for (int n = 0; n < TAM_MATERIAS; n++)
+                            for (int n = 0; n < DIAS_SEM; n++)
                             {
                                 if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
                                 {
@@ -100,7 +100,7 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200])
 
     if (archivo == NULL) {
 
-        printf("No se encontr%c un archivo de horario\n", 162);
+        //printf("No se encontr%c un archivo de actividades\n", 162);
         return;
                          }
 
@@ -155,7 +155,7 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200])
     fclose(archivo);
 }
 
-bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA]){
+bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]){
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "r");

@@ -5,9 +5,9 @@
 
 int main()
 {
-    char materias[TAM_MATERIAS][7][30] = {0};   //Para almacenar las materias. Filas son las horas, columnas los dias de la semana
+    char materias[TAM_HORA][DIAS_SEM][30] = {0};//Para almacenar las materias. Filas son las horas, columnas los dias de la semana
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
-    char tareas[10][10][200] = {0};
+    char tareas[10][10][200] = {0};             //Primera fila (Primer indice 0) = materia; Las filas consiguientes son las actividades para esa materia
     const char* nombre_archivo_horario = "Horario.csv";
     const char* nombre_archivo_tareas = "Actividades.csv";
 
@@ -51,7 +51,7 @@ int main()
             break;
 
             case 'C':   //Flecha derecha
-                if(x < 5){x++;}
+                if(x < DIAS_SEM){x++;}
             break;
 
             case 'D':   //Flecha izquierda
@@ -77,7 +77,7 @@ int main()
 
                 case 1: //Modificar materia del horario
 
-                    for (int i = 0; i < 7; i++)
+                    for (int i = 0; i < TAM_HORA; i++)
                     {
                             materias[i][x-1][0] = '\0';
                     }
@@ -97,7 +97,7 @@ int main()
     return 0;
 }
 
-void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA])
+void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA])
 {
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
@@ -114,12 +114,12 @@ void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2
     int posicionX = 73;
     int posicionY = 4;
     int clases, op1 = 0, op2 = 0;
-    char temp[20];
+    char temp[30];
 
     limpiarPantalla();
     menuHorario(false, materias, hora, 100, 100);
+    casilla(46,20, posicionX-2, posicionY-2);
 
-        casilla(46,20, posicionX-2, posicionY-2);
 
         gotoxy(posicionX, posicionY);
         printf("Introducir la cantidad de clases");
@@ -130,39 +130,46 @@ void leerMaterias(int dia , char materias[TAM_MATERIAS][7][30], const int hora[2
             for(int j = 0; j < clases; j++)
             {
                 gotoxy(posicionX, posicionY+2);
-
                 printf("Introduzca la %s asignatura: ", ordinales[j]);
+                gotoxy(posicionX, posicionY+3);
+
+
                 while (getchar() != '\n');        //Eliminar el salto de linea en buffer
-                fgets(temp, 20, stdin);
+                fgets(temp, 30, stdin);
                 temp[strcspn(temp, "\r\n")] = '\0'; //Eliminar el salto de linea de la variable
 
                 for(int m = op2; m < TAM_HORA; m++){
 
-                    gotoxy(posicionX, posicionY+3+m);
+                    gotoxy(posicionX, posicionY+4+m);
                     printf("Desde %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
 
                                                    }
-                gotoxy(posicionX, posicionY+3+TAM_HORA);
+
+                gotoxy(posicionX, posicionY+4+TAM_HORA);
                 scanf("%d", &op1);
 
                 for(int m = op1+1; m < TAM_HORA; m++){
 
-                    gotoxy(posicionX, posicionY+3+m);
+                    gotoxy(posicionX, posicionY+4+m);
                     printf("Hasta %02d:%02d = Opcion %d\n", hora[0][m], hora[1][m], m);
 
                                                      }
-                gotoxy(posicionX, posicionY+3+TAM_HORA);
+
+                gotoxy(posicionX, posicionY+4+TAM_HORA);
                 scanf("%d", &op2);
 
                 for(; op1 < op2; op1++){
                     strcpy(materias[op1][dia], temp);
                                        }
+                limpiarPantalla();
+                menuHorario(false, materias, hora, 100, 100);
+                casilla(46,20, posicionX-2, posicionY-2);
             }
 }
 
 
 
-void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA])
+void leerHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA])
 {
         char opHoras = '\0';
         bool invalida = false;
@@ -200,7 +207,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
                         gotoxy(posicionX, posicionY);
                         printf("Formato de la hora\thora:minutos\n");
                         gotoxy(posicionX, posicionY+1);
-                        printf("Ejemplo:\t\t  12:30\n");
+                        printf("Ejemplo:\t\t  14:30\n");
                         gotoxy(posicionX, posicionY+3);
                         printf("Introduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
@@ -218,25 +225,29 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
                         gotoxy(posicionX, posicionY);
                         printf("Formato de la hora\thora:minutos\n");
                         gotoxy(posicionX, posicionY+1);
-                        printf("Ejemplo:\t\t  12:30\n");
+                        printf("Ejemplo:\t\t  14:30\n");
                         gotoxy(posicionX, posicionY+3);
                         printf("Introduzca la hora indicada: ");
                         scanf("%d:%d", &hora[0][i], &hora[1][i]);
 
                                                 }
                     calcHora(hora);
+
                 break;
 
                 default:
 
-                    gotoxy(posicionX, posicionY+3);
-                    printf("Opcion introducida invalida, intente nuevamente\n");
+                    gotoxy(posicionX, posicionY+5);
+                    printf("Opcion introducida invalida\n");
+                    gotoxy(posicionX, posicionY+6);
+                    printf("Intente nuevamente...\n");
+                    leerTecla();
                     invalida = true;
 
                 break;
             }
 
-            limpiarPantalla();
+            //limpiarPantalla();
 
         }while(validarHora(hora) || invalida || !menuHoras(0,'1',hora));
 
@@ -244,7 +255,7 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_MATERIAS][7][30],
 
         limpiarArreglo(materias, hora, true, false);
 
-        for(int i = 0; i < 5; i++)      //LECTURA DE MATERIAS
+        for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
         {
             leerMaterias(i, materias, hora);
         }
@@ -261,7 +272,12 @@ bool validarHora(const int hora[2][TAM_HORA])
     for (int i = 0; i < TAM_HORA; i++)
     {
 
-        if (hora[0][i] < 0 || hora[0][i] > 23 || hora[1][i] < 0 || hora[1][i] > 59)
+        if (hora[0][i] < 0 || hora[0][i] > 23)      //Revisar horas
+        {
+            printf("Dato invalido introducido, respetar el formato de 24 horas\n");
+            return true;
+        }
+        else if(hora[1][i] < 0 || hora[1][i] > 59)  //Revisar minutos
         {
             printf("Dato invalido introducido, respetar el formato de 24 horas\n");
             return true;
@@ -272,7 +288,16 @@ bool validarHora(const int hora[2][TAM_HORA])
     return false;
 }
 
-void leerTarea(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200], int x, int y)
+void leerEstudiante()
+{
+
+
+
+
+
+}
+
+void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][200], int x, int y)
 {
     char temp[200];
     llenarTareas(materias, tareas);

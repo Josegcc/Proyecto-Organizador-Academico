@@ -68,7 +68,7 @@ void mostrarMes(int diasMes, int diaInicial, int diaEleg)
     printf("\n");
 }
 
-void calendario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200])
+void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][200])
 {
     limpiarPantalla();
     int mes, diaMes, diaInicial, opMes;

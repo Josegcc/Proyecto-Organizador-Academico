@@ -1,6 +1,6 @@
 #include "organizador_academico.h"
 
-void limpiarArreglo(char materias[TAM_MATERIAS][7][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
+void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
 {
     for (int i = 0; i < TAM_HORA; i++)
     {
@@ -40,7 +40,7 @@ void calcHora(int hora[2][TAM_HORA])
         case 3:
             horaDif = abs((hora[1][1] - hora[1][0]) + 180);
         break;
-                               }
+                                   }
 
     for(int i = 0; i < TAM_HORA-1; ++i){
 

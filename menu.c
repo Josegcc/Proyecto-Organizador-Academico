@@ -19,17 +19,19 @@ bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA])
 
             if(cont == i-1 && cont % 2 == 0 && verific == 0)
             {
-                printf("\n\t%s%02d:%02d%s-%02d:%02d\t|\t|\t|\t|\t|\t|\n", ROJO, hora[0][i-1], hora[1][i-1], COLOR_RESET, hora[0][i], hora[1][i]);
-                COLOR_PANTALLA;
+                printf("\n\t%s%02d:%02d%s%s-%02d:%02d", ROJO, hora[0][i-1], hora[1][i-1], COLOR_RESET, "\033[44m", hora[0][i], hora[1][i]);
+                printf("\t|\t|\t|\t|\t|\t|\n");
             }
             else if(cont == i && cont % 2 != 0 && verific == 0)
             {
-                printf("\n\t%02d:%02d-%s%02d:%02d%s\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], ROJO, hora[0][i], hora[1][i], COLOR_RESET);
+                printf("\n\t%02d:%02d-%s%02d:%02d%s", hora[0][i-1], hora[1][i-1], ROJO, hora[0][i], hora[1][i], COLOR_RESET);
                 COLOR_PANTALLA;
+                printf("\t|\t|\t|\t|\t|\t|\n");
             }
             else
             {
-                printf("\n\t%02d:%02d-%02d:%02d\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+                printf("\n\t%02d:%02d-%02d:%02d", hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
+                printf("\t|\t|\t|\t|\t|\t|\n");
             }
 
             printf("\t_________________________________________________________\r\n");
@@ -47,7 +49,7 @@ bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA])
     return false;
 }
 
-bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], int posX, int posY)
+bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY)
 {
     limpiarPantalla();
     const char* semana[] ={"Hora", "\tLun", "Mar",
@@ -62,7 +64,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
     printf("\n\n\n");
 
 
-        for(int j = 0; j < 6; j++)
+        for(int j = 0; j < DIAS_SEM; j++)
         {
         if(posX == j && posY == 0){
         printf("\t%s%s%s", ROJO, semana[j], COLOR_RESET);
@@ -85,7 +87,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
                 printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
                 }
 
-                for (int j = 0; j < 5; j++){
+                for (int j = 0; j < DIAS_SEM; j++){
 
                     if(posX-1 == j && posY == i){    printf("%s\t| %.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   COLOR_PANTALLA;}
                     else                        {    printf("\t| %.5s", materias[i-1][j]);                                        }
@@ -106,7 +108,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
     return false;
 }
 
-int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY)
+int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[10][10][200], int posX, int posY)
 {
     int y = 0;
     char op = '\0';
@@ -181,7 +183,7 @@ int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM
     return -1;
 }
 
-void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[10][10][200], int x, int y)
+void menuSecundario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][200], int x, int y)
 {
 
     int posicionX = 73;

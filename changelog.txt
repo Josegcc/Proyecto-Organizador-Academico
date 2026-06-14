@@ -1,4 +1,8 @@
 14/06/26
+VERSION 0.3.4.1 ORGANIZADOR ACADEMICO
+*Se cambió la lógica con respecto al tamaño de el arreglo "materias", ahora las filas, que representan las horas, vienen dadas por el tamaño del arreglo horas ("TAM_HORA"), y las columnas según una macro llamada "DIAS_SEM", que indica el número de días de la semana (5 o 7)
+
+14/06/26
 VERSION 0.3.4 ORGANIZADOR ACADEMICO
 *Cambiado el color de la terminal. Fondo azul con letras blancas
 -Para Linux se crea una macro llamada "COLOR_PANTALLA" que imprime la secuencia de escape ANSI que cambia el color del fondo de todos los caracteres consiguientes, sólo hasta que se encuentra una secuencia de reseteo "COLOR_RESET"
