@@ -213,19 +213,27 @@ void tamanoPantalla()
 {
 #ifdef _WIN32
 
-   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+   HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
     COORD bufferSize = {120, 50};
     SMALL_RECT windowSize = {0, 0, 119, 49};
 
-    SetConsoleScreenBufferSize(hConsole, bufferSize);
+    SetConsoleScreenBufferSize(hStdOut, bufferSize);
 
-    SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
+    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
+
+    // Combine text color (Foreground) and background color using bitwise OR (|)
+    SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+
+    //Reset back to standard white text on black background
+    SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
 #else
 
    printf("\e[8;40;120t");
    fflush(stdout);
+   COLOR_PANTALLA;
+
 #endif
 
 }
@@ -243,7 +251,8 @@ void casilla(int base, int altura, int posX, int posY)
         {
             for(int j = 0; j < base; j ++)
             {
-            printf("—");
+            //printf("—");
+            printf("-");
             }
         }else
         {
@@ -275,6 +284,7 @@ void limpiarPantalla()
     FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, cellCount, coord, &count);
 
     SetConsoleCursorPosition(hStdOut, coord);
+
 #else
     printf("\033[H\033[2J\n");
 #endif

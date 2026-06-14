@@ -1,3 +1,9 @@
+14/06/26
+VERSION 0.3.4 ORGANIZADOR ACADEMICO
+*Cambiado el color de la terminal. Fondo azul con letras blancas
+-Para Linux se crea una macro llamada "COLOR_PANTALLA" que imprime la secuencia de escape ANSI que cambia el color del fondo de todos los caracteres consiguientes, sólo hasta que se encuentra una secuencia de reseteo "COLOR_RESET"
+-La macro "COLOR PANTALLA" está declarada en windows para evitar errores de compilacion pero se declara como nulo, ya que windows tiene su propio método para cambiar el color de la pantalla, con la libreria Windows.h. Véase la función "tamanoPantalla" en el archivo "utiles.c"
+
 13/06/26
 VERSION 0.3.3.1 ORGANIZADOR ACADEMICO
 *Creado recuadro para la lectura de horas

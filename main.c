@@ -60,9 +60,10 @@ int main()
 
             case '\n':  //Tecla 'enter'
 
-                if(x < 1 && y < 1 && strlen(materias[y-1][x-1]) == 0){
+                if(x < 1 || y < 1 || strlen(materias[y-1][x-1]) == 0)
+                {
                 break;
-                                                                     }
+                }
 
                 switch(menuPricipal(materias, hora, tareas, x, y))
                 {
@@ -280,10 +281,10 @@ void leerTarea(const char materias[TAM_MATERIAS][7][30], char tareas[10][10][200
     {
         if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
         {
-        gotoxy(73, 15);
+        gotoxy(73, 6);
         printf("Introduzca la actividad para esta materia: ");
 
-        gotoxy(73,16);
+        gotoxy(73,7);
         //while (getchar() != '\n');
         fgets(temp, 30, stdin);
         temp[strcspn(temp, "\r\n")] = '\0';

@@ -17,6 +17,17 @@
 #include <ctype.h>
 #include <time.h>
 
+#ifdef _WIN32   //Librerias Windows
+#include <conio.h>
+#include <windows.h>
+#define COLOR_PANTALLA NULL
+#else           //Librerias Linux
+#include <unistd.h>
+#include <termios.h>
+#include <fcntl.h>
+#define COLOR_PANTALLA printf("\033[44m");
+#endif
+
 #define ROJO "\033[0;101m"
 #define GRIS "\033[0;100m"
 #define COLOR_RESET "\033[0m"

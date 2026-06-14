@@ -3,6 +3,7 @@
 bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA])
 {
     limpiarPantalla();
+    COLOR_PANTALLA;
 
     casilla(58,3,8,0);
     gotoxy(28,2);
@@ -19,10 +20,12 @@ bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA])
             if(cont == i-1 && cont % 2 == 0 && verific == 0)
             {
                 printf("\n\t%s%02d:%02d%s-%02d:%02d\t|\t|\t|\t|\t|\t|\n", ROJO, hora[0][i-1], hora[1][i-1], COLOR_RESET, hora[0][i], hora[1][i]);
+                COLOR_PANTALLA;
             }
             else if(cont == i && cont % 2 != 0 && verific == 0)
             {
                 printf("\n\t%02d:%02d-%s%02d:%02d%s\t|\t|\t|\t|\t|\t|\n", hora[0][i-1], hora[1][i-1], ROJO, hora[0][i], hora[1][i], COLOR_RESET);
+                COLOR_PANTALLA;
             }
             else
             {
@@ -51,7 +54,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
                             "Mi\x82", "Jue", "Vie",
                             "Sab", "Dom"};
 
-
+    COLOR_PANTALLA;
     casilla(58,3,8,0);
     gotoxy(28,2);
     printf("HORARIO ACADEMICO\n");
@@ -63,6 +66,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
         {
         if(posX == j && posY == 0){
         printf("\t%s%s%s", ROJO, semana[j], COLOR_RESET);
+        COLOR_PANTALLA;
                                   }
         else{
         printf("\t%s", semana[j]);
@@ -75,6 +79,7 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
 
             if(posX == 0 && posY == i){
             printf("\n\t%s%02d:%02d-%02d:%02d%s",ROJO, hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i], COLOR_RESET);
+            COLOR_PANTALLA;
                                       }
             else{
                 printf("\n\t%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);
@@ -82,8 +87,8 @@ bool menuHorario(bool verific, const char materias[TAM_MATERIAS][7][30], const i
 
                 for (int j = 0; j < 5; j++){
 
-                    if(posX-1 == j && posY == i){    printf("%s\t| %.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   }
-                    else                        {    printf("\t| %.5s", materias[i-1][j]);                          }
+                    if(posX-1 == j && posY == i){    printf("%s\t| %.5s%s", ROJO, materias[i-1][j], COLOR_RESET);   COLOR_PANTALLA;}
+                    else                        {    printf("\t| %.5s", materias[i-1][j]);                                        }
 
 
                                                       }
@@ -114,6 +119,7 @@ int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM
     {
 
     limpiarPantalla();
+    COLOR_PANTALLA;
 
     menuHorario(false, materias, hora, posX, posY);
     menuSecundario(materias, tareas, posX, posY);
@@ -128,6 +134,7 @@ int menuPricipal(const char materias[TAM_MATERIAS][7][30], const int hora[2][TAM
         if (y == j)
         {
             printf("%s%s%s\n", ROJO, menuPrinc[j], COLOR_RESET);
+            COLOR_PANTALLA;
         }else
         {
             printf("%s\n", menuPrinc[j]);
@@ -179,6 +186,7 @@ void menuSecundario(const char materias[TAM_MATERIAS][7][30], const char tareas[
 
     int posicionX = 73;
     int posicionY = 4;
+    COLOR_PANTALLA;
 
 
     casilla(44,20,posicionX-2,posicionY-2);
