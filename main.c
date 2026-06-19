@@ -7,9 +7,15 @@ int main()
 {
     char materias[TAM_HORA][DIAS_SEM][30] = {0};//Para almacenar las materias. Filas son las horas, columnas los dias de la semana
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
-    char tareas[10][10][200] = {0};             //Primera fila (Primer indice 0) = materia; Las filas consiguientes son las actividades para esa materia
+    char tareas[10][10][50] = {0};             //Primera fila (Primer indice 0) = materia; Las filas consiguientes son las actividades para esa materia
     const char* nombre_archivo_horario = "Horario.csv";
     const char* nombre_archivo_tareas = "Actividades.csv";
+    const char* nombre_archivo_estudiante = "Datos_Estudiante.csv";
+
+    char nombre[40];
+    char carrera[30];
+    char curso[5];
+
 
     tamanoPantalla();
 
@@ -18,11 +24,19 @@ int main()
 
         limpiarArreglo(materias, hora, true, true);                        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
         limpiarPantalla();
-        printf("Primero debemos saber t%c horario acad%cmico\n ", 163, 130);
-        leerHorario(nombre_archivo_horario, materias, hora);
+
+        printf("Primero debemos saber t%cs datos de estudiante\n ", 163);
+        leerEstudiante(nombre, carrera, curso);
+        formatearArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
+
+
+        printf("Ahora debemos saber t%c horario acad%cmico\n ", 163, 130);
+        leerHorario(materias, hora);
+        formatearArchivoHorario(nombre_archivo_horario, materias, hora);
 
         }
 
+    leerArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
     leerArchivoTareas(nombre_archivo_tareas, tareas);
 
     //Una vez lleno el horario, se entra al menu principal
@@ -37,6 +51,7 @@ int main()
 
         menuHorario(false, materias, hora, x, y);
         menuSecundario(materias, tareas, x, y);
+        menuEstudiante(nombre, carrera, curso);
 
         op = leerTecla();
 
@@ -169,7 +184,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
 
 
 
-void leerHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA])
+void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA])
 {
         char opHoras = '\0';
         bool invalida = false;
@@ -262,7 +277,6 @@ void leerHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS_SEM][3
 
       }while(!menuHorario(true, materias, hora, 100, 100));
 
-    formatearArchivoHorario(nombre_archivo, materias, hora);
 }
 
 
@@ -288,18 +302,41 @@ bool validarHora(const int hora[2][TAM_HORA])
     return false;
 }
 
-void leerEstudiante()
+void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
 {
 
+    int posY = 9;
+
+    gotoxy(73, posY);
+    printf("Introduzca su primer nombre\n");
+    gotoxy(73, posY+1);
+    printf("y su primer apellido\n");
+    gotoxy(73, posY+2);
+    //while (getchar() != '\n');
+    fgets(nombre, 40, stdin);
+    nombre[strcspn(nombre, "\r\n")] = '\0';
+
+
+    gotoxy(73, posY+4);
+    printf("Introduzca la carrera que está cursando\n");
+    gotoxy(73, posY+5);
+    fgets(carrera, 30, stdin);
+    carrera[strcspn(carrera, "\r\n")] = '\0';
+
+    gotoxy(73, posY+7);
+    printf("Introduzca el  año que cursa\n");
+    gotoxy(73, posY+8);
+    fgets(curso, 5, stdin);
+    curso[strcspn(curso, "\r\n")] = '\0';
 
 
 
 
 }
 
-void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][200], int x, int y)
+void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y)
 {
-    char temp[200];
+    char temp[50];
     llenarTareas(materias, tareas);
 
     for(int i = 0; i < 10; i++)

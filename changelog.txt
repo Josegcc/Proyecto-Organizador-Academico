@@ -1,3 +1,11 @@
+19/06/26
+VERSION 0.3.6 ORGANIZADOR ACADEMICO
+*Personalizacion, ahora el programa además de los datos de horario pedirá datos personales del estudiante
+-Para esto se crearon las funciones: "leerArchivoEstudiante", "formatearArchivoEstudiante" (Para la permanencia de los datos), "leerEstudiante" (Para la lectura de datos) y "menuEstudiante" (Para mostrar estos datos en todo momento del programa)
+-Los datos del estudiante se almacenan en las variables "nombre", "carrera" y "curso"
+*Solucionado un error logico con respecto al color de el fondo de la consola, para esto se creo una macro llamada "AZUL_FONDO"
+*Es necesario reevaluar la logica con respecto a las funciones "limpiarPantalla" y "tamanoPantalla", especialmente en la version de Windows.
+
 14/06/26
 VERSION 0.3.5 ORGANIZADOR ACADEMICO
 *Documentado el código en el archivo de cabecera "organizador_académico.h"

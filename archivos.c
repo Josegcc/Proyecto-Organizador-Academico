@@ -30,7 +30,18 @@ void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM
       fclose(archivo);
 }
 
-void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][200])
+void formatearArchivoEstudiante(const char* nombre_archivo, const char nombre[40], const char carrera[30], const char curso[5])
+{
+    FILE *archivo;
+    archivo = fopen(nombre_archivo, "w");
+
+    //fprintf(archivo, "DATOS DEL ESTUDIANTE");
+    fprintf(archivo, "%s\n%s\n%s", nombre, carrera, curso);
+
+    fclose(archivo);
+}
+
+void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50])
 {
     int counter = 0;
 
@@ -66,7 +77,7 @@ void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][1
 
 }
 
-void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10][200])
+void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10][50])
 {
 
     FILE *archivo;
@@ -92,7 +103,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10
     fclose(archivo);
 }
 
-void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][200])
+void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][50])
 {
 
     FILE *archivo;
@@ -222,4 +233,28 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
     fclose(archivo);
 
     return menuHorario(true, materias, hora, 100, 100);
+}
+
+void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5])
+{
+    FILE *archivo;
+    archivo = fopen(nombre_archivo, "r");
+
+    if (archivo == NULL) {
+
+        //printf("No se encontr%c un archivo de datos de estudiante\n", 162);
+        return;
+                         }
+
+
+    fgets(nombre, 40, archivo);
+    nombre[strcspn(nombre, "\r\n")] = '\0';
+
+    fgets(carrera, 30, archivo);
+    carrera[strcspn(carrera, "\r\n")] = '\0';
+
+    fgets(curso, 5, archivo);
+    curso[strcspn(curso, "\r\n")] = '\0';
+
+    fclose(archivo);
 }
