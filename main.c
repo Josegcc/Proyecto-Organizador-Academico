@@ -25,7 +25,7 @@ int main()
         limpiarArreglo(materias, hora, true, true);                        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
         limpiarPantalla();
 
-        printf("Primero debemos saber t%cs datos de estudiante\n ", 163);
+        menuHorario(false, materias, hora, 100, 100);
         leerEstudiante(nombre, carrera, curso);
         formatearArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
 
@@ -276,10 +276,7 @@ void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA])
         }
 
       }while(!menuHorario(true, materias, hora, 100, 100));
-
 }
-
-
 
 bool validarHora(const int hora[2][TAM_HORA])
 {
@@ -288,12 +285,24 @@ bool validarHora(const int hora[2][TAM_HORA])
 
         if (hora[0][i] < 0 || hora[0][i] > 23)      //Revisar horas
         {
-            printf("Dato invalido introducido, respetar el formato de 24 horas\n");
+            gotoxy(73,12);
+            printf("Dato invalido introducido\n");
+            gotoxy(73,13);
+            printf("Respetar el formato de 24 horas\n");
+            gotoxy(73,14);
+            printf("Presione una tecla para reintentar...\n");
+            leerTecla();
             return true;
         }
         else if(hora[1][i] < 0 || hora[1][i] > 59)  //Revisar minutos
         {
-            printf("Dato invalido introducido, respetar el formato de 24 horas\n");
+            gotoxy(73,12);
+            printf("Dato invalido introducido\n");
+            gotoxy(73,13);
+            printf("Respetar el formato de 24 horas\n");
+            gotoxy(73,14);
+            printf("Presione una tecla para reintentar...\n");
+            leerTecla();
             return true;
         }
 
@@ -305,7 +314,9 @@ bool validarHora(const int hora[2][TAM_HORA])
 void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
 {
 
-    int posY = 9;
+    int posY = 4;
+
+    casilla(44,20,71,2);
 
     gotoxy(73, posY);
     printf("Introduzca su primer nombre\n");
@@ -328,10 +339,6 @@ void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
     gotoxy(73, posY+8);
     fgets(curso, 5, stdin);
     curso[strcspn(curso, "\r\n")] = '\0';
-
-
-
-
 }
 
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y)

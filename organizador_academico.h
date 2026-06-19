@@ -53,8 +53,9 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]); //Lee las horas académicas, tambíén llama a la función "leerMaterias" la cantidad de veces que corresponde a los dias de la semana. Y almacena los datos en el arreglo 'horas'
 void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA]);            //Lee las materias que el estudiante cursa en el horario indicado, almacena los datos en la variable 'materias'
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y);        //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia
-bool validarHora(const int hora[2][TAM_HORA]);                                                              //Valida que las horas indicadas estén dentro del rango de 24 horas, y en general que sean correctas. Esta funcion es llamada por la función "leerHoras"
 void leerEstudiante(char nombre[40], char carrera[30], char curso[5]);
+bool validarHora(const int hora[2][TAM_HORA]);                                                              //Valida que las horas indicadas estén dentro del rango de 24 horas, y en general que sean correctas. Esta funcion es llamada por la función "leerHoras"
+
 
 /*calendario.c*/
 void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50]);

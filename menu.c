@@ -135,7 +135,6 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
         if (y == j)
         {
             printf("%s%s%s\n", ROJO, menuPrinc[j], AZUL_FONDO);
-            COLOR_PANTALLA;
         }else
         {
             printf("%s\n", menuPrinc[j]);

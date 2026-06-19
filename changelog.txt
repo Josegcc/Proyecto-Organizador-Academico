@@ -1,4 +1,8 @@
 19/06/26
+VERSION 0.3.6.1 ORGANIZADOR ACADEMICO
+*Pequeñas mejoras visuales en la lectura de datos del estudiante
+
+19/06/26
 VERSION 0.3.6 ORGANIZADOR ACADEMICO
 *Personalizacion, ahora el programa además de los datos de horario pedirá datos personales del estudiante
 -Para esto se crearon las funciones: "leerArchivoEstudiante", "formatearArchivoEstudiante" (Para la permanencia de los datos), "leerEstudiante" (Para la lectura de datos) y "menuEstudiante" (Para mostrar estos datos en todo momento del programa)
