@@ -25,13 +25,15 @@ int main()
         limpiarArreglo(materias, hora, true, true);                        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
         limpiarPantalla();
 
-        menuHorario(false, materias, hora, 100, 100);
-        leerEstudiante(nombre, carrera, curso);
-        formatearArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
+        //menuHorario(false, materias, hora, 100, 100);
+        //leerEstudiante(nombre, carrera, curso);
+        //formatearArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
 
-
-        printf("Ahora debemos saber t%c horario acad%cmico\n ", 163, 130);
-        leerHorario(materias, hora);
+        calcHora(hora);
+        for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
+        {
+            leerMaterias(i, materias, hora);
+        }
         formatearArchivoHorario(nombre_archivo_horario, materias, hora);
 
         }
@@ -180,102 +182,6 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
                 menuHorario(false, materias, hora, 100, 100);
                 casilla(46,20, posicionX-2, posicionY-2);
             }
-}
-
-
-
-void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA])
-{
-        char opHoras = '\0';
-        bool invalida = false;
-        int posicionX = 73;
-        int posicionY = 4;
-
-        do  //op verificacion horario correcto?
-        {
-            invalida = false;
-            limpiarArreglo(materias, hora, false, true);
-
-            menuHoras(100, 0, hora);
-
-            casilla(46,20, posicionX-2, posicionY-2);
-
-            gotoxy(posicionX, posicionY);
-            printf("Opcion 1: Escribir cada hora manualmente\n");
-            gotoxy(posicionX, posicionY+1);
-            printf("Opcion 2: Calcular usando las dos\n");
-            gotoxy(posicionX, posicionY+2);
-            printf("\t  primeras horas\n");
-            gotoxy(posicionX, posicionY+3);
-            opHoras = leerTecla();
-
-            //LECTURA DE HORAS
-            switch(opHoras)
-            {
-                case '1':
-                    for(int i = 0; i < TAM_HORA; i++){
-
-                        limpiarPantalla();
-                        menuHoras(i, 0, hora);
-                        casilla(46,20, posicionX-2, posicionY-2);
-
-                        gotoxy(posicionX, posicionY);
-                        printf("Formato de la hora\thora:minutos\n");
-                        gotoxy(posicionX, posicionY+1);
-                        printf("Ejemplo:\t\t  14:30\n");
-                        gotoxy(posicionX, posicionY+3);
-                        printf("Introduzca la hora indicada: ");
-                        scanf("%d:%d", &hora[0][i], &hora[1][i]);
-
-                                                        }
-                break;
-
-                case '2':
-                    for(int i = 0; i < 2; i++){
-
-                        limpiarPantalla();
-                        menuHoras(i, 0, hora);
-                        casilla(46,20, posicionX-2, posicionY-2);
-
-                        gotoxy(posicionX, posicionY);
-                        printf("Formato de la hora\thora:minutos\n");
-                        gotoxy(posicionX, posicionY+1);
-                        printf("Ejemplo:\t\t  14:30\n");
-                        gotoxy(posicionX, posicionY+3);
-                        printf("Introduzca la hora indicada: ");
-                        scanf("%d:%d", &hora[0][i], &hora[1][i]);
-
-                                                }
-                    calcHora(hora);
-
-                break;
-
-                default:
-
-                    gotoxy(posicionX, posicionY+5);
-                    printf("Opcion introducida invalida\n");
-                    gotoxy(posicionX, posicionY+6);
-                    printf("Intente nuevamente...\n");
-                    leerTecla();
-                    invalida = true;
-
-                break;
-            }
-
-            //limpiarPantalla();
-
-        }while(validarHora(hora) || invalida || !menuHoras(0,'1',hora));
-
-    do{
-
-        limpiarArreglo(materias, hora, true, false);
-
-        for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
-        {
-            leerMaterias(i, materias, hora);
-        }
-
-      }while(!menuHorario(true, materias, hora, 100, 100));
 }
 
 bool validarHora(const int hora[2][TAM_HORA])

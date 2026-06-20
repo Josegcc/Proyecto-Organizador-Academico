@@ -42,8 +42,7 @@ void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char car
 void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50]);                                           //Se encarga de llenar el arreglo "tareas" con cada una de las materias que se encuentran en el horario
 void calcHora(int hora[2][TAM_HORA]);                                                                                               //Realiza el cómputo de todos los horarios académicos tomando como referencia los dos primeros que el usuario introduce
 
-/*menu.c - Diferentes menus*/
-bool menuHoras(int cont, bool verific, const int hora[2][TAM_HORA]);                                                                            //Menu para mostrar únicamente las horas académicas, y resaltar en rojo las que el usuario debe introducir, si debe hacerlo
+/*menu.c - Diferentes menus*/                                                                          //Menu para mostrar únicamente las horas académicas, y resaltar en rojo las que el usuario debe introducir, si debe hacerlo
 bool menuHorario(bool verific,const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY);                    //Menu para mostrar el horario completo, con materias, horas y dias de la semana
 void menuSecundario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50], int x, int y);                                 //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
 void menuEstudiante(const char nombre[40], const char carrera[30], const char curso[5]);

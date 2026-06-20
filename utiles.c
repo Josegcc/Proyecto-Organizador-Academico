@@ -22,25 +22,9 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
 
 void calcHora(int hora[2][TAM_HORA])
 {
-    int horaDif;
+    int horaDif = 45;
 
-    switch(hora[0][1] - hora[0][0]){
-        case 0:
-            horaDif = abs(hora[1][1] - hora[1][0]);
-        break;
-
-        case 1:
-            horaDif = abs((hora[1][1] - hora[1][0]) + 60);
-        break;
-
-        case 2:
-            horaDif = abs((hora[1][1] - hora[1][0]) + 120);
-        break;
-
-        case 3:
-            horaDif = abs((hora[1][1] - hora[1][0]) + 180);
-        break;
-                                   }
+    hora[0][0] = 8; hora[1][0] = 00;
 
     for(int i = 0; i < TAM_HORA-1; ++i){
 
@@ -54,7 +38,10 @@ void calcHora(int hora[2][TAM_HORA])
         hora[0][i+1] = hora[0][i];
         hora[1][i+1] = hora[1][i] + horaDif;
         }
-
+        if(i != 0)  //Ajuste por horas de descanso entre bloques horarios
+        {
+            hora[1][i+1] += 5;
+        }
                                        }
 }
 
