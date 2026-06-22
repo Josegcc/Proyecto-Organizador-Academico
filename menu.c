@@ -173,13 +173,91 @@ void menuSecundario(const char materias[TAM_HORA][DIAS_SEM][30], const char tare
                 gotoxy(posicionX, posicionY+3+j);
                 if(strlen(tareas[j][i]) != 0)
                 {
-                printf("%s\r\n", tareas[j][i]);
+                printf("%s\t\t\tCodigo: %d\r\n", tareas[j][i], j);
                 }
 
             }
             break;
         }
     }
+}
+
+void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[10][10][50], int posX, int posY)
+{
+    int y = 0;
+    char op = '\0';
+    const char *menuPrinc[] = {
+        "Introducir nueva actividad",
+        "Eliminar una actividad",
+        "Presione ESC para volver atras"
+                              };
+    do
+    {
+
+    limpiarPantalla();
+    COLOR_PANTALLA;
+
+    menuHorario(false, materias, hora, posX, posY);
+    menuSecundario(materias, tareas, posX, posY);
+
+    casilla(35, 6, 20, 29);
+
+    //Imprimir menu principal
+    for (int j = 0; j < 3; j++)
+    {
+        gotoxy(23,31+j);
+
+        if (y == j)
+        {
+            printf("%s%s%s\n", ROJO, menuPrinc[j], AZUL_FONDO);
+        }else
+        {
+            printf("%s\n", menuPrinc[j]);
+        }
+    }
+
+    //Cambiar la posicion de la seleccion
+    op = leerTecla();
+
+        switch(op)
+        {
+            case 'B':   //Flecha abajo
+                if(y < 2){y++;}
+            break;
+
+            case 'A':   //Flecha arriba
+                if(y > 0){y--;}
+            break;
+
+            case '\n':  //Tecla 'enter'
+
+                switch(y)
+                {
+                case 0:
+
+                leerTarea(materias, tareas, posX, posY);
+
+                break;
+
+                case 1:
+
+                elimTarea(materias[posY-1][posX-1], tareas);
+
+                break;
+
+                case 2:
+
+                return;
+
+                break;
+
+                }
+
+            break;
+        }
+
+    }while(op != 27);//Al presionar Escape se sale del ciclo, para volver al menu de horario
+
 }
 
 void menuEstudiante(const char nombre[40], const char carrera[30], const char curso[5])

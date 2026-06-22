@@ -8,14 +8,13 @@
 #ifdef _WIN32               //Librerias Windows
 #include <conio.h>      //Para funcion _getch
 #include <windows.h>    //Para funciones de color y tamaño de pantalla (GetStdHandle, FillConsoleOutputCharacter, SetConsoleCursorPosition, SetConsoleWindowInfo, SetConsoleTextAttribute)
-#define COLOR_PANTALLA NULL
 #else                       //Librerias Linux
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
-#define COLOR_PANTALLA printf("\033[44m");
 #endif
 
+#define COLOR_PANTALLA printf("\033[44m");
 #define ROJO "\033[0;101m"
 #define GRIS "\033[0;100m"
 #define AZUL_FONDO "\033[44m"
@@ -44,6 +43,7 @@ void calcHora(int hora[2][TAM_HORA]);                                           
 
 /*menu.c - Diferentes menus*/                                                                          //Menu para mostrar únicamente las horas académicas, y resaltar en rojo las que el usuario debe introducir, si debe hacerlo
 bool menuHorario(bool verific,const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY);                    //Menu para mostrar el horario completo, con materias, horas y dias de la semana
+void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[10][10][50], int posX, int posY);
 void menuSecundario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50], int x, int y);                                 //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
 void menuEstudiante(const char nombre[40], const char carrera[30], const char curso[5]);
 int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[10][10][50], int posX, int posY); //Menu que aparece en la parte inferior cuando se presiona 'enter'
@@ -53,6 +53,7 @@ void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]); 
 void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA]);            //Lee las materias que el estudiante cursa en el horario indicado, almacena los datos en la variable 'materias'
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y);        //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia
 void leerEstudiante(char nombre[40], char carrera[30], char curso[5]);
+void elimTarea(const char materia[30], char tareas[10][10][50]);
 bool validarHora(const int hora[2][TAM_HORA]);                                                              //Valida que las horas indicadas estén dentro del rango de 24 horas, y en general que sean correctas. Esta funcion es llamada por la función "leerHoras"
 
 

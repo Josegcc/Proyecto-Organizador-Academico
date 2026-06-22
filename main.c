@@ -79,15 +79,16 @@ int main()
 
                 if(x < 1 || y < 1 || strlen(materias[y-1][x-1]) == 0)
                 {
-                break;
+                    break; //Si se presiona una casilla vacia se sale del ciclo, no hace nada
                 }
 
                 switch(menuPricipal(materias, hora, tareas, x, y))
                 {
 
-                case 0: //Intoducir tarea (por ahora)
+                case 0:
 
-                    leerTarea(materias, tareas, x, y);
+                    llenarTareas(materias, tareas);
+                    menuTareas(materias, hora, tareas, x, y);
                     formatearArchivoTareas(nombre_archivo_tareas, tareas);
 
                 break;
@@ -250,7 +251,6 @@ void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y)
 {
     char temp[50];
-    llenarTareas(materias, tareas);
 
     for(int i = 0; i < 10; i++)
     {
@@ -274,6 +274,34 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][
 
                 break;
             }
+
+        }
+    }
+}
+
+void elimTarea(const char materia[30], char tareas[10][10][50])
+{
+    int codigo;
+
+
+    gotoxy(73,11);
+    printf("Introduzca el codigo de la actividad\n");
+    gotoxy(73,12);
+    printf("que desea eliminar\n");
+
+    gotoxy(73,13);
+    scanf("%d", &codigo);
+
+    if(codigo < 10)
+    {
+
+        for(int i = 0; i < 10; i++)
+        {
+            if(strcmp(materia, tareas[0][i]) == 0)
+            {
+            tareas[codigo][i][0] = '\0';
+            }
+
 
         }
     }
