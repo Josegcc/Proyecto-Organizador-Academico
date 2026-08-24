@@ -1,5 +1,12 @@
 #include "organizador_academico.h"
 
+#define SUP_IZ  "\u250C"
+#define SUP_DER "\u2514"
+#define INF_IZ  "\u2510"
+#define INF_DER "\u2518"
+#define HORIZONTAL "\u2500"
+#define VERTICAL "\u2502"
+
 void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
 {
     for (int i = 0; i < TAM_HORA; i++)
@@ -146,6 +153,79 @@ char leerTecla()
 
 }
 
+int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y)
+{
+	char tecla = 0;
+    int opcion = desc_opcion;
+
+    while(tecla != 27)
+    {
+    	limpiar_area(x, y, 35, tamOpciones);
+
+    	for(int i = desc_opcion; i < tamOpciones; i++)
+    	{
+    		gotoxy(x+3, y+2+i);
+    		if(opcion == i)
+    		{
+    		printf("%s%s%s", ROJO, opciones[i], AZUL_FONDO);
+    		}
+    		else
+    		{
+    		printf("%s", opciones[i]);
+    		}
+   	 	}
+
+   	 	casilla(35, tamOpciones+2, x, y);
+
+   	 	tecla = leerTecla();
+
+    	switch(tecla)
+    	{
+    	case 'B':
+
+    		opcion++;
+
+    		if(opcion >= tamOpciones)
+    		{
+    		opcion = desc_opcion;
+    		}
+
+    	break;
+
+    	case 'A':
+
+    		opcion--;
+
+    		if(opcion < desc_opcion)
+    		{
+    		opcion = tamOpciones-1;
+    		}
+
+    	break;
+
+    	case '\n':
+
+    	limpiar_area(x, y+1, 39, tamOpciones+2);
+    	return opcion;
+
+    	break;
+
+    	case 27:
+
+        limpiar_area(x, y+1, 39, tamOpciones+2);
+    	return 27;
+
+    	break;
+
+    	default:
+    	break;
+
+    	}
+    }
+    return 0;
+}
+
+
 void gotoxy(int x, int y)
 {
 #ifdef _WIN32
@@ -201,19 +281,30 @@ void tamanoPantalla()
 #ifdef _WIN32
 
    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+   HWND consoleWindow = GetConsoleWindow();
 
-    COORD bufferSize = {120, 50};
-    SMALL_RECT windowSize = {0, 0, 119, 49};
+    COORD bufferSize = {120, 40};
+    SMALL_RECT windowSize = {0, 0, 119, 39};
 
-    SetConsoleScreenBufferSize(hStdOut, bufferSize);
+    //SetConsoleMode(hStdOut, ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 
-    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
+    /*SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
+    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);    */
 
     // Combine text color (Foreground) and background color using bitwise OR (|)
     SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
 
-    //Reset back to standard white text on black background
-    //SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+    //SetConsoleOutputCP(CP_UTF8);
+
+    /*Desactivar rezigin de la ventana*/
+    LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+
+    style &= ~WS_MAXIMIZEBOX;
+    style &= ~WS_SIZEBOX;
+
+    SetWindowLong(consoleWindow, GWL_STYLE, style);
+
+    SetWindowPos(consoleWindow, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
 #else
 
@@ -225,35 +316,129 @@ void tamanoPantalla()
 
 }
 
+//posX y posY deben coincidir exactamente con las coordenadas del cuadro o casilla donde se imprimirá la cadena
+//O al menos estar dentro del rango del cuadro (LA POSICION Y ES LA QUE MAS PUEDE VARIAR)
+void imprimir_centrado(const char *cadena, int baseCas, int altCas, int posX, int posY)
+{
+    int padding = (baseCas + strlen(cadena)) / 2;
+
+    gotoxy(posX+1, posY);
+    printf("%*s\n", padding-1, cadena);
+}
+
 void casilla(int base, int altura, int posX, int posY)
 {
+    altura += indice_terminal_altura();
+    base +=   indice_terminal_anchura();
+
+    //posX += indice_terminal_anchura() * 3;
+    //posY -= indice_terminal_altura * 2;
 
     for(int i = 1; i <= altura; i++)
     {
         gotoxy(posX, posY+i);
 
-        printf("|");
+        if(i == 1)
+        {
+        printf(SUP_IZ);
+        }
+        else if (i == altura)
+        {
+        printf(SUP_DER);
+        }
+        else
+        {
+        printf("│");
+        }
 
         if(i == 1 || i == altura)
         {
             for(int j = 0; j < base; j ++)
             {
-            //printf("—");
-            printf("-");
-            }
-        }else
-        {
-            for(int j = 0; j < base; j ++)
-            {
-            printf(" ");
+            printf("—");
             }
         }
 
-        printf("|");
+        //Mueve el cursor al lado derecho del recuadro
+        gotoxy(posX+base, posY+i);
+        if(i == 1)
+        {
+        printf(INF_IZ);
+        }
+        else if (i == altura)
+        {
+        printf(INF_DER);
+        }
+        else
+        {
+        printf("│");
+        }
+
         printf("\n");
     }
 
 }
+
+int indice_terminal_altura()
+{
+    int terminal_height;
+
+	#ifdef _WIN32
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    // Get the structural console details
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    terminal_height = csbi.srWindow.Bottom - csbi.srWindow.Top;
+
+	#else
+	struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w); // Fetch terminal dimensions
+
+    terminal_height = w.ws_row;
+    #endif
+
+    int indice_terminal_altura  = (terminal_height - 40) / 10;
+
+    return indice_terminal_altura;
+}
+
+int indice_terminal_anchura()
+{
+    int terminal_width;
+
+	#ifdef _WIN32
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    // Get the structural console details
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    terminal_width = csbi.srWindow.Right - csbi.srWindow.Left;
+
+	#else
+	struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w); // Fetch terminal dimensions
+
+    terminal_width = w.ws_col;
+    #endif
+
+    int indice_terminal_anchura = (terminal_width - 120) / 10;
+
+    return indice_terminal_anchura;
+}
+
+void limpiar_area(int posX, int posY, int base, int altura)
+{
+    for (int i = 0; i < altura; i++) {
+        gotoxy(posX, posY + i);
+        for (int j = 0; j < base; j++) {
+            putchar(' ');
+        }
+    }
+
+    gotoxy(posX, posY);
+    fflush(stdout);
+}
+
+
 
 void limpiarPantalla()
 {
@@ -263,16 +448,45 @@ void limpiarPantalla()
     DWORD count;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-    GetConsoleScreenBufferInfo(hStdOut, &csbi);
+    if (hStdOut == INVALID_HANDLE_VALUE) return;
+
+    /* Get the number of character cells in the current buffer */
+    if (!GetConsoleScreenBufferInfo(hStdOut, &csbi)) return;
     DWORD cellCount = csbi.dwSize.X * csbi.dwSize.Y;
 
-    FillConsoleOutputCharacter(hStdOut, (TCHAR)' ', cellCount, coord, &count);
+    /* Fill the entire buffer with spaces */
+    if (!FillConsoleOutputCharacter(hStdOut, (TCHAR)' ', cellCount, coord, &count)) return;
 
-    FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, cellCount, coord, &count);
+    /* Fill the entire buffer with the current text attributes */
+    if (!FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, cellCount, coord, &count)) return;
 
+    /* Move the cursor back to the top left corner */
     SetConsoleCursorPosition(hStdOut, coord);
 
 #else
-    printf("\033[H\033[2J\n");
-#endif
+
+    printf("\033[2J");
+
+#endif // _WIN32
+}
+
+void mostrarCursor(bool mostrar)    //Verdadero para mostrar el cursor, false para ocultarlo
+{
+#ifdef _WIN32
+
+    HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursor_info;
+
+    GetConsoleCursorInfo(console_handle, &cursor_info);
+    cursor_info.bVisible = visible; // TRUE to show, FALSE to hide
+    SetConsoleCursorInfo(console_handle, &cursor_info);
+
+#else
+
+    if(mostrar){    printf("\033[?25h");}
+    else       {    printf("\033[?25l");}
+
+#endif // _WIN32
+
+
 }

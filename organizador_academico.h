@@ -9,6 +9,7 @@
 #include <conio.h>      //Para funcion _getch
 #include <windows.h>    //Para funciones de color y tamaño de pantalla (GetStdHandle, FillConsoleOutputCharacter, SetConsoleCursorPosition, SetConsoleWindowInfo, SetConsoleTextAttribute)
 #else                       //Librerias Linux
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
@@ -29,7 +30,14 @@ void casilla(int base, int altura, int posX, int posY); //Muestra un cuadro en l
 void tamanoPantalla();      //Para definir el tamaño y color de la consola
 char leerTecla();           //Lee una sola tecla que el usuario presione sin esperar que este preione enter y sin ECHO
 void gotoxy(int x, int y);  //Mueve el cursor al área de la pantalla indicada
-bool pregunta();            //Se encarga de leer dos valores 'S' o 'N'
+int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y);
+void imprimir_centrado(const char *cadena, int posX, int posY, int baseCas, int altCas);
+int indice_terminal_altura();
+int indice_terminal_anchura();
+void limpiar_area(int posX, int posY, int altura, int base);
+void mostrarCursor(bool mostrar);
+bool pregunta();            //Se encarga de leer dos posibles valores 'S' o 'N'
+
 
 /*archivos.c - Operaciones logicas y manejo de archivos*/
 void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM_HORA][DIAS_SEM][30], const int Hora[2][TAM_HORA]); //Crea el archivo "Horario.csv"
@@ -44,7 +52,7 @@ void calcHora(int hora[2][TAM_HORA]);                                           
 /*menu.c - Diferentes menus*/                                                                          //Menu para mostrar únicamente las horas académicas, y resaltar en rojo las que el usuario debe introducir, si debe hacerlo
 bool menuHorario(bool verific,const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY);                    //Menu para mostrar el horario completo, con materias, horas y dias de la semana
 void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[10][10][50], int posX, int posY);
-void menuSecundario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50], int x, int y);                                 //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
+void menuSecundario(const char materia[30], const char tareas[10][10][50], int x, int y);                                 //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
 void menuEstudiante(const char nombre[40], const char carrera[30], const char curso[5]);
 int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[10][10][50], int posX, int posY); //Menu que aparece en la parte inferior cuando se presiona 'enter'
 

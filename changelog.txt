@@ -1,3 +1,19 @@
+24/08/26
+VERSION 0.3.7 ORGANIZADOR ACADEMICO
+[Multiples cambios marcados en el commit]
+
+*El cambio mas notable es en la forma en que se limpia la pantalla. La función 'limpiarPantalla' se usa en casos particulares dejando en su lugar a la funcion 'limpiar_area'. Esta funcion limpia la pantalla dentro de un rango especifico, lo cual debería ser más óptimo que eliminar todo
+-Siguiendo este principio se cambia la forma en que se usa la funcion 'casilla', en otras palabras ahora cada recuadro en la pantalla se dibuja una cantidad minima de veces. Para evitar llamar a esta funcion cada vez que se limpia la pantalla, se elimina todo lo que está dentro del recuadro y se actualiza el contenido.
+
+*Escala. El programa en teoría detecta la resolución de la terminal o consola y en base a eso dibuja las casillas de acuerdo a la resolución estándar, que sería 140x80. Para esto se actualizó la función 'casilla' y se crea la funcion 'imprimir_centrado', esta ultima para imprimir texto en la pantalla y que quede centrado en su respectivo recuadro.
+-Ambas funciones "indice_terminal_..." devuelven el indice o la relación entre el tamaño actual de la terminal y el tamaño esperado por el programa, 80x140
+
+*Otro cambio importante es la creación de la funcion 'menu'. Esta se crea para modularizar los distintos menus interactivos para el usuario, estos donde con las flechas del teclado arriba o abajo y la tecla enter el usuario seleccionaba una opción, la funcion 'menu devuelve un entero que representa la opcion elegida'. Gracias a esto se ahorran varias lineas de código.
+
+*Se crea la función 'mostrarCursor' para mostrar u ocultar el cursor.
+
+*Se cambio la manera en que se leen los datos, especialmente la hora de cada materia.
+
 19/06/26
 VERSION 0.3.6.1 ORGANIZADOR ACADEMICO
 *Pequeñas mejoras visuales en la lectura de datos del estudiante

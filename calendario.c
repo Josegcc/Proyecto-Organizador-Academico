@@ -38,32 +38,43 @@ void mostrarMes(int diasMes, int diaInicial, int diaEleg)
 {
     int counter = 1;
     bool primero = false;
+    int x = 2; int y = 4;
+
+    casilla(60,15,x , y-2);
+
+    gotoxy(x, y);
+
 
     for(; counter < diaInicial; counter++)
     {
-        printf("\t");
+        //printf("\t");
     }
 
+    gotoxy(counter * 5 + x, y);
 
     for(int i = 1; i <= diasMes; i++)
     {
+
             if(diaEleg == counter && primero == false)
             {
-                printf("\x1b[41m");
+                printf(ROJO);
                 primero = true;
             }
 
-        printf("%5d\t", i);
-        printf("\x1b[0m");
+        printf("%d", i);
+        printf(AZUL_FONDO);
 
             if(counter%7== 0)
             {
                 printf("\n");
+                y++;
                 counter = 0;
             }
 
         counter++;
     }
+
+
 
     printf("\n");
 }
@@ -71,6 +82,7 @@ void mostrarMes(int diasMes, int diaInicial, int diaEleg)
 void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50])
 {
     limpiarPantalla();
+    gotoxy(0,0);
     int mes, diaMes, diaInicial, opMes;
 
     char *meses[] =     {
@@ -117,7 +129,7 @@ void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[1
 
 
     limpiarPantalla();
-    printf("- - - - - - - - - - - %s - - - - - - - - - - -\n\n ", meses[mes-1]);
+    printf("- - - - - - - - - - - - - %s - - - - - - - - - - - - -\n\n ", meses[mes-1]);
     for(int i = 0; i < 7; i++)
     {
         printf(" %.3s\t", dias[i]);

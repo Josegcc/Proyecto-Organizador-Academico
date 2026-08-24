@@ -16,15 +16,16 @@ void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM
 
         for(int i = 1; i < TAM_HORA; i++){
             fprintf(archivo, "%02d:%02d-%02d:%02d",hora[0][i-1], hora[1][i-1], hora[0][i], hora[1][i]);//PRIMERA COLUMNA
+            fprintf(archivo, ",");
 
             for (int j = 0; j < DIAS_SEM; j++){
-
-                fprintf(archivo, ",");  //Poner una coma al inicio de cada columna (Despues de la hora, etc)
 
                 if (*materias[i-1][j] != '\0' || strlen(materias[i-1][j]) > 0){
                     fprintf(archivo, "%s",materias[i-1][j]);  //Escribe la materia si la hay en ese arrelgo, ese dia
                                                                               }
-                                       }
+
+                fprintf(archivo, ",");
+                                              }
             fprintf(archivo,"\n");
                                          }
       fclose(archivo);
