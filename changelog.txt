@@ -1,3 +1,11 @@
+15/09/26
+VERSION 0.3.8 ORGANIZADOR ACADEMICO
+Primer intento de opciones y relacionados con el calendario academico
+
+*Se crea la funcion menuCalendario y se modifica la función calendario y mostrarMes (estas dos ultimas del archivo calendario.c).
+
+El nuevo menu tiene opciones para visualizar el calendario, donde se muestran resaltados los dias que el estudiante tiene alguna actividad registrada, y el color indica qué actividad es
+
 24/08/26
 VERSION 0.3.7 ORGANIZADOR ACADEMICO
 [Multiples cambios marcados en el commit]

@@ -34,56 +34,69 @@ int primerDia(int year, int mes)
     return diaSem;
 }
 
-void mostrarMes(int diasMes, int diaInicial, int diaEleg)
+void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
     int counter = 1;
-    bool primero = false;
-    int x = 2; int y = 4;
+    //bool primero = false;
+    int fechasTareas[TAM_MATERIA_TAREAS * (TAM_TAREA-1)] = {0};
+    int x = 71; int y = 6;
 
-    casilla(60,15,x , y-2);
+    int m = 0;
+    for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
+    {
+        if(strlen(tareas[0][i]) > 0)
+        {
+            for(int j = 1; j < TAM_TAREA; j++)
+            {
+                if(strlen(tareas[j][i]) > 0)
+                {
+                    if(tareaFecha[j][i].mes == mesEleg)
+                    {
+                    fechasTareas[m] = tareaFecha[j][i].dia;
+                    m++;
+                    }
+                }
+                else{   break;  }
+            }
+        }
+        else{  break;  }
+    }
 
     gotoxy(x, y);
 
+    for(; counter < diaInicial; counter++);
 
-    for(; counter < diaInicial; counter++)
-    {
-        //printf("\t");
-    }
-
-    gotoxy(counter * 5 + x, y);
-
+    m = 101;
     for(int i = 1; i <= diasMes; i++)
     {
+        gotoxy(counter * 6 + (x-4), y);
 
-            if(diaEleg == counter && primero == false)
+        for(int j = 0; j < sizeof(fechasTareas) / sizeof(fechasTareas[0]); j++)
+        {
+            if(fechasTareas[j] == i)
             {
-                printf(ROJO);
-                primero = true;
+                printf("\033[%dm", m);
+                m++;
             }
+        }
 
         printf("%d", i);
         printf(AZUL_FONDO);
 
             if(counter%7== 0)
             {
-                printf("\n");
                 y++;
                 counter = 0;
             }
 
         counter++;
     }
-
-
-
-    printf("\n");
 }
 
-void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[10][10][50])
+void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
-    limpiarPantalla();
-    gotoxy(0,0);
-    int mes, diaMes, diaInicial, opMes;
+    int x = 71, y = 4;
+    int diaInicial;
 
     char *meses[] =     {
     "Enero", "Febrero", "Marzo",
@@ -96,67 +109,65 @@ void calendario(const char materias[TAM_HORA][DIAS_SEM][30], const char tareas[1
     "Viernes", "Sabado", "Domingo"
     };
 
-    time_t now = time(NULL);
-    struct tm *local = localtime(&now);
-    int year = local->tm_year + 1900;
-    mes = local->tm_mon;
-    printf("AÑO ACTUAL: %d\n", year);
+    //time_t now = time(NULL);
+    //struct tm *local = localtime(&now);
+    //int year = local->tm_year + 1900;
 
-    for(int i = 0; i < 12-mes; i++)
-    {
-        printf("%.6s\t----->\t%d", meses[i+mes], i+1);
-
-        if(i == 0)
-        {
-            printf(" <--- MES ACTUAL");
-        }
-
-        printf("\n");
-    }
-
-    printf("Introduzca el numero del mes que desea visualizar y presione enter: \n");
-    scanf("%d", &opMes);
-    mes = mes + opMes;
-
+    limpiar_area(x+1, y+1, 42, 16);
+    gotoxy(x+1,y);
+    printf("- - - - - - - - %s - - - - - - - -", meses[mesEleg-1]);
     for(int i = 0; i < 7; i++)
     {
-        printf("%.5s\t----->\t%d\n", dias[i], i+1);
+        gotoxy((x+1) + i*6, y+1);
+        printf(" %.3s", dias[i]);
     }
 
-    printf("Introduzca el numero del dia en particular: ");
-    scanf("%d", &diaMes);
+    diaInicial = primerDia(anoEleg, mesEleg);
 
-
-
-    limpiarPantalla();
-    printf("- - - - - - - - - - - - - %s - - - - - - - - - - - - -\n\n ", meses[mes-1]);
-    for(int i = 0; i < 7; i++)
+    if(mesEleg == 2)
     {
-        printf(" %.3s\t", dias[i]);
-    }
-
-    printf("\n");
-
-    diaInicial = primerDia(year, mes);
-
-    if(mes == 2)
-    {
-        if(bisiesto(year))
+        if(bisiesto(anoEleg))
         {
-            mostrarMes(28, diaInicial, diaMes);
+            mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha);
         }else
         {
-            mostrarMes(29, diaInicial, diaMes);
+            mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha);
         }
     }
-    else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+    else if (mesEleg == 4 || mesEleg == 6 || mesEleg == 9 || mesEleg == 11)
     {
-            mostrarMes(30, diaInicial, diaMes);
+            mostrarMes(30, diaInicial, mesEleg, tareas, tareaFecha);
     }
-    else {  mostrarMes(31, diaInicial, diaMes);   }
+    else {  mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha);   }
 
+    int m = 101;
+    printf("\033[30m"); //LETRAS NEGRAS
+
+    for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
+    {
+        if(strlen(tareas[0][i]) > 0)
+        {
+            for(int j = 1; j < TAM_TAREA; j++)
+            {
+                if(strlen(tareas[j][i]) > 0 && tareaFecha[j][i].mes == mesEleg)
+                {
+                    printf("\033[%dm", m);
+
+                    m++;
+                    gotoxy(x+1, y+8+(m-101));
+                    printf("%s --- %s   %d-%d-%d", tareas[0][i], tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                }
+                //else{   break;  }
+            }
+        }
+        else{   break;  }
+    }
+
+    printf(AZUL_FONDO);
+    printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
+
+    gotoxy(x+1, y+16);
     printf("Presione una tecla para continuar...\r\n");
     leerTecla();
-
 
 }

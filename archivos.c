@@ -42,7 +42,7 @@ void formatearArchivoEstudiante(const char* nombre_archivo, const char nombre[40
     fclose(archivo);
 }
 
-void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50])
+void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
 {
     int counter = 0;
 
@@ -78,23 +78,23 @@ void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][1
 
 }
 
-void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10][50])
+void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
 
     FILE *archivo;
     archivo = fopen(nombre_archivo, "w");
 
-    fprintf(archivo, "Materia,Actividad\n");
+    fprintf(archivo, "Materia,Actividad_Fecha\n");
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
         fprintf(archivo, "%s", tareas[0][i]);
 
-        for(int j = 1; j < 10; j++)
+        for(int j = 1; j < TAM_TAREA; j++)
             {
                 if(strlen(tareas[j][i]) != 0)
                 {
-                fprintf(archivo, ",%s", tareas[j][i]);
+                fprintf(archivo, ",%s %d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
                 }
             }
         fprintf(archivo, "\n");
@@ -104,7 +104,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[10][10
     fclose(archivo);
 }
 
-void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][50])
+void leerArchivoTareas(const char *nombre_archivo, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
 
     FILE *archivo;
@@ -138,7 +138,7 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][50])
         char *line_ptr = buffer;
         char *next_comma;
 
-        while (line_ptr && i < 10)
+        while (line_ptr && i < TAM_MATERIA_TAREAS)
         {
             next_comma = strchr(line_ptr, ',');
             if (next_comma != NULL)
@@ -146,8 +146,10 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[10][10][50])
                 *next_comma = '\0';
             }
 
-            if (j - 1 < 10) {
-                strcpy(tareas[i][j - 1], line_ptr);
+            if (j - 1 < TAM_TAREA) {
+                sscanf(line_ptr, "%s %d-%d-%d", tareas[i][j - 1], &tareaFecha[i][j-1].dia, &tareaFecha[i][j-1].mes, &tareaFecha[i][j-1].ano);
+                //strcpy(tareas[i][j - 1], line_ptr);
+
                 //tareas[i][j - 1][199] = '\0'; // Asegurar el fin de cadena
             }
 

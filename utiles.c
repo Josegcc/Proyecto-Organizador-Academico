@@ -153,18 +153,27 @@ char leerTecla()
 
 }
 
-int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y)
+int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 {
 	char tecla = 0;
     int opcion = desc_opcion;
+    int tamCasilla = 0;
+
+    for(int i = 0; i < tamOpciones; i++)    //Busqueda lineal para determinar el tamaño del recuadro, dependiendo de la cadena de mayor longitud
+    {
+        int stringSize = strlen(opciones[i]);
+
+        if(stringSize > tamCasilla)
+        tamCasilla = stringSize + 2;
+    }
 
     while(tecla != 27)
     {
-    	limpiar_area(x, y, 35, tamOpciones);
+    	limpiar_area(x, y, tamCasilla, tamOpciones);
 
     	for(int i = desc_opcion; i < tamOpciones; i++)
     	{
-    		gotoxy(x+3, y+2+i);
+    		gotoxy(x+1, y+2+i - desc_opcion);
     		if(opcion == i)
     		{
     		printf("%s%s%s", ROJO, opciones[i], AZUL_FONDO);
@@ -175,7 +184,7 @@ int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y)
     		}
    	 	}
 
-   	 	casilla(35, tamOpciones+2, x, y);
+   	 	casilla(tamCasilla, tamOpciones+2 - desc_opcion, x, y);
 
    	 	tecla = leerTecla();
 
@@ -205,14 +214,14 @@ int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     	case '\n':
 
-    	limpiar_area(x, y+1, 39, tamOpciones+2);
+    	limpiar_area(x, y+1, tamCasilla+1, tamOpciones+2);
     	return opcion;
 
     	break;
 
     	case 27:
 
-        limpiar_area(x, y+1, 39, tamOpciones+2);
+        limpiar_area(x, y+1, tamCasilla+1, tamOpciones+2);
     	return 27;
 
     	break;

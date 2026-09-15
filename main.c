@@ -7,7 +7,8 @@ int main()
 {
     char materias[TAM_HORA][DIAS_SEM][30] = {0};//Para almacenar las materias. Filas son las horas, columnas los dias de la semana
     int hora[2][TAM_HORA] = {0};                //Primera fila (Primer indice 0) = Horas; Segunda fila (Primer indice 1) = Minutos
-    char tareas[10][10][50] = {0};             //Primera fila (Primer indice 0) = materia; Las filas consiguientes son las actividades para esa materia
+    char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50] = {0};              //Primera fila (Primer indice 0) = materia; Las filas consiguientes son las actividades para esa materia
+    Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1] = {0};                  //Para almacenar la fecha de cada actividad
     const char* nombre_archivo_horario = "Horario.csv";
     const char* nombre_archivo_tareas = "Actividades.csv";
     const char* nombre_archivo_estudiante = "Datos_Estudiante.csv";
@@ -48,7 +49,7 @@ int main()
         }
 
     leerArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
-    leerArchivoTareas(nombre_archivo_tareas, tareas);
+    leerArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
     limpiarPantalla();
 
@@ -71,7 +72,7 @@ int main()
     {
 
         menuHorario(false, materias, hora, x, y);
-        menuSecundario(materias[y-1][x-1], tareas, x, y);
+        menuSecundario(materias[y-1][x-1], tareas, tareaFecha, x, y);
         menuEstudiante(nombre, carrera, curso);
 
         op = leerTecla();
@@ -115,11 +116,12 @@ int main()
 
                     case 1: //Calendario
 
-                        calendario(materias, tareas);
+                        //calendario(materias, tareas);
+                        menuCalendario(tareas, tareaFecha);
 
                     break;
                     }
-                    break;
+                break;
                 }
 
                 else if(x < 1 || strlen(materias[y-1][x-1]) == 0)
@@ -134,8 +136,8 @@ int main()
                     case 0: //Menu Actividades
 
                         llenarTareas(materias, tareas);
-                        menuTareas(materias, hora, tareas, x, y);
-                        formatearArchivoTareas(nombre_archivo_tareas, tareas);
+                        menuTareas(materias, hora, tareas, tareaFecha, x, y);
+                        formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
                     break;
 
@@ -153,7 +155,8 @@ int main()
 
                     case 2: //Calendario
 
-                        calendario(materias, tareas);
+                        //calendario(materias, tareas);
+                        menuCalendario(tareas, tareaFecha);
 
                     break;
                 }
@@ -224,15 +227,15 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
 
                 mostrarCursor(false);
 
-                imprimir_centrado("Desde:", 46, 20, posicionX, posicionY+4);
+                imprimir_centrado("Desde:", 44, 19, posicionX, posicionY+4);
 
-                op1 = menu(horas, TAM_HORA, op2,  posicionX, posicionY+5);
+                op1 = menu(horas, TAM_HORA, op2, posicionX+14, posicionY+5);
 
                 //limpiar_area(72, 4, 42, 17);
 
-                imprimir_centrado("Hasta:", 46, 20, posicionX, posicionY+4);
+                imprimir_centrado("Hasta:", 44, 19, posicionX, posicionY+4);
 
-                op2 = menu(horas, TAM_HORA, op1, posicionX, posicionY+5);
+                op2 = menu(horas, TAM_HORA, op1, posicionX+14, posicionY+5);
 
                 for(; op1 < op2; op1++){
                     strcpy(materias[op1][dia], temp);
@@ -244,74 +247,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
         limpiar_area(posicionX-1, posicionY, 42, 17);
 }
 
-bool validarHora(const int hora[2][TAM_HORA])
-{
-    for (int i = 0; i < TAM_HORA; i++)
-    {
-
-        if (hora[0][i] < 0 || hora[0][i] > 23)      //Revisar horas
-        {
-            gotoxy(73,12);
-            printf("Dato invalido introducido\n");
-            gotoxy(73,13);
-            printf("Respetar el formato de 24 horas\n");
-            gotoxy(73,14);
-            printf("Presione una tecla para reintentar...\n");
-            leerTecla();
-            return true;
-        }
-        else if(hora[1][i] < 0 || hora[1][i] > 59)  //Revisar minutos
-        {
-            gotoxy(73,12);
-            printf("Dato invalido introducido\n");
-            gotoxy(73,13);
-            printf("Respetar el formato de 24 horas\n");
-            gotoxy(73,14);
-            printf("Presione una tecla para reintentar...\n");
-            leerTecla();
-            return true;
-        }
-
-    }
-
-    return false;
-}
-
-void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
-{
-
-    int posY = 4;
-
-    casilla(44,20,71,2);
-
-    mostrarCursor(true);
-
-    gotoxy(73, posY);
-    printf("Introduzca su primer nombre\n");
-    gotoxy(73, posY+1);
-    printf("y su primer apellido\n");
-    gotoxy(73, posY+2);
-    //while (getchar() != '\n');
-    fgets(nombre, 40, stdin);
-    nombre[strcspn(nombre, "\r\n")] = '\0';
-
-
-    gotoxy(73, posY+4);
-    printf("Introduzca la carrera que está cursando\n");
-    gotoxy(73, posY+5);
-    fgets(carrera, 30, stdin);
-    carrera[strcspn(carrera, "\r\n")] = '\0';
-
-    gotoxy(73, posY+7);
-    printf("Introduzca el  año que cursa\n");
-    gotoxy(73, posY+8);
-    fgets(curso, 5, stdin);
-    curso[strcspn(curso, "\r\n")] = '\0';
-
-    mostrarCursor(false);
-}
-
-void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][50], int x, int y)
+void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
 {
     char temp[50];
     int posicionX = (indice_terminal_anchura() * 4) + 72;
@@ -328,7 +264,6 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][
         gotoxy(posicionX+1, 7);
         printf("Para esta materia:");
 
-        //gotoxy(posicionX+1,7);
         //while (getchar() != '\n');
         fgets(temp, 30, stdin);
         temp[strcspn(temp, "\r\n")] = '\0';
@@ -338,16 +273,64 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[10][10][
                 if(strlen(tareas[j][i]) == 0)
                 {
                 strcpy(tareas[j][i], temp);
+
+                mostrarCursor(false);
+
+                //int dia = 1; int mes = 9; int ano = 26; //REEMPLAZAR ESTAS VARIABLE CON VALORES CORRECTOS (DIA ACTUAL)
+                int seleccion = 0;
+                char tecla = 0;
+
+                time_t actual = time(NULL);
+                struct tm *t = localtime(&actual);
+
+                tareaFecha[j][i].dia = t->tm_mday;
+                tareaFecha[j][i].mes = t->tm_mon + 1;
+                tareaFecha[j][i].ano = t->tm_year + 1900;
+
+                gotoxy(posicionX+1, 9);
+                printf("Seleccione la fecha de la actividad");
+                    while(tecla != '\n')
+                    {
+                        gotoxy(posicionX+15, 10);
+
+
+                             if(tecla == 'C' && seleccion < 2) {seleccion++;}
+
+                        else if(tecla == 'D' && seleccion > 0) {seleccion--;}
+
+                        switch(seleccion)
+                        {
+                        case 0:
+                                 if(tecla == 'A' && tareaFecha[j][i].dia < 31) (tareaFecha[j][i].dia)++;
+                            else if(tecla == 'B' && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
+                            printf("%s%02d%s-%02d-%02d",ROJO, tareaFecha[j][i].dia ,AZUL_FONDO, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
+                        break;
+
+                        case 1:
+                                 if(tecla == 'A' && tareaFecha[j][i].mes < 12) tareaFecha[j][i].mes++;
+                            else if(tecla == 'B' && tareaFecha[j][i].mes > 1) tareaFecha[j][i].mes--;
+                            printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,ROJO, tareaFecha[j][i].mes ,AZUL_FONDO, tareaFecha[j][i].ano);
+                        break;
+
+                        case 2:
+                                 if(tecla == 'A') tareaFecha[j][i].ano++;
+                            else if(tecla == 'B') tareaFecha[j][i].ano--;
+                            printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,ROJO, tareaFecha[j][i].ano ,AZUL_FONDO);
+                        break;
+
+                        }
+                        limpiar_area(posicionX, 11, 42, 9);
+                        tecla = leerTecla();
+                    }
                 break;
                 }
-            }
-
+              }
         }
+
     }
-    mostrarCursor(false);
 }
 
-void elimTarea(const char materia[30], char tareas[10][10][50])
+void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
 {
     char temps[10][30] = {0};
     int cantidad_actividades = 0;
@@ -399,4 +382,38 @@ void elimTarea(const char materia[30], char tareas[10][10][50])
             }
         }
 
+}
+
+void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
+{
+
+    int posY = 4;
+
+    casilla(44,20,71,2);
+
+    mostrarCursor(true);
+
+    gotoxy(73, posY);
+    printf("Introduzca su primer nombre\n");
+    gotoxy(73, posY+1);
+    printf("y su primer apellido\n");
+    gotoxy(73, posY+2);
+    //while (getchar() != '\n');
+    fgets(nombre, 40, stdin);
+    nombre[strcspn(nombre, "\r\n")] = '\0';
+
+
+    gotoxy(73, posY+4);
+    printf("Introduzca la carrera que está cursando\n");
+    gotoxy(73, posY+5);
+    fgets(carrera, 30, stdin);
+    carrera[strcspn(carrera, "\r\n")] = '\0';
+
+    gotoxy(73, posY+7);
+    printf("Introduzca el  año que cursa\n");
+    gotoxy(73, posY+8);
+    fgets(curso, 5, stdin);
+    curso[strcspn(curso, "\r\n")] = '\0';
+
+    mostrarCursor(false);
 }

@@ -82,7 +82,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
     return false;
 }
 
-int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[10][10][50], int posX, int posY)
+int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], int posX, int posY)
 {
     int op = -1;
     int tamOpciones = 4;
@@ -103,13 +103,9 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
     do
     {
 
-    //limpiar_area(20, 33 , 35, 5);
     COLOR_PANTALLA;
 
-    menuHorario(false, materias, hora, posX, posY);
-    menuSecundario(materias[posY-1][posX-1], tareas, posX, posY);
-
-    op = menu(menuPrinc, tamOpciones, 0, 20, 33);
+    op = menu(menuPrinc, tamOpciones, 0, 20, 32);
 
     switch(op)
         {
@@ -132,7 +128,7 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
     return -1;
 }
 
-void menuSecundario(const char materia[30], const char tareas[10][10][50], int x, int y)
+void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
 {
     int posicionX = 71;
     int posicionY = 2;
@@ -142,7 +138,6 @@ void menuSecundario(const char materia[30], const char tareas[10][10][50], int x
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
     limpiar_area(posicionX+1, posicionY+2, 42, 17);
-    //casilla(44,19,71,2);
 
     imprimir_centrado(materia, 44, 20, posicionX, posicionY+2);
 
@@ -154,8 +149,11 @@ void menuSecundario(const char materia[30], const char tareas[10][10][50], int x
 
         for(int j = 1; j < 10; j++)
             {
+                if(strlen(tareas[j][i]) > 0)
+                {
                 gotoxy(posicionX+1, posicionY+4+j);
-                printf("%s", tareas[j][i]);
+                printf("%s\t\t\tFecha: %d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                }
             }
 
             break;
@@ -163,7 +161,7 @@ void menuSecundario(const char materia[30], const char tareas[10][10][50], int x
     }
 }
 
-void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[10][10][50], int posX, int posY)
+void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int posX, int posY)
 {
     //int y = 0;
     int op = -1;
@@ -177,22 +175,21 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
 
     COLOR_PANTALLA;
 
-    menuHorario(false, materias, hora, posX, posY);
-    menuSecundario(materias[posY-1][posX-1], tareas, posX, posY);
-
     op = menu(menuPrinc, 3, 0, 20, 33);
 
         switch(op)
         {
                 case 0:
 
-                leerTarea(materias, tareas, posX, posY);
+                leerTarea(materias, tareas, tareaFecha, posX, posY);
+                return; //No permite continuar despues de hacer un cambio
 
                 break;
 
                 case 1:
 
                 elimTarea(materias[posY-1][posX-1], tareas);
+                return; //No permite continuar despues de hacer un cambio
 
                 break;
 
@@ -205,6 +202,78 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
 
     }while(op != 27);//Al presionar Escape se sale del ciclo, para volver al menu de horario
 
+}
+
+void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
+{
+    const char *opciones[] = {"Ver el calendario para este mes",
+                              "Ver el calendario para otro mes",
+                              "Presione ESC para volver atrás"};
+
+    const char *meses[] = {
+    "Enero", "Febrero", "Marzo",
+    "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre",
+    "Octubre", "Noviembre", "Diciembre"};
+
+    limpiar_area(19,33, 50, 6);
+
+    time_t actual = time(NULL);
+    struct tm *t = localtime(&actual);
+
+    //t->tm_mday;
+    int mes_actual = t->tm_mon + 1;
+    int ano_actual = t->tm_year + 1900;
+
+    int op = menu(opciones, 3, 0, 20, 32);
+    do{
+        switch(op)
+        {
+                case 0:
+
+                    calendario(ano_actual, mes_actual, tareas, tareaFecha);
+                    return;
+
+                break;
+
+                case 1:
+                    char opc[4][10] = {0};
+                    int j = 0;
+                    int mes = mes_actual;
+                    int ano = ano_actual;
+
+                    for(int i = 0; i < 4; i++)
+                    {
+                        if(mes + i > 11)
+                        {
+                        mes = 0;
+                        ano = ano + 1;
+                        j = 0;
+                        }
+                        strcpy(opc[i], meses[mes + j]);
+                        j++;
+                    }
+
+                    const char *months[] = {opc[0], opc[1], opc[2], opc[3]};
+                    limpiar_area(72, 4, 42, 17);
+
+                    int selecion = menu(months, 4, 0, 73, 5) + mes_actual;
+                    if (selecion > 11) selecion = selecion - 12;
+
+                    calendario(ano_actual, selecion + 1, tareas, tareaFecha);
+
+                    return;
+
+                break;
+
+                case 2:
+
+                    return;
+
+                break;
+        }
+
+    }while(op != 27);//Al presionar Escape se sale del ciclo, para volver al menu de horario
 }
 
 void menuEstudiante(const char nombre[40], const char carrera[30], const char curso[5])
