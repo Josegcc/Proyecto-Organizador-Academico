@@ -1,4 +1,7 @@
 21/09/26
+Solucionado problema anterior
+
+21/09/26
 VERSION 0.3.8.1 ORGANIZADOR ACADEMICO
 Intento de arreglar errores con la forma en que se muestran las materias y fechas en los calendarios. Es necesario desarrollar un algoritmo de ordenamiento para que esto funcione, o algún otro método
 
