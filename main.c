@@ -45,6 +45,8 @@ int main()
             leerMaterias(i, materias, hora);
         }
         formatearArchivoHorario(nombre_archivo_horario, materias, hora);
+        llenarTareas(materias, tareas);
+        formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
         }
 
@@ -65,6 +67,8 @@ int main()
     casilla(44,15, 71 + indice_terminal_anchura() * 4, 21);  //CASILLA menuEstudiante
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+
+    menuEstudiante(nombre, carrera, curso);
 
     mostrarCursor(false);
 
@@ -115,8 +119,7 @@ int main()
                     break;
 
                     case 1: //Calendario
-
-                        //calendario(materias, tareas);
+                        ordenarFechas(tareas, tareaFecha);
                         menuCalendario(tareas, tareaFecha);
 
                     break;
@@ -135,7 +138,6 @@ int main()
 
                     case 0: //Menu Actividades
 
-                        llenarTareas(materias, tareas);
                         menuTareas(materias, hora, tareas, tareaFecha, x, y);
                         formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
@@ -156,6 +158,7 @@ int main()
                     case 2: //Calendario
 
                         //calendario(materias, tareas);
+                        ordenarFechas(tareas, tareaFecha);
                         menuCalendario(tareas, tareaFecha);
 
                     break;
@@ -255,7 +258,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
     mostrarCursor(true);
     limpiar_area(posicionX, 5, 42, 16);
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
         if(strcmp(tareas[0][i], materias[y-1][x-1]) == 0)
         {
@@ -268,7 +271,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
         fgets(temp, 30, stdin);
         temp[strcspn(temp, "\r\n")] = '\0';
 
-            for(int j = 1; j < 10; j++)
+            for(int j = 1; j < TAM_TAREA; j++)
             {
                 if(strlen(tareas[j][i]) == 0)
                 {

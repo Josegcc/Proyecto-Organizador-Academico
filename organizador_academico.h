@@ -73,3 +73,6 @@ void elimTarea(const char materia[30], char tareas[10][10][50]);
 
 /*calendario.c*/
 void calendario(int anoEleg, int mesEleg, const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);
+void intercambiarFechas(Fecha *fechaTarea1, Fecha *fechaTarea2);
+bool compararFechas(const Fecha fechaTarea1, const Fecha fechaTarea2);
+void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);

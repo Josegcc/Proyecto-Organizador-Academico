@@ -234,8 +234,8 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
     }
 
     fclose(archivo);
-
-    return menuHorario(true, materias, hora, 100, 100);
+    return true;
+    //return menuHorario(true, materias, hora, 100, 100);   //PARA PREGUNTAR SI EL HORARIO GUARDADO ES CORRECTO
 }
 
 void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5])
