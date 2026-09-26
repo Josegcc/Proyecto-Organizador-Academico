@@ -1,3 +1,11 @@
+26/09/26
+VERSION 0.3.9 ORGANIZADOR ACADEMICO
+*Optimizaciones para la version de Windows
+-La funcion limpiarArea se modifica para compilarse utilizando las API de Windows, dependiendo de la variable de entorno. En otras palabras, se utiliza la API de Windows para limpiar la pantalla porque es más óptimo
+-Se bufferea el manejador de la terminal de Windows GetStdHandle(STD_OUTPUT_HANDLE), una sola vez para la función gotoxy, anteriormente se llamaba cada vez que se invocaba esta función
+
+*Para ambas versiones del programa se optimizó la función menuHorario. Ahora solo se llama a printf una sola vez por línea utilizando un buffer que almacena los contenidos de cada fila
+
 21/09/26
 Solucionado problema anterior
 

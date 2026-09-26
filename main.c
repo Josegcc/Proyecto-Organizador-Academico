@@ -61,10 +61,10 @@ int main()
     int x = 0;
     int y = 1;
 
-    casilla(63, 26, 7, 5);                                   //CASILLA menuHorario
-    casilla(63,3,7,2);                                       //CASILLA CABECERA (HORARIO ACADEMICO)
-    casilla(44,19,71 + indice_terminal_anchura() * 4, 2);    //CASILLA menuSecundario
-    casilla(44,15, 71 + indice_terminal_anchura() * 4, 21);  //CASILLA menuEstudiante
+    casilla(62, 26, 7, 5);                                   //CASILLA menuHorario
+    casilla(62,3,7,2);                                       //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(44,19,81 + indice_terminal_anchura() * 4, 2);    //CASILLA menuSecundario
+    casilla(44,15, 81 + indice_terminal_anchura() * 4, 21);  //CASILLA menuEstudiante
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
@@ -75,9 +75,10 @@ int main()
     do
     {
 
-        menuHorario(false, materias, hora, x, y);
         menuSecundario(materias[y-1][x-1], tareas, tareaFecha, x, y);
-        menuEstudiante(nombre, carrera, curso);
+        menuHorario(false, materias, hora, x, y);
+
+        fflush(stdout);
 
         op = leerTecla();
 

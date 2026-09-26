@@ -39,7 +39,7 @@ void tamanoPantalla();      //Para definir el tamaño y color de la consola
 char leerTecla();           //Lee una sola tecla que el usuario presione sin esperar que este preione enter y sin ECHO
 void gotoxy(int x, int y);  //Mueve el cursor al área de la pantalla indicada
 int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y);
-void imprimir_centrado(const char *cadena, int posX, int posY, int baseCas, int altCas);
+void imprimir_centrado(const char *cadena, int baseCas, int altCas, int posX, int posY);
 int indice_terminal_altura();
 int indice_terminal_anchura();
 void limpiar_area(int posX, int posY, int altura, int base);

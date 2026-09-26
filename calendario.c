@@ -243,8 +243,6 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
     }
     else {  mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha);   }
 
-    int m = 101;
-
     printf(AZUL_FONDO);
 
     gotoxy(x+1, y+16);

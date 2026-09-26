@@ -1,11 +1,21 @@
 #include "organizador_academico.h"
 
+//FOR DEBUGGING ONLY
+/*#define SUP_IZ  "+"
+#define SUP_DER "+"
+#define INF_IZ  "+"
+#define INF_DER "+"
+#define HORIZONTAL "-"
+#define VERTICAL "|"*/
+
+
 #define SUP_IZ  "\u250C"
 #define SUP_DER "\u2514"
 #define INF_IZ  "\u2510"
 #define INF_DER "\u2518"
 #define HORIZONTAL "\u2500"
 #define VERTICAL "\u2502"
+
 
 void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras)
 {
@@ -239,6 +249,9 @@ void gotoxy(int x, int y)
 {
 #ifdef _WIN32
 
+    static HANDLE hConsole = NULL;
+    if (!hConsole) hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     COORD coord;
     coord.X = x;
     coord.Y = y;
@@ -292,18 +305,19 @@ void tamanoPantalla()
    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
    HWND consoleWindow = GetConsoleWindow();
 
-    COORD bufferSize = {120, 40};
-    SMALL_RECT windowSize = {0, 0, 119, 39};
+    COORD bufferSize = {140, 80};
+    SMALL_RECT windowSize = {0, 0, 139, 39};
 
     //SetConsoleMode(hStdOut, ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 
-    /*SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
-    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);    */
+    SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
+    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
 
     // Combine text color (Foreground) and background color using bitwise OR (|)
-    SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+    //SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+    COLOR_PANTALLA;
 
-    //SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
 
     /*Desactivar rezigin de la ventana*/
     LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
@@ -317,7 +331,7 @@ void tamanoPantalla()
 
 #else
 
-   printf("\e[8;40;120t");
+   printf("\e[8;40;140t");
    fflush(stdout);
    COLOR_PANTALLA;
 
@@ -350,22 +364,22 @@ void casilla(int base, int altura, int posX, int posY)
         if(i == 1)
         {
         printf(SUP_IZ);
+            for(int j = 0; j < base; j ++)
+            {
+            printf(HORIZONTAL);
+            }
         }
         else if (i == altura)
         {
         printf(SUP_DER);
+            for(int j = 0; j < base; j ++)
+            {
+            printf(HORIZONTAL);
+            }
         }
         else
         {
-        printf("│");
-        }
-
-        if(i == 1 || i == altura)
-        {
-            for(int j = 0; j < base; j ++)
-            {
-            printf("—");
-            }
+        printf(VERTICAL);
         }
 
         //Mueve el cursor al lado derecho del recuadro
@@ -380,10 +394,8 @@ void casilla(int base, int altura, int posX, int posY)
         }
         else
         {
-        printf("│");
+        printf(VERTICAL);
         }
-
-        printf("\n");
     }
 
 }
@@ -436,6 +448,22 @@ int indice_terminal_anchura()
 
 void limpiar_area(int posX, int posY, int base, int altura)
 {
+    #ifdef _WIN32
+
+    static HANDLE hConsole = NULL;
+    if (!hConsole) hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    DWORD charsWritten;
+    COORD coord;
+    coord.X = posX;
+
+    for (int i = 0; i < altura; i++) {
+        coord.Y = posY + i;
+        FillConsoleOutputCharacterA(hConsole, ' ', base, coord, &charsWritten);
+    }
+
+    #else
+
     for (int i = 0; i < altura; i++) {
         gotoxy(posX, posY + i);
         for (int j = 0; j < base; j++) {
@@ -445,6 +473,7 @@ void limpiar_area(int posX, int posY, int base, int altura)
 
     gotoxy(posX, posY);
     fflush(stdout);
+    #endif // _WIN32
 }
 
 
@@ -487,7 +516,7 @@ void mostrarCursor(bool mostrar)    //Verdadero para mostrar el cursor, false pa
     CONSOLE_CURSOR_INFO cursor_info;
 
     GetConsoleCursorInfo(console_handle, &cursor_info);
-    cursor_info.bVisible = visible; // TRUE to show, FALSE to hide
+    cursor_info.bVisible = mostrar; // TRUE to show, FALSE to hide
     SetConsoleCursorInfo(console_handle, &cursor_info);
 
 #else
