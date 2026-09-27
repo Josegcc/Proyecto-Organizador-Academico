@@ -1,3 +1,12 @@
+27/09/26
+VERSION 0.3.10 ORGANIZADOR ACADEMICO
+*Mejorada la lectura de datos
+-Mas versatilidad a la hora de leer materias, ahora el programa no detecta caracteres especiales ni numeros, pero si detecta la tecla de escape, que se puede usar para cancelar el proceso en cualquier momento, funciona de manera similar a la hora de ingresar actividades
+*Datos técnicos:
+-Para esto se crearon las funciones leerTexto y leerLetra.
+La funcion leerLetra funciona como la funcion leerTecla, pero no recibe las flechas del teclado si no las letras, además de otras teclas necesarias para introducir texto (Como el espacio, enter, etc). Devuelve true si se encontró un error
+La funcion leerTexto recibe una cadena de caracteres donde se guardara un texto que se introducira de acuerdo a el formato que establece la funcion leerLetra. Es decir, solo letras.
+
 26/09/26
 VERSION 0.3.9 ORGANIZADOR ACADEMICO
 *Optimizaciones para la version de Windows

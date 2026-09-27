@@ -5,7 +5,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 {
 
     const char* semana[] ={"Hora", "| Lun", "| Mar",
-                            "| Mi\x82", "| Jue", "| Vie",
+                            "| Mi\xE9", "| Jue", "| Vie",
                             "| Sab", "| Dom"};
     const char* raya = "_______________________________________________________________";
 
@@ -51,7 +51,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
             }
 
             if(posX == 0 && posY == i){
-            snprintf((buffer+strlen(buffer)), 256, "%s%02d:%02d-%02d:%02d\u2502%s",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], AZUL_FONDO);
+            snprintf((buffer+strlen(buffer)), 256, "%s%02d:%02d-%02d:%02d%s\u2502",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], AZUL_FONDO);
                                       }
             else{
                 snprintf((buffer+strlen(buffer)), 256, "%02d:%02d-%02d:%02d\u2502",hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i]);
@@ -59,10 +59,9 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 
                 for (int j = 0; j < DIAS_SEM; j++){
 
-                    //gotoxy(21 + (j*10), 7+i*3);
-                    if(posX-1 == j && posY == i){    snprintf((buffer+strlen(buffer)), 256, "%s%-9.5s\u2502%s", ROJO, materias[i-1][j], AZUL_FONDO);                  }
+                    if(posX-1 == j && posY == i){    snprintf((buffer+strlen(buffer)), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], AZUL_FONDO);                  }
                     else                        {    snprintf((buffer+strlen(buffer)), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
-                                                      }
+                                                  }
                 gotoxy(10, 7+i*3);  //AL PRINCIPIO DE LA LINEA
                 printf("%s", buffer);
 
@@ -90,16 +89,16 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
     int op = -1;
     int tamOpciones = 4;
     const char *menuPrinc[] = {
-        "Men\u00FA de actividades",
+        "Men\xFA de actividades",
         "Modificar materias para este d\u00EDa",
-        "Menu Calendario",
-        "Presione ESC para volver"
+        "Men\xFA Calendario",
+        "Presione ESC para volver atr\u00E1s"
                               };
-    if(posY < 1)
+    if(posY < 1)                    //Presione ESC para volver atr\xE1s
     {
         menuPrinc[0] ="Modificar materias para este d\u00EDa";
-        menuPrinc[1] = "Menu Calendario";
-        menuPrinc[2] = "Presione ESC para volver";
+        menuPrinc[1] = "Men\xFA Calendario";
+        menuPrinc[2] = "Presione ESC para volver atr\u00E1s";
         tamOpciones = 3;
     }
 
@@ -140,7 +139,7 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
     posicionX += indice_terminal_anchura() * 4;
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
-    limpiar_area(posicionX+1, posicionY+2, 42, 10);
+    limpiar_area(posicionX+1, posicionY+2, 45, 17);
 
     imprimir_centrado(materia, 44, 20, posicionX, posicionY+2);
 
@@ -155,7 +154,9 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
                 if(strlen(tareas[j][i]) > 0)
                 {
                 gotoxy(posicionX+1, posicionY+4+j);
-                printf("%s\t\tFecha: %d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                printf("%s", tareas[j][i]);
+                gotoxy(posicionX+30, posicionY+4+j);
+                printf("Fecha: %d-%d-%d", tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
                 }
             }
 
@@ -211,7 +212,7 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
 {
     const char *opciones[] = {"Ver el calendario para este mes",
                               "Ver el calendario para otro mes",
-                              "Presione ESC para volver atrás"};
+                              "Presione ESC para volver atr\xE1s"};
 
     const char *meses[] = {
     "Enero", "Febrero", "Marzo",
@@ -258,9 +259,9 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
                     }
 
                     const char *months[] = {opc[0], opc[1], opc[2], opc[3]};
-                    limpiar_area(72, 4, 42, 17);
+                    limpiar_area(90, 6, 42, 15);
 
-                    int selecion = menu(months, 4, 0, 73, 5) + mes_actual;
+                    int selecion = menu(months, 4, 0, 101, 6) + mes_actual;
                     if (selecion > 11) selecion = selecion - 12;
 
                     calendario(ano_actual, selecion + 1, tareas, tareaFecha);
@@ -301,7 +302,7 @@ void menuEstudiante(const char nombre[40], const char carrera[30], const char cu
     printf(carrera);
 
     gotoxy(posX, posY+9);
-    printf("Año que cursa");
+    printf("A\xF1o que cursa");
     gotoxy(posX, posY+10);
     printf(curso);
 }

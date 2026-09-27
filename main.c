@@ -15,7 +15,7 @@ int main()
 
     char nombre[40];
     char carrera[30];
-    char curso[5];
+    char curso[12];
 
     tamanoPantalla();
     limpiarPantalla();
@@ -189,10 +189,11 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
     "septima","octava","novena","decima"
                               };
 
-    int posicionX = 73;
+    int posicionX = 91;
     int posicionY = 4;
     int clases, op1 = 0, op2 = 0;
     char temp[30];
+    bool confirmacion = false;
 
     //limpiar_area(72, 4, 42, 17);
     menuHorario(false, materias, hora, 100, 100);
@@ -204,18 +205,27 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
     }                                                           //TESTING
 
     const char *horas[] = {temps[0], temps[1], temps[2], temps[3], temps[4], temps[5], temps[6], temps[7]};
+    const char *numeros[] ={"Ninguna","1","2","3","4","5","6","7"};
 
+        mostrarCursor(false);
         limpiar_area(posicionX-1, posicionY, 42, 17);
-        mostrarCursor(true);
 
         gotoxy(posicionX, posicionY);
         printf("Introducir la cantidad de clases");
         gotoxy(posicionX, posicionY+1);
         printf("correspondientes a el d%ca %s: ",161 , dias[dia]);
-        scanf("%d", &clases);
 
-        while(getchar() != '\n')        //Eliminar el salto de linea en buffer
-        ;
+        clases = menu(numeros, 8, 0, posicionX+14, posicionY+2);
+        if(clases == 27)
+        {
+            gotoxy(posicionX, posicionY+9);
+            printf("Seguro que desea cancelar? (S/N)");
+            fflush(stdout);
+            confirmacion = pregunta();
+
+            if(confirmacion){   mostrarCursor(false);  return;  }
+            else            {   leerMaterias(dia, materias, hora);  return;}
+        }
 
             for(int j = 0; j < clases; j++)
             {
@@ -224,10 +234,18 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
                 gotoxy(posicionX, posicionY+2);
                 printf("Introduzca la %s asignatura: ", ordinales[j]);
                 gotoxy(posicionX, posicionY+3);
+                fflush(stdout);
 
+                    if(leerTexto(temp, 30, posicionX, posicionY+3))
+                    {
+                        gotoxy(posicionX, posicionY+9);
+                        printf("Seguro que desea cancelar? (S/N)");
+                        fflush(stdout);
+                        confirmacion = pregunta();
 
-                fgets(temp, 30, stdin);
-                temp[strcspn(temp, "\r\n")] = '\0'; //Eliminar el salto de linea de la variable
+                        if(confirmacion){   mostrarCursor(false);  return;  }
+                        else            {   j--;   limpiar_area(posicionX-1, posicionY+2, 42, 15);  continue;    }
+                    }
 
                 mostrarCursor(false);
 
@@ -235,11 +253,32 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
 
                 op1 = menu(horas, TAM_HORA, op2, posicionX+14, posicionY+5);
 
-                //limpiar_area(72, 4, 42, 17);
+                if(op1 == 27)
+                {
+                    gotoxy(posicionX, posicionY+9);
+                    printf("Seguro que desea cancelar? (S/N)");
+                    fflush(stdout);
+                    confirmacion = pregunta();
+
+                    if(confirmacion){   mostrarCursor(false);  return;  }
+                    else            {   j--;   limpiar_area(posicionX-1, posicionY+2, 42, 15);  continue;    }
+                }
 
                 imprimir_centrado("Hasta:", 44, 19, posicionX, posicionY+4);
 
                 op2 = menu(horas, TAM_HORA, op1, posicionX+14, posicionY+5);
+
+                if(op2 == 27)
+                {
+                    gotoxy(posicionX, posicionY+9);
+                    printf("Seguro que desea cancelar? (S/N)");
+                    fflush(stdout);
+                    confirmacion = pregunta();
+
+                    if(confirmacion){   mostrarCursor(false);  return;  }
+                    else            {   j--;   limpiar_area(posicionX-1, posicionY+2, 42, 15); op2 = op1;  continue;    }
+                }
+
 
                 for(; op1 < op2; op1++){
                     strcpy(materias[op1][dia], temp);
@@ -254,10 +293,11 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
 {
     char temp[50];
-    int posicionX = (indice_terminal_anchura() * 4) + 72;
+    bool confirmacion = false;
+    int posicionX = (indice_terminal_anchura() * 4) + 82;
 
     mostrarCursor(true);
-    limpiar_area(posicionX, 5, 42, 16);
+    limpiar_area(posicionX, 5, 45, 16);
 
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
@@ -267,10 +307,20 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
         printf("Introduzca la actividad");
         gotoxy(posicionX+1, 7);
         printf("Para esta materia:");
+        fflush(stdout);
 
-        //while (getchar() != '\n');
-        fgets(temp, 30, stdin);
-        temp[strcspn(temp, "\r\n")] = '\0';
+        //leerTexto(temp, 30, posicionX+1,8);
+        if(leerTexto(temp, 30, posicionX+1, 8))
+        {
+            gotoxy(posicionX, 17);
+            printf("Seguro que desea cancelar? (S/N)");
+            fflush(stdout);
+            confirmacion = pregunta();
+
+            if(confirmacion){   mostrarCursor(false);  return;  }
+            else            {   i--; limpiar_area(posicionX, 5, 45, 16);  continue;    }
+        }
+
 
             for(int j = 1; j < TAM_TAREA; j++)
             {
@@ -280,7 +330,6 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
 
                 mostrarCursor(false);
 
-                //int dia = 1; int mes = 9; int ano = 26; //REEMPLAZAR ESTAS VARIABLE CON VALORES CORRECTOS (DIA ACTUAL)
                 int seleccion = 0;
                 char tecla = 0;
 
@@ -339,10 +388,10 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
     char temps[10][30] = {0};
     int cantidad_actividades = 0;
 
-    int posicionX = 73;
+    int posicionX = 90;
     int posicionY = 4;
 
-    limpiar_area(posicionX-1, posicionY, 42, 17);
+    limpiar_area(posicionX, posicionY, 45, 17);
 
     for(int i = 0; i < 10; i++)
         {

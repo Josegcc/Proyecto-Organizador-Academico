@@ -6,8 +6,8 @@
 #define INF_IZ  "+"
 #define INF_DER "+"
 #define HORIZONTAL "-"
-#define VERTICAL "|"*/
-
+#define VERTICAL "|"
+*/
 
 #define SUP_IZ  "\u250C"
 #define SUP_DER "\u2514"
@@ -60,6 +60,94 @@ void calcHora(int hora[2][TAM_HORA])
             hora[1][i+1] += 5;
         }
                                        }
+}
+
+char leerLetra()
+{
+
+    char buf[8];
+    char tecla = '\0';
+
+
+#ifdef _WIN32
+    int ch;
+
+    while (tecla == '\0')
+    {
+        ch = _getch();
+
+        if (ch == 0 || ch == 224)   //Teclas especiales (flechas)
+        {
+
+        }else if(ch == '\b'){
+        tecla = 127;
+        }
+        else if (ch == 13) //Tecla Enter
+        {
+        tecla = '\n';
+        }else if(ch == 27)  //Tecla ESC
+        {
+        tecla = 27;
+        }
+        else if (ch >= 65 && ch <= 122 || ch == ' ')  //LETRAS
+        {
+        tecla = ch;
+        }
+
+    }
+
+#else
+        struct termios old = {0};
+        if (tcgetattr(0, &old) < 0)
+                perror("tcsetattr()");
+        old.c_lflag &= ~ICANON;
+        old.c_lflag &= ~ECHO;
+        old.c_cc[VMIN] = 1;
+        old.c_cc[VTIME] = 0;
+        if (tcsetattr(0, TCSANOW, &old) < 0)
+                perror("tcsetattr ICANON");
+
+	while(tecla == '\0')
+	{
+
+        int n = read(0, buf, 1);
+        if (n > 0) {
+        if (buf[0] == 27) { // ESC key detected
+
+            int flags = fcntl(0, F_GETFL, 0);
+            fcntl(0, F_SETFL, flags | O_NONBLOCK);
+
+            // Try to read more bytes (e.g., if an arrow key was pressed, '[' and 'A' are waiting)
+            int n_extra = read(0, buf + 1, sizeof(buf) - 1);
+            fcntl(0, F_SETFL, flags);
+
+            if (n_extra <= 0)
+            {
+                //printf("Result: Standalone ESC key pressed instantly!\n");
+                tecla = buf[0];
+            }else{
+                // Extra bytes exist, meaning it's an escape sequence (like an arrow key)
+                //printf("Result: Escape sequence detected (Length: %d)\n", n_extra + 1);
+                // buf[1] will typically be '[', and buf[2] will be 'A', 'B', 'C', or 'D'
+            }
+        	}
+        	else if(buf[0] >= 65 && buf[0] <= 122){   //LETRAS
+            	tecla = buf[0];
+        	}
+        	else if(buf[0] == '\n' || buf[0] == 127 || buf[0] == ' '){
+        	tecla = buf[0];
+        	}
+     			}
+    }
+
+    old.c_lflag |= ICANON;
+    old.c_lflag |= ECHO;
+    if (tcsetattr(0, TCSADRAIN, &old) < 0)
+        perror ("tcsetattr ~ICANON");
+#endif
+
+    return tecla;
+
 }
 
 char leerTecla()
@@ -179,7 +267,6 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     while(tecla != 27)
     {
-    	limpiar_area(x, y, tamCasilla, tamOpciones);
 
     	for(int i = desc_opcion; i < tamOpciones; i++)
     	{
@@ -195,6 +282,8 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
    	 	}
 
    	 	casilla(tamCasilla, tamOpciones+2 - desc_opcion, x, y);
+
+   	 	fflush(stdout);
 
    	 	tecla = leerTecla();
 
@@ -224,14 +313,14 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     	case '\n':
 
-    	limpiar_area(x, y+1, tamCasilla+1, tamOpciones+2);
+    	limpiar_area(x, y+1, tamCasilla+3, tamOpciones+2);
     	return opcion;
 
     	break;
 
     	case 27:
 
-        limpiar_area(x, y+1, tamCasilla+1, tamOpciones+2);
+        limpiar_area(x, y+1, tamCasilla+3, tamOpciones+2);
     	return 27;
 
     	break;
@@ -244,6 +333,54 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     return 0;
 }
 
+bool leerTexto(char cadena[], size_t lon_cadena, int x, int y) 	//int x, int y
+{
+  char tecla;
+  gotoxy(x,y);
+
+  unsigned int i = 0;
+  while(true)
+  {
+  	tecla = leerLetra();
+
+  	if(tecla == 27){
+
+  	cadena[0] = '\0';
+  	return true;
+
+  	}
+  	else if(tecla == 127){
+  		if(strlen(cadena) > 0)
+  		{
+  		limpiar_area(x,y, strlen(cadena),1);
+
+  		cadena[i-1] = '\0';
+
+  		gotoxy(x,y);
+  		printf("%s", cadena);
+  		fflush(stdout);
+  		i--;
+  		}
+  	}
+  	else if(tecla == '\n'){
+
+  	return 0;
+
+  	}else{
+  		if(i < lon_cadena-1)
+  		{
+  			cadena[i] = tecla;
+  			cadena[i+1] = '\0';
+  			printf("%c", tecla);
+  			fflush(stdout);
+  			i++;
+  		}
+  	}
+
+  }
+
+  return false;
+}
 
 void gotoxy(int x, int y)
 {
