@@ -113,7 +113,7 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
     int fechasTareas[TAM_MATERIA_TAREAS * (TAM_TAREA-1)] = {0};
     int indicesx[TAM_MATERIA_TAREAS] = {0};
     int indicesy[TAM_TAREA-1] = {0};
-    int x = 91; int y = 6;
+    int x = 81 + indice_terminal_anchura() * 8; int y = 6;
 
     int m = 0;
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
@@ -172,7 +172,7 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
             {
                 printf("\033[%dm", m);
                 printf("\033[30m"); //LETRAS NEGRAS
-                gotoxy(x, y+8+(m-101));
+                gotoxy(x+1, y+8+(m-101));
                 printf("%.5s --->" , tareas[0][indicesy[m-101]]);
                 gotoxy(x+15, y+8+(m-101));
                 printf("%s --->", tareas[indicesx[m-101]][indicesy[m-101]]);
@@ -202,7 +202,7 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
 
 void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
-    int x = 90, y = 4;
+    int x = 81 + indice_terminal_anchura() * 8, y = 4;
     int diaInicial;
 
     char *meses[] =     {
@@ -248,6 +248,7 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
     else {  mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha);   }
 
     printf(AZUL_FONDO);
+
 
     gotoxy(x+1, y+16);
     printf("Presione una tecla para continuar...\r\n");

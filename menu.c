@@ -132,14 +132,14 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 
 void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
 {
-    int posicionX = 81;
+    int posicionX = 82;
     int posicionY = 2;
     COLOR_PANTALLA;
 
-    posicionX += indice_terminal_anchura() * 4;
+    posicionX += indice_terminal_anchura() * 8;
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
-    limpiar_area(posicionX+1, posicionY+2, 45, 17);
+    limpiar_area(posicionX, posicionY+2, 43 + indice_terminal_anchura(), 17);
 
     imprimir_centrado(materia, 44, 20, posicionX, posicionY+2);
 
@@ -155,7 +155,7 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
                 {
                 gotoxy(posicionX+1, posicionY+4+j);
                 printf("%s", tareas[j][i]);
-                gotoxy(posicionX+30, posicionY+4+j);
+                gotoxy(posicionX+28, posicionY+4+j);
                 printf("Fecha: %d-%d-%d", tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
                 }
             }
@@ -259,10 +259,11 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
                     }
 
                     const char *months[] = {opc[0], opc[1], opc[2], opc[3]};
-                    limpiar_area(90, 6, 42, 15);
+                    limpiar_area(82 + indice_terminal_anchura() * 8, 6, 43 + indice_terminal_anchura(), 15);
 
                     int selecion = menu(months, 4, 0, 101, 6) + mes_actual;
-                    if (selecion > 11) selecion = selecion - 12;
+                    if (selecion == 27 + mes_actual){ return;   }
+                    if (selecion > 11) { selecion = selecion - 12;}
 
                     calendario(ano_actual, selecion + 1, tareas, tareaFecha);
 
@@ -286,7 +287,7 @@ void menuEstudiante(const char nombre[40], const char carrera[30], const char cu
     int posX = 83;
     int posY = 23;
 
-    posX += indice_terminal_anchura() * 4;
+    posX += indice_terminal_anchura() * 8;
 
     gotoxy(posX, posY+1);
     imprimir_centrado("DATOS DEL ESTUDIANTE", 44, 15, posX-2, posY);

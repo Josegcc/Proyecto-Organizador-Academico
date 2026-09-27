@@ -20,8 +20,8 @@ int main()
     tamanoPantalla();
     limpiarPantalla();
 
-    casilla(63, 26, 7, 5);  //CASILLA menuHorario
-    casilla(63,3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(64 - indice_terminal_anchura(), 26, 7, 5); //CASILLA menuHorario
+    casilla(64 - indice_terminal_anchura(),3,7,2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
@@ -32,8 +32,8 @@ int main()
 
         calcHora(hora);
 
-        casilla(63, 26, 7, 5);
-        casilla(63,3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
+        casilla(64 - indice_terminal_anchura(), 26, 7, 5);
+        casilla(64 - indice_terminal_anchura(),3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
         imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
         menuHorario(false, materias, hora, 100, 100);
         leerEstudiante(nombre, carrera, curso);
@@ -61,10 +61,10 @@ int main()
     int x = 0;
     int y = 1;
 
-    casilla(62, 26, 7, 5);                                   //CASILLA menuHorario
-    casilla(62,3,7,2);                                       //CASILLA CABECERA (HORARIO ACADEMICO)
-    casilla(44,19,81 + indice_terminal_anchura() * 4, 2);    //CASILLA menuSecundario
-    casilla(44,15, 81 + indice_terminal_anchura() * 4, 21);  //CASILLA menuEstudiante
+    casilla(64 - indice_terminal_anchura(), 26, 7, 5);                                   //CASILLA menuHorario
+    casilla(64 - indice_terminal_anchura(),3,7,2);                                       //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
+    casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
@@ -294,10 +294,10 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
 {
     char temp[50];
     bool confirmacion = false;
-    int posicionX = (indice_terminal_anchura() * 4) + 82;
+    int posicionX = (indice_terminal_anchura() * 8) + 82;
 
     mostrarCursor(true);
-    limpiar_area(posicionX, 5, 45, 16);
+    limpiar_area(posicionX, 5, 45 - indice_terminal_anchura(), 16);
 
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
@@ -372,7 +372,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                         break;
 
                         }
-                        limpiar_area(posicionX, 11, 42, 9);
+                        limpiar_area(posicionX, 11, 44 - indice_terminal_anchura(), 9);
                         tecla = leerTecla();
                     }
                 break;
@@ -388,10 +388,10 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
     char temps[10][30] = {0};
     int cantidad_actividades = 0;
 
-    int posicionX = 90;
+    int posicionX = 90 + indice_terminal_anchura() * 8;
     int posicionY = 4;
 
-    limpiar_area(posicionX, posicionY, 45, 17);
+    limpiar_area(posicionX-8, posicionY, 43 + indice_terminal_anchura(), 17);
 
     for(int i = 0; i < 10; i++)
         {

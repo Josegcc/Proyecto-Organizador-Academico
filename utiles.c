@@ -442,7 +442,7 @@ void tamanoPantalla()
    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
    HWND consoleWindow = GetConsoleWindow();
 
-    COORD bufferSize = {140, 80};
+    COORD bufferSize = {140, 40};
     SMALL_RECT windowSize = {0, 0, 139, 39};
 
     //SetConsoleMode(hStdOut, ENABLE_VIRTUAL_TERMINAL_PROCESSING);
@@ -578,7 +578,7 @@ int indice_terminal_anchura()
     terminal_width = w.ws_col;
     #endif
 
-    int indice_terminal_anchura = (terminal_width - 120) / 10;
+    int indice_terminal_anchura = (terminal_width - 140) / 10;
 
     return indice_terminal_anchura;
 }
