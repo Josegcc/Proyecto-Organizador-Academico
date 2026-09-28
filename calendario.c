@@ -68,8 +68,6 @@ void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFe
             tamArreglo--;
 		}
 	}
-
-	//EL SEGUNDO ALGORITMO ORDENA LAS FILAS (LA MATERIA QUE TENGA LA FECHA MAS CERCANA IRÁ PRIMERO)
 }
 
 bool bisiesto(int year)
@@ -173,9 +171,9 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
                 printf("\033[%dm", m);
                 printf("\033[30m"); //LETRAS NEGRAS
                 gotoxy(x+1, y+8+(m-101));
-                printf("%.5s --->" , tareas[0][indicesy[m-101]]);
+                printf(" %.5s " , tareas[0][indicesy[m-101]]);
                 gotoxy(x+15, y+8+(m-101));
-                printf("%s --->", tareas[indicesx[m-101]][indicesy[m-101]]);
+                printf(" %s ", tareas[indicesx[m-101]][indicesy[m-101]]);
                 gotoxy(x+35, y+8+(m-101));
                 printf("%d-%d-%d", tareaFecha[indicesx[m-101]][indicesy[m-101]].dia, tareaFecha[indicesx[m-101]][indicesy[m-101]].mes, tareaFecha[indicesx[m-101]][indicesy[m-101]].ano);
                 printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO

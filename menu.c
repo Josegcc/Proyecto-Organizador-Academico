@@ -155,7 +155,7 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
                 {
                 gotoxy(posicionX+1, posicionY+4+j);
                 printf("%s", tareas[j][i]);
-                gotoxy(posicionX+28, posicionY+4+j);
+                gotoxy(posicionX+26, posicionY+4+j);
                 printf("Fecha: %d-%d-%d", tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
                 }
             }
@@ -172,6 +172,7 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
     const char *menuPrinc[] = {
         "Introducir nueva actividad",
         "Eliminar una actividad",
+        "Exportar archivo de actividades semanal",
         "Presione ESC para volver atr\u00E1s"
                               };
     do
@@ -179,7 +180,7 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
 
     COLOR_PANTALLA;
 
-    op = menu(menuPrinc, 3, 0, 20, 33);
+    op = menu(menuPrinc, 4, 0, 20, 33);
 
         switch(op)
         {
@@ -198,6 +199,15 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
                 break;
 
                 case 2:
+                    time_t actual = time(NULL);
+                    struct tm *t = localtime(&actual);
+
+                    int semana = t->tm_wday;
+                    gotoxy(50,35);
+                    printf("%d", semana);
+                break;
+
+                case 3:
 
                 return;
 

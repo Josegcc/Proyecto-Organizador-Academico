@@ -189,7 +189,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
     "septima","octava","novena","decima"
                               };
 
-    int posicionX = 91;
+    int posicionX = 82 + indice_terminal_anchura() * 8;
     int posicionY = 4;
     int clases, op1 = 0, op2 = 0;
     char temp[30];
@@ -208,7 +208,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
     const char *numeros[] ={"Ninguna","1","2","3","4","5","6","7"};
 
         mostrarCursor(false);
-        limpiar_area(posicionX-1, posicionY, 42, 17);
+        limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
 
         gotoxy(posicionX, posicionY);
         printf("Introducir la cantidad de clases");
@@ -284,10 +284,10 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
                     strcpy(materias[op1][dia], temp);
                                        }
 
-                limpiar_area(posicionX-1, posicionY+2, 42, 15);
+                limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
                 menuHorario(false, materias, hora, 100, 100);
             }
-        limpiar_area(posicionX-1, posicionY, 42, 17);
+        limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
 }
 
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
@@ -297,7 +297,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
     int posicionX = (indice_terminal_anchura() * 8) + 82;
 
     mostrarCursor(true);
-    limpiar_area(posicionX, 5, 45 - indice_terminal_anchura(), 16);
+    limpiar_area(posicionX, 5, 43 + indice_terminal_anchura(), 16);
 
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
@@ -412,6 +412,20 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
             break;
             }
         }
+
+    if(cantidad_actividades <= 1)
+    {
+    gotoxy(posicionX, posicionY);
+    printf("No se encontraron actividades\n");
+    gotoxy(posicionX, posicionY+1);
+    printf("para esta materia\n");
+
+    gotoxy(posicionX-5, posicionY+16);
+    printf("Presione una tecla para continuar...\r\n");
+    leerTecla();
+
+    return;
+    }
 
     const char *opciones[] = {temps[1], temps[2], temps[3], temps[4], temps[5], temps[6], temps[7], temps[8], temps[9]};
 

@@ -84,7 +84,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MA
     FILE *archivo;
     archivo = fopen(nombre_archivo, "w");
 
-    fprintf(archivo, "Materia,Actividad_Fecha\n");
+    fprintf(archivo, "Materia,Actividad Fecha\n");
 
     for (int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
