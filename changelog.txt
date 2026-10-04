@@ -1,3 +1,12 @@
+4/10/26
+VERSION 0.4.0 ORGANIZADOR ACADEMICO
+*Creada una opción para exportar todas las actividades de la semana actual
+-Aún faltan revisiones para mejorar esta opción, para dar a elegir qué semana exportar,etc.
+*Mejorada la lectura de datos para materias. El arreglo 'tareas' ahora almacena la materia en su primer indice al mismo tiempo que se introducen en el arreglo 'materias, esto es una mejora cuando antes se realizaba una busqueda lineal cada vez.
+-Se crearon funciones para controlar la lectura de materias en el arreglo 'tareas'. -"limpiarTareas", busqueda lineal que se encarga de eliminar una materia del arreglo 'tareas', si se llama en un ciclo elimina varias.
+-"materiaRepet" busqueda lineal, si un elemento se encuentra más de una vez (en un día distinto de la semana), devuelve true. Busqueda lineal
+-"exportarArchivoTareas", crea un archivo con los dias de la semana y las actividades que se tienen pendientes en esa semana. Falta darle el nombre a este archivo y que el usuario pueda elegir qué semana quiere ver.
+
 27/09/26
 VERSION 0.3.10 ORGANIZADOR ACADEMICO
 *Mejorada la lectura de datos

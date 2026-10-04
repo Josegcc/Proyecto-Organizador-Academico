@@ -33,6 +33,7 @@ int ano;
 
 /*utiles.c - Funciones de uso muy general utilizadas en casi todo el programa*/
 void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA], bool elimMaterias, bool elimHoras);   //Elimina todos los elementos de los arreglos 'materias' y 'hora', dependiendo de los valores booleanos que recibe
+void limpiarTareas(const char* materia, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]);
 void limpiarPantalla();              //Elimina todos lo que haya escrito o se muestre en consola
 void casilla(int base, int altura, int posX, int posY); //Muestra un cuadro en la consola, la posicion depende de las variables 'pos'
 void tamanoPantalla();      //Para definir el tamaño y color de la consola
@@ -55,7 +56,8 @@ void formatearArchivoEstudiante(const char* nombre_archivo, const char nombre[40
 bool leerArchivoHorario(const char* nombre_archivo, char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]);                  //Se encarga de leer el archivo "Horario.csv", si este no existe o el usuario indica que no es correcto, devuelve falso
 void leerArchivoTareas(const char *nombre_archivo, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);                                                       //Lee el archivo "Actividades.csv"
 void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5]);
-void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]);                                           //Se encarga de llenar el arreglo "tareas" con cada una de las materias que se encuentran en el horario
+bool materiaRepet(const char materias[TAM_HORA][DIAS_SEM][30], const char* materia);
+void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana);
 void calcHora(int hora[2][TAM_HORA]);                                                                                               //Realiza el cómputo de todos los horarios académicos tomando como referencia los dos primeros que el usuario introduce
 
 /*menu.c - Diferentes menus*/
@@ -68,13 +70,14 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 
 /*main.c - Lectura de datos*/
 void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]); //Lee las horas académicas, tambíén llama a la función "leerMaterias" la cantidad de veces que corresponde a los dias de la semana. Y almacena los datos en el arreglo 'horas'
-void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA]);            //Lee las materias que el estudiante cursa en el horario indicado, almacena los datos en la variable 'materias'
+void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], const int hora[2][TAM_HORA]);            //Lee las materias que el estudiante cursa en el horario indicado, almacena los datos en la variable 'materias'
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y);        //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia
 void leerEstudiante(char nombre[40], char carrera[30], char curso[5]);
 void elimTarea(const char materia[30], char tareas[10][10][50]);
 
 /*calendario.c*/
 void calendario(int anoEleg, int mesEleg, const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);
+bool bisiesto(int year);
 void intercambiarFechas(Fecha *fechaTarea1, Fecha *fechaTarea2);
 bool compararFechas(const Fecha fechaTarea1, const Fecha fechaTarea2);
 void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);

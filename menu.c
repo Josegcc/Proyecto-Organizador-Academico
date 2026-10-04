@@ -51,16 +51,16 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
             }
 
             if(posX == 0 && posY == i){
-            snprintf((buffer+strlen(buffer)), 256, "%s%02d:%02d-%02d:%02d%s\u2502",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], AZUL_FONDO);
+            snprintf(buffer+strlen(buffer), 256, "%s%02d:%02d-%02d:%02d%s\u2502",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], AZUL_FONDO);
                                       }
             else{
-                snprintf((buffer+strlen(buffer)), 256, "%02d:%02d-%02d:%02d\u2502",hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i]);
+                snprintf(buffer+strlen(buffer), 256, "%02d:%02d-%02d:%02d\u2502",hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i]);
                 }
 
                 for (int j = 0; j < DIAS_SEM; j++){
 
-                    if(posX-1 == j && posY == i){    snprintf((buffer+strlen(buffer)), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], AZUL_FONDO);                  }
-                    else                        {    snprintf((buffer+strlen(buffer)), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
+                    if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], AZUL_FONDO);                  }
+                    else                        {    snprintf(buffer+strlen(buffer), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
                                                   }
                 gotoxy(10, 7+i*3);  //AL PRINCIPIO DE LA LINEA
                 printf("%s", buffer);
@@ -202,9 +202,29 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
                     time_t actual = time(NULL);
                     struct tm *t = localtime(&actual);
 
+                    int anoActual = t->tm_year;
+                    int mes = t->tm_mon + 1;
+
                     int semana = t->tm_wday;
-                    gotoxy(50,35);
-                    printf("%d", semana);
+                    int diames = t->tm_mday;
+                    int lunes = diames - semana + 1;
+
+                        if(mes == 2)
+                        {
+                            if(bisiesto(anoActual))
+                            {
+                                //mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha);
+                            }else
+                            {
+                                //mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha);
+                            }
+                        }
+                        else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+                        {
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes);
+                        }
+                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes);
+                             }
                 break;
 
                 case 3:

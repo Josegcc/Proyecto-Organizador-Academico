@@ -42,40 +42,37 @@ void formatearArchivoEstudiante(const char* nombre_archivo, const char nombre[40
     fclose(archivo);
 }
 
-void llenarTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
+bool materiaRepet(const char materias[TAM_HORA][DIAS_SEM][30], const char* materia)
 {
     int counter = 0;
 
-        for(int i = 1; i < TAM_HORA; i++)
+        for(int i = 0; i < TAM_HORA; i++)
         {
                 for (int j = 0; j < DIAS_SEM; j++)
                 {
-                    bool elem_repet = false;
-
-                    if(strlen(materias[i][j]) > 0)
+                    if(strlen(materias[j][i]) > 0)
                     {
-                        for(int m = i; m < TAM_HORA; m++)
+                        if(strcmp(materias[j][i], materia) == 0)
                         {
-                            for (int n = 0; n < DIAS_SEM; n++)
-                            {
-                                if(strcmp(materias[i][j], materias[m][n]) == 0 && (m != i || n != j))
-                                {
-                                elem_repet = true;
-                                break;
-                                }
-                            }
-                            if(elem_repet){break;}          //Los break; cierran el ciclo cuando se encuentra una coincidencia
+                        counter++;
+                        break;
                         }
-                        if(!elem_repet)
-                        {
-                            strcpy(tareas[0][counter], materias[i][j]);
-                            counter++;
-                        }
+
                     }
                 }
         }
 
+        if(counter > 1)
+        {
+        return true;
+        }
+        else
+        {
+        return false;
+        }
 
+
+        return false;
 }
 
 void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
@@ -84,7 +81,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MA
     FILE *archivo;
     archivo = fopen(nombre_archivo, "w");
 
-    fprintf(archivo, "Materia,Actividad Fecha\n");
+    fprintf(archivo, "Materia,Actividad_Fecha\n");
 
     for (int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
@@ -94,7 +91,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MA
             {
                 if(strlen(tareas[j][i]) != 0)
                 {
-                fprintf(archivo, ",%s %d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                fprintf(archivo, ",%s_%d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
                 }
             }
         fprintf(archivo, "\n");
@@ -147,10 +144,9 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[TAM_MATERIA_TAREA
             }
 
             if (j - 1 < TAM_TAREA) {
-                sscanf(line_ptr, "%s %d-%d-%d", tareas[i][j - 1], &tareaFecha[i][j-1].dia, &tareaFecha[i][j-1].mes, &tareaFecha[i][j-1].ano);
-                //strcpy(tareas[i][j - 1], line_ptr);
+                sscanf(line_ptr, "%59[^_]_%d-%d-%d", tareas[i][j - 1], &tareaFecha[i][j-1].dia, &tareaFecha[i][j-1].mes, &tareaFecha[i][j-1].ano);
 
-                //tareas[i][j - 1][199] = '\0'; // Asegurar el fin de cadena
+                //tareas[i][j - 1][49] = '\0'; // Asegurar el fin de cadena
             }
 
             if (next_comma != NULL)
@@ -236,6 +232,43 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
     fclose(archivo);
     return true;
     //return menuHorario(true, materias, hora, 100, 100);   //PARA PREGUNTAR SI EL HORARIO GUARDADO ES CORRECTO
+}
+
+void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana)
+{
+    FILE *archivo;
+    archivo = fopen("Ejemplo", "w");
+    const char* diasSemana[] ={"Lunes", "Martes",
+                            "Mi\xE9", "Jueves", "Viernes",
+                            "Sabado", "Domingo"};
+
+    char buffer[1024] = "";
+
+    for(int i = semana; i < semana + 7; i++)
+    {
+        snprintf(buffer+strlen(buffer), 1024, "[Dia  %s]\n", diasSemana[i - semana]);
+        for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
+        {
+            if(strlen(tareas[0][j]) != 0)
+            {
+                for(int m = 1; m < TAM_TAREA; m++)
+                {
+                if(strlen(tareas[m][j]) > 0)
+                {
+                    if(tareaFecha[m][j].dia == i && tareaFecha[m][j].mes == mes)
+                    {
+                    snprintf(buffer+strlen(buffer), 1024, "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                    }
+
+                }else { break;;   }
+                }
+            }
+
+        }
+    }
+
+    fprintf(archivo, "%s", buffer);
+    fclose(archivo);
 }
 
 void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5])

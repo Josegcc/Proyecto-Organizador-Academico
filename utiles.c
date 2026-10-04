@@ -6,8 +6,8 @@
 #define INF_IZ  "+"
 #define INF_DER "+"
 #define HORIZONTAL "-"
-#define VERTICAL "|"
-*/
+#define VERTICAL "|"*/
+
 
 #define SUP_IZ  "\u250C"
 #define SUP_DER "\u2514"
@@ -33,6 +33,23 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
             {
                 materias[i][j][0] = '\0';
             }
+        }
+    }
+}
+
+void limpiarTareas(const char* materia, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
+{
+    for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
+    {
+        if(strcmp(materia, tareas[0][i]) == 0)
+        {
+
+            for(int j = 0; j < TAM_TAREA; j++)
+            {
+            tareas[j][i][0] = '\0';
+            }
+
+            break;
         }
     }
 }
@@ -333,7 +350,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     return 0;
 }
 
-bool leerTexto(char cadena[], size_t lon_cadena, int x, int y) 	//int x, int y
+bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
 {
   char tecla;
   gotoxy(x,y);
@@ -457,10 +474,10 @@ void tamanoPantalla()
     SetConsoleOutputCP(CP_UTF8);
 
     /*Desactivar rezigin de la ventana*/
-    LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+    /*LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
 
     style &= ~WS_MAXIMIZEBOX;
-    style &= ~WS_SIZEBOX;
+    style &= ~WS_SIZEBOX;*/
 
     SetWindowLong(consoleWindow, GWL_STYLE, style);
 
@@ -585,32 +602,20 @@ int indice_terminal_anchura()
 
 void limpiar_area(int posX, int posY, int base, int altura)
 {
-    #ifdef _WIN32
-
-    static HANDLE hConsole = NULL;
-    if (!hConsole) hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    DWORD charsWritten;
-    COORD coord;
-    coord.X = posX;
-
-    for (int i = 0; i < altura; i++) {
-        coord.Y = posY + i;
-        FillConsoleOutputCharacterA(hConsole, ' ', base, coord, &charsWritten);
+    /*char* blankLine = (char*)malloc(base + 1);
+    memset(blankLine, ' ', base);*/
+    char blankLine[base + 1];
+    for(int i = 0; i < base; i++){
+    blankLine[i] = ' ';
     }
 
-    #else
+    blankLine[base] = '\0';
 
     for (int i = 0; i < altura; i++) {
         gotoxy(posX, posY + i);
-        for (int j = 0; j < base; j++) {
-            putchar(' ');
-        }
+        fputs(blankLine, stdout);
     }
-
-    gotoxy(posX, posY);
-    fflush(stdout);
-    #endif // _WIN32
+    //free(blankLine);
 }
 
 

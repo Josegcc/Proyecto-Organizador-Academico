@@ -22,6 +22,7 @@ int main()
 
     casilla(64 - indice_terminal_anchura(), 26, 7, 5); //CASILLA menuHorario
     casilla(64 - indice_terminal_anchura(),3,7,2);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
@@ -34,6 +35,7 @@ int main()
 
         casilla(64 - indice_terminal_anchura(), 26, 7, 5);
         casilla(64 - indice_terminal_anchura(),3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
+        casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
         imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
         menuHorario(false, materias, hora, 100, 100);
         leerEstudiante(nombre, carrera, curso);
@@ -42,10 +44,10 @@ int main()
 
         for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
         {
-            leerMaterias(i, materias, hora);
+            leerMaterias(i, materias, tareas, hora);
         }
+
         formatearArchivoHorario(nombre_archivo_horario, materias, hora);
-        llenarTareas(materias, tareas);
         formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
         }
@@ -111,11 +113,16 @@ int main()
 
                         for (int i = 0; i < TAM_HORA; i++)
                         {
-                                materias[i][x-1][0] = '\0';
+                            if(!materiaRepet(materias, materias[i][x-1])){  //Por si hay materias repetidas en varios dias
+                            limpiarTareas(materias[i][x-1], tareas);
+                            }
+
+                            materias[i][x-1][0] = '\0';
                         }
 
-                        leerMaterias(x-1, materias, hora);
+                        leerMaterias(x-1, materias, tareas, hora);
                         formatearArchivoHorario(nombre_archivo_horario, materias, hora);
+                        formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
                     break;
 
@@ -139,6 +146,7 @@ int main()
 
                     case 0: //Menu Actividades
 
+                        //llenarTareas(materias, tareas);
                         menuTareas(materias, hora, tareas, tareaFecha, x, y);
                         formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
@@ -148,11 +156,15 @@ int main()
 
                         for (int i = 0; i < TAM_HORA; i++)
                         {
-                                materias[i][x-1][0] = '\0';
+                            if(!materiaRepet(materias, materias[i][x-1])){  //Por si hay materias repetidas en varios dias
+                            limpiarTareas(materias[i][x-1], tareas);
+                            }
+                            materias[i][x-1][0] = '\0';
                         }
 
-                        leerMaterias(x-1, materias, hora);
+                        leerMaterias(x-1, materias, tareas, hora);
                         formatearArchivoHorario(nombre_archivo_horario, materias, hora);
+                        formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
                     break;
 
@@ -176,7 +188,7 @@ int main()
     return 0;
 }
 
-void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA])
+void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], const int hora[2][TAM_HORA])
 {
     const char *dias[] = {
     "Lunes", "Martes", "Miercoles", "Jueves",
@@ -205,7 +217,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
     }                                                           //TESTING
 
     const char *horas[] = {temps[0], temps[1], temps[2], temps[3], temps[4], temps[5], temps[6], temps[7]};
-    const char *numeros[] ={"Ninguna","1","2","3","4","5","6","7"};
+    const char *numeros[] ={"Ninguna","1","2","3","4","5"};
 
         mostrarCursor(false);
         limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
@@ -215,7 +227,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
         gotoxy(posicionX, posicionY+1);
         printf("correspondientes a el d%ca %s: ",161 , dias[dia]);
 
-        clases = menu(numeros, 8, 0, posicionX+14, posicionY+2);
+        clases = menu(numeros, 6, 0, posicionX+14, posicionY+2);
         if(clases == 27)
         {
             gotoxy(posicionX, posicionY+9);
@@ -224,7 +236,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
             confirmacion = pregunta();
 
             if(confirmacion){   mostrarCursor(false);  return;  }
-            else            {   leerMaterias(dia, materias, hora);  return;}
+            else            {   leerMaterias(dia, materias, tareas, hora);  return;}
         }
 
             for(int j = 0; j < clases; j++)
@@ -248,6 +260,17 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
                     }
 
                 mostrarCursor(false);
+
+                for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
+                {
+                    if(strcmp(tareas[0][i], temp) == 0){
+                    break;
+                    }
+                    else if(strlen(tareas[0][i]) == 0){
+                    strcpy(tareas[0][i], temp);
+                    break;
+                    }
+                }
 
                 imprimir_centrado("Desde:", 44, 19, posicionX, posicionY+4);
 
@@ -287,6 +310,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], const int hor
                 limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
                 menuHorario(false, materias, hora, 100, 100);
             }
+
         limpiar_area(posicionX, posicionY, 43 + indice_terminal_anchura(), 17);
 }
 
@@ -309,7 +333,6 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
         printf("Para esta materia:");
         fflush(stdout);
 
-        //leerTexto(temp, 30, posicionX+1,8);
         if(leerTexto(temp, 30, posicionX+1, 8))
         {
             gotoxy(posicionX, 17);
@@ -344,6 +367,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                 printf("Seleccione la fecha de la actividad");
                     while(tecla != '\n')
                     {
+                        //limpiar_area(posicionX, 5, 43 + indice_terminal_anchura(), 16);
                         gotoxy(posicionX+15, 10);
 
 
@@ -372,7 +396,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                         break;
 
                         }
-                        limpiar_area(posicionX, 11, 44 - indice_terminal_anchura(), 9);
+                        fflush(stdout);
                         tecla = leerTecla();
                     }
                 break;
@@ -453,32 +477,30 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
 
 void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
 {
-
+    int posX = 83 + indice_terminal_anchura() * 8;
     int posY = 4;
-
-    casilla(44,20,71,2);
 
     mostrarCursor(true);
 
-    gotoxy(73, posY);
+    gotoxy(posX, posY);
     printf("Introduzca su primer nombre\n");
-    gotoxy(73, posY+1);
+    gotoxy(posX, posY+1);
     printf("y su primer apellido\n");
-    gotoxy(73, posY+2);
+    gotoxy(posX, posY+2);
     //while (getchar() != '\n');
     fgets(nombre, 40, stdin);
     nombre[strcspn(nombre, "\r\n")] = '\0';
 
 
-    gotoxy(73, posY+4);
+    gotoxy(posX, posY+4);
     printf("Introduzca la carrera que está cursando\n");
-    gotoxy(73, posY+5);
+    gotoxy(posX, posY+5);
     fgets(carrera, 30, stdin);
     carrera[strcspn(carrera, "\r\n")] = '\0';
 
-    gotoxy(73, posY+7);
+    gotoxy(posX, posY+7);
     printf("Introduzca el  año que cursa\n");
-    gotoxy(73, posY+8);
+    gotoxy(posX, posY+8);
     fgets(curso, 5, stdin);
     curso[strcspn(curso, "\r\n")] = '\0';
 
