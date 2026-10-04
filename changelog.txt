@@ -1,4 +1,9 @@
 4/10/26
+VERSION 0.4.1 ORGANIZADOR ACADEMICO
+*Añadidas opciones para exportar el archivo de actividades semanales, se puede elegir la semana actual o la semana próxima
+-Para la semana próxima aún hay que escribir el código para el caso de que el la semana próxima caiga en otro año, es decir, en el caso de que estemos en la última semana de diciembre
+
+4/10/26
 VERSION 0.4.0 ORGANIZADOR ACADEMICO
 *Creada una opción para exportar todas las actividades de la semana actual
 -Aún faltan revisiones para mejorar esta opción, para dar a elegir qué semana exportar,etc.

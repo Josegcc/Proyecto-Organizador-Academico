@@ -175,10 +175,13 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
         "Exportar archivo de actividades semanal",
         "Presione ESC para volver atr\u00E1s"
                               };
+
+    int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
     do
     {
 
-    COLOR_PANTALLA;
+    //COLOR_PANTALLA;
 
     op = menu(menuPrinc, 4, 0, 20, 33);
 
@@ -202,28 +205,51 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
                     time_t actual = time(NULL);
                     struct tm *t = localtime(&actual);
 
-                    int anoActual = t->tm_year;
+                    const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
+
+                    if(t->tm_year){ diasMes[1] = 28; }
+
                     int mes = t->tm_mon + 1;
 
-                    int semana = t->tm_wday;
-                    int diames = t->tm_mday;
-                    int lunes = diames - semana + 1;
+                    int lunes = (t->tm_mday - t->tm_wday) + 1;
+
+                    switch(menu(opciones, 3, 0, 20, 33))
+                    {
+                    case 0:
+
+                    break;
+
+                    case 1:
+
+                        if(lunes + 7 > diasMes[mes]){
+                        lunes = (lunes + 7) - diasMes[mes];
+                        mes++;
+                        }
+                        else{   lunes = lunes + 7; }
+
+                    break;
+
+                    default:
+                    //return;
+                    break;
+
+                    }
 
                         if(mes == 2)
                         {
-                            if(bisiesto(anoActual))
+                            if(bisiesto(t->tm_year))
                             {
-                                //mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha);
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
                             }else
                             {
-                                //mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha);
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
                             }
                         }
                         else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
                         {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes);
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
                         }
-                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes);
+                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
                              }
                 break;
 

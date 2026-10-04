@@ -57,7 +57,7 @@ bool leerArchivoHorario(const char* nombre_archivo, char materias[TAM_HORA][DIAS
 void leerArchivoTareas(const char *nombre_archivo, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);                                                       //Lee el archivo "Actividades.csv"
 void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5]);
 bool materiaRepet(const char materias[TAM_HORA][DIAS_SEM][30], const char* materia);
-void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana);
+void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana, int diasMes);
 void calcHora(int hora[2][TAM_HORA]);                                                                                               //Realiza el cómputo de todos los horarios académicos tomando como referencia los dos primeros que el usuario introduce
 
 /*menu.c - Diferentes menus*/

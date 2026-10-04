@@ -234,7 +234,7 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
     //return menuHorario(true, materias, hora, 100, 100);   //PARA PREGUNTAR SI EL HORARIO GUARDADO ES CORRECTO
 }
 
-void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana)
+void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana, int diasMes)
 {
     FILE *archivo;
     archivo = fopen("Ejemplo", "w");
@@ -242,9 +242,9 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
                             "Mi\xE9", "Jueves", "Viernes",
                             "Sabado", "Domingo"};
 
-    char buffer[1024] = "";
+    char buffer[2048] = "";
 
-    for(int i = semana; i < semana + 7; i++)
+    for(int i = semana; i < semana + DIAS_SEM; i++)
     {
         snprintf(buffer+strlen(buffer), 1024, "[Dia  %s]\n", diasSemana[i - semana]);
         for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
@@ -255,9 +255,14 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
                 {
                 if(strlen(tareas[m][j]) > 0)
                 {
-                    if(tareaFecha[m][j].dia == i && tareaFecha[m][j].mes == mes)
+                    if( tareaFecha[m][j].dia == i && tareaFecha[m][j].mes == mes )
                     {
-                    snprintf(buffer+strlen(buffer), 1024, "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                    snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                    }else if( i > diasMes ){
+                        if( tareaFecha[m][j].dia == i - diasMes && tareaFecha[m][j].mes == mes + 1 )
+                        {
+                        snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                        }
                     }
 
                 }else { break;;   }

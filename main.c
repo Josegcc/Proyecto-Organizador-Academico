@@ -363,6 +363,9 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                 tareaFecha[j][i].mes = t->tm_mon + 1;
                 tareaFecha[j][i].ano = t->tm_year + 1900;
 
+                int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                if(bisiesto(tareaFecha[j][i].ano)){ diasMes[1] = 28; }
+
                 gotoxy(posicionX+1, 9);
                 printf("Seleccione la fecha de la actividad");
                     while(tecla != '\n')
@@ -378,20 +381,20 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                         switch(seleccion)
                         {
                         case 0:
-                                 if(tecla == 'A' && tareaFecha[j][i].dia < 31) (tareaFecha[j][i].dia)++;
+                                 if(tecla == 'A' && tareaFecha[j][i].dia < diasMes[ tareaFecha[j][i].mes - 1] ) (tareaFecha[j][i].dia)++;
                             else if(tecla == 'B' && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
                             printf("%s%02d%s-%02d-%02d",ROJO, tareaFecha[j][i].dia ,AZUL_FONDO, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
                         break;
 
                         case 1:
-                                 if(tecla == 'A' && tareaFecha[j][i].mes < 12) tareaFecha[j][i].mes++;
-                            else if(tecla == 'B' && tareaFecha[j][i].mes > 1) tareaFecha[j][i].mes--;
+                                 if(tecla == 'A' && tareaFecha[j][i].mes < 12){ tareaFecha[j][i].mes++; tareaFecha[j][i].dia = 1;}
+                            else if(tecla == 'B' && tareaFecha[j][i].mes > 1) { tareaFecha[j][i].mes--; tareaFecha[j][i].dia = 1;}
                             printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,ROJO, tareaFecha[j][i].mes ,AZUL_FONDO, tareaFecha[j][i].ano);
                         break;
 
                         case 2:
-                                 if(tecla == 'A') tareaFecha[j][i].ano++;
-                            else if(tecla == 'B') tareaFecha[j][i].ano--;
+                                 if(tecla == 'A'){ tareaFecha[j][i].ano++;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
+                            else if(tecla == 'B'){ tareaFecha[j][i].ano--;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
                             printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,ROJO, tareaFecha[j][i].ano ,AZUL_FONDO);
                         break;
 
