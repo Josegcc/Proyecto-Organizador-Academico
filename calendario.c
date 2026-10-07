@@ -172,11 +172,11 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
             {
                 printf("\033[%dm", m);
                 printf("\033[30m"); //LETRAS NEGRAS
-                gotoxy(x+1, 14+(j - pagActual));
+                gotoxy(x+1, 13+(j - pagActual));
                 printf(" %.5s..." , tareas[0][indicesy[j]]);
-                gotoxy(x+11, 14+(j - pagActual));
+                gotoxy(x+11, 13+(j - pagActual));
                 printf(" %s ", tareas[indicesx[j]][indicesy[j]]);
-                gotoxy(x+34, 14+(j - pagActual));
+                gotoxy(x+34, 13+(j - pagActual));
                 printf("%d-%d-%d", tareaFecha[indicesx[j]][indicesy[j]].dia, tareaFecha[indicesx[j]][indicesy[j]].mes, tareaFecha[indicesx[j]][indicesy[j]].ano);
                 printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
                 m++;
@@ -273,6 +273,10 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
 
     limpiar_area(82 + indice_terminal_anchura() * 8, 6, 43 + indice_terminal_anchura(), 15);
 
+    gotoxy(x+1, y+16); printf("<-");
+    imprimir_centrado("ESC para Salir", 44, 19, x+1, y+16);
+    gotoxy(x+42, y+16); printf("->");
+
         if(mesEleg == 2)
         {
             if(bisiesto(anoEleg))
@@ -292,10 +296,5 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
     }while (opcion != -1);
 
     printf(AZUL_FONDO);
-
-
-    /*gotoxy(x+1, y+16);
-    printf("Presione una tecla para continuar...\r\n");
-    leerTecla();*/
 
 }

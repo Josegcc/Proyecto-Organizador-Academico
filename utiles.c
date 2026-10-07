@@ -282,7 +282,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
         tamCasilla = stringSize + 2;
     }
 
-    while(tecla != 27)
+    while(true)
     {
 
     	for(int i = desc_opcion; i < tamOpciones; i++)
@@ -354,6 +354,7 @@ bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
 {
   char tecla;
   gotoxy(x,y);
+  fflush(stdout);
 
   unsigned int i = 0;
   while(true)
@@ -381,7 +382,7 @@ bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
   	}
   	else if(tecla == '\n'){
 
-  	return 0;
+  	return false;
 
   	}else{
   		if(i < lon_cadena-1)
@@ -669,4 +670,23 @@ void mostrarCursor(bool mostrar)    //Verdadero para mostrar el cursor, false pa
 #endif // _WIN32
 
 
+}
+
+void imprimirVerificacionMaterias() //Solo para evitar muchas lineas de codigo en el ciclo principal
+{
+    limpiar_area(82 + indice_terminal_anchura(), 4, 43 + indice_terminal_anchura(), 17);
+
+    gotoxy(84,4);
+    printf("Seguro que desea modificar las ");
+    gotoxy(88,5);
+    printf("materias de este dia?");
+    gotoxy(84,7);
+    printf("Esto eliminará todas las materias");
+    gotoxy(84,8);
+    printf("y actividades del dia seleccionado");
+    gotoxy(88,9);
+    printf("(Toda la columna)");
+    gotoxy(96, 12);
+    printf("(S/N)");
+    fflush(stdout);
 }

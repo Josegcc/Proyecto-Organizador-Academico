@@ -31,13 +31,14 @@ void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM
       fclose(archivo);
 }
 
-void formatearArchivoEstudiante(const char* nombre_archivo, const char nombre[40], const char carrera[30], const char curso[5])
+void formatearArchivoEstudiante(const char* nombre_archivo, Usuario estudiante)
 {
     FILE *archivo;
-    archivo = fopen(nombre_archivo, "w");
+    archivo = fopen(nombre_archivo, "wb");
 
     //fprintf(archivo, "DATOS DEL ESTUDIANTE");
-    fprintf(archivo, "%s\n%s\n%s", nombre, carrera, curso);
+    //fprintf(archivo, "%s\n%s\n%s", nombre, carrera, curso);
+    fwrite(&estudiante, sizeof(Usuario), 1, archivo);
 
     fclose(archivo);
 }
@@ -238,15 +239,19 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
 {
     FILE *archivo;
     archivo = fopen("Actividades Semanales.txt", "w");
+
+    if (archivo == NULL) {  return; }
+
+
     const char* diasSemana[] ={"Lunes", "Martes",
-                            "Mi\xE9", "Jueves", "Viernes",
+                            "Mi\u00E9rcoles", "Jueves", "Viernes",
                             "Sabado", "Domingo"};
 
     char buffer[2048] = "";
 
     for(int i = semana; i < semana + DIAS_SEM; i++)
     {
-        snprintf(buffer+strlen(buffer), 1024, "\n[Dia  %s]\n", diasSemana[i - semana]);
+        snprintf(buffer+strlen(buffer), 1024, "\n[%s]\n", diasSemana[i - semana]);
         for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
         {
             if(strlen(tareas[0][j]) != 0)
@@ -268,7 +273,6 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
                 }else { break;;   }
                 }
             }
-
         }
     }
 
@@ -282,10 +286,10 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
     fclose(archivo);
 }
 
-void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char carrera[30], char curso[5])
+void leerArchivoEstudiante(const char* nombre_archivo, Usuario *estudiante)
 {
     FILE *archivo;
-    archivo = fopen(nombre_archivo, "r");
+    archivo = fopen(nombre_archivo, "rb");
 
     if (archivo == NULL) {
 
@@ -293,15 +297,7 @@ void leerArchivoEstudiante(const char* nombre_archivo, char nombre[40], char car
         return;
                          }
 
-
-    fgets(nombre, 40, archivo);
-    nombre[strcspn(nombre, "\r\n")] = '\0';
-
-    fgets(carrera, 30, archivo);
-    carrera[strcspn(carrera, "\r\n")] = '\0';
-
-    fgets(curso, 5, archivo);
-    curso[strcspn(curso, "\r\n")] = '\0';
+    fread(estudiante, sizeof(Usuario), 1, archivo);
 
     fclose(archivo);
 }

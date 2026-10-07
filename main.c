@@ -11,11 +11,9 @@ int main()
     Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1] = {0};                  //Para almacenar la fecha de cada actividad
     const char* nombre_archivo_horario = "Horario.csv";
     const char* nombre_archivo_tareas = "Actividades.csv";
-    const char* nombre_archivo_estudiante = "Datos_Estudiante.csv";
+    const char* nombre_archivo_estudiante = "Datos_Estudiante.dat";
+    Usuario estudiante;
 
-    char nombre[40];
-    char carrera[30];
-    char curso[12];
 
     tamanoPantalla();
     limpiarPantalla();
@@ -38,8 +36,8 @@ int main()
         casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
         imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
         menuHorario(false, materias, hora, 100, 100);
-        leerEstudiante(nombre, carrera, curso);
-        formatearArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
+        leerEstudiante(&estudiante);
+        formatearArchivoEstudiante(nombre_archivo_estudiante, estudiante);
 
 
         for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
@@ -52,7 +50,7 @@ int main()
 
         }
 
-    leerArchivoEstudiante(nombre_archivo_estudiante, nombre, carrera, curso);
+    leerArchivoEstudiante(nombre_archivo_estudiante, &estudiante);
     leerArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
     limpiarPantalla();
@@ -70,11 +68,9 @@ int main()
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
-    menuEstudiante(nombre, carrera, curso);
+    menuEstudiante(estudiante, estudiante.nombre, estudiante.carrera, estudiante.curso);
 
     mostrarCursor(false);
-
-    int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     do
     {
@@ -113,6 +109,10 @@ int main()
 
                     case 0: //Modificar materia del horario
 
+                        imprimirVerificacionMaterias();
+
+                        if( !pregunta() ){   break;  }
+
                         for (int i = 0; i < TAM_HORA; i++)
                         {
                             if(!materiaRepet(materias, materias[i][x-1])){  //Por si hay materias repetidas en varios dias
@@ -129,6 +129,7 @@ int main()
                     break;
 
                     case 1: //Calendario
+
                         ordenarFechas(tareas, tareaFecha);
                         menuCalendario(tareas, tareaFecha);
 
@@ -136,55 +137,8 @@ int main()
 
                     case 2:
 
-                    time_t actual = time(NULL);
-                    struct tm *t = localtime(&actual);
+                    menuExportarArchivo(tareas, tareaFecha);
 
-                    const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
-
-                    if(t->tm_year){ diasMes[1] = 28; }
-
-                    int mes = t->tm_mon + 1;
-
-                    int lunes = (t->tm_mday - t->tm_wday) + 1;
-
-                    switch(menu(opciones, 3, 0, 20, 33))
-                        {
-                        case 0:
-
-                        break;
-
-                        case 1:
-
-                            if(lunes + 7 > diasMes[mes]){
-                            lunes = (lunes + 7) - diasMes[mes];
-                            mes++;
-                            }
-                            else{   lunes = lunes + 7; }
-
-                        break;
-
-                        default:
-                        //return;
-                        break;
-
-                        }
-
-                        if(mes == 2)
-                        {
-                            if(bisiesto(t->tm_year))
-                            {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
-                            }else
-                            {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
-                            }
-                        }
-                        else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
-                        {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
-                        }
-                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
-                             }
                     break;
                     }
                 break;
@@ -207,6 +161,10 @@ int main()
                     break;
 
                     case 1: //Modificar materia del horario
+
+                        imprimirVerificacionMaterias();
+
+                        if( !pregunta() ){   break;  }
 
                         for (int i = 0; i < TAM_HORA; i++)
                         {
@@ -231,55 +189,8 @@ int main()
 
                     case 3: //Exportar archivo semanal
 
-                        time_t actual = time(NULL);
-                        struct tm *t = localtime(&actual);
+                    menuExportarArchivo(tareas, tareaFecha);
 
-                        const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
-
-                        if(t->tm_year){ diasMes[1] = 28; }
-
-                        int mes = t->tm_mon + 1;
-
-                        int lunes = (t->tm_mday - t->tm_wday) + 1;
-
-                        switch(menu(opciones, 3, 0, 20, 33))
-                            {
-                            case 0:
-
-                            break;
-
-                            case 1:
-
-                                if(lunes + 7 > diasMes[mes]){
-                                lunes = (lunes + 7) - diasMes[mes];
-                                mes++;
-                                }
-                                else{   lunes = lunes + 7; }
-
-                            break;
-
-                            default:
-                            //return;
-                            break;
-
-                            }
-
-                            if(mes == 2)
-                            {
-                                if(bisiesto(t->tm_year))
-                                {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
-                                }else
-                                {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
-                                }
-                            }
-                            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
-                            {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
-                            }
-                            else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
-                                 }
                     break;
                 }
             break;
@@ -330,7 +241,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[T
         gotoxy(posicionX, posicionY);
         printf("Introducir la cantidad de clases");
         gotoxy(posicionX, posicionY+1);
-        printf("correspondientes a el d%ca %s: ",161 , dias[dia]);
+        printf("correspondientes a el d\u00EDa %s: ", dias[dia]);
 
         clases = menu(numeros, 6, 0, posicionX+14, posicionY+2);
         if(clases == 27)
@@ -583,7 +494,7 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
 
 }
 
-void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
+void leerEstudiante(Usuario *estudiante)
 {
     int posX = 83 + indice_terminal_anchura() * 8;
     int posY = 4;
@@ -594,23 +505,17 @@ void leerEstudiante(char nombre[40], char carrera[30], char curso[5])
     printf("Introduzca su primer nombre\n");
     gotoxy(posX, posY+1);
     printf("y su primer apellido\n");
-    gotoxy(posX, posY+2);
-    //while (getchar() != '\n');
-    fgets(nombre, 40, stdin);
-    nombre[strcspn(nombre, "\r\n")] = '\0';
-
+    while(leerTexto(estudiante->nombre, 40, posX, posY+2)){  limpiar_area(posX, posY+2, 40, 1);  fflush(stdout); };
 
     gotoxy(posX, posY+4);
     printf("Introduzca la carrera que está cursando\n");
-    gotoxy(posX, posY+5);
-    fgets(carrera, 30, stdin);
-    carrera[strcspn(carrera, "\r\n")] = '\0';
-
-    gotoxy(posX, posY+7);
-    printf("Introduzca el  año que cursa\n");
-    gotoxy(posX, posY+8);
-    fgets(curso, 5, stdin);
-    curso[strcspn(curso, "\r\n")] = '\0';
+    while(leerTexto(estudiante->carrera, 40, posX, posY+5)){  limpiar_area(posX, posY+5, 40, 1); fflush(stdout); };
 
     mostrarCursor(false);
+    gotoxy(posX, posY+7);
+    printf("Seleccione el  año que cursa\n");
+    const char* opciones[] = {"1", "2", "3", "4", "5", "6"};
+
+       do{estudiante->curso = menu(opciones, 6, 0, posX+15, posY+7) + 1;}
+    while(estudiante->curso == 28);
 }

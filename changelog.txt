@@ -1,3 +1,8 @@
+VERSION 0.4.2 ORGANIZADOR ACADEMICO
+*Mejorada la lectura de datos de estudiante al principio del programa
+-Ahora el archivo "Datos_Estudiante" es de tipo binario, asimismo los datos del estudiante 'nombre', 'carrera' y 'curso' se incluyeron en un struct.
+*Añadida una verificacion al momento de intentar modificar una materia del horario, esto para evitar eliminar datos sin respaldarlos o por accidente. Para imprimir el mensaje de verificacion se creó la función "imprimirVerificacionMaterias"
+
 Pequeña version de prueba para un menu interactivo en el calendario. Utilizando las flechas izquierda y derecha se puede seleccionar el rango de actividades que se tienen en el mes, para visualizar mayor cantidad de actividades en el calendario evitando errores
 
 VERSION 0.4.1.1 ORGANIZADOR ACADEMICO
