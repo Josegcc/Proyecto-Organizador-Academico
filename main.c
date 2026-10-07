@@ -74,6 +74,8 @@ int main()
 
     mostrarCursor(false);
 
+    int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
     do
     {
 
@@ -131,6 +133,59 @@ int main()
                         menuCalendario(tareas, tareaFecha);
 
                     break;
+
+                    case 2:
+
+                    time_t actual = time(NULL);
+                    struct tm *t = localtime(&actual);
+
+                    const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
+
+                    if(t->tm_year){ diasMes[1] = 28; }
+
+                    int mes = t->tm_mon + 1;
+
+                    int lunes = (t->tm_mday - t->tm_wday) + 1;
+
+                    switch(menu(opciones, 3, 0, 20, 33))
+                        {
+                        case 0:
+
+                        break;
+
+                        case 1:
+
+                            if(lunes + 7 > diasMes[mes]){
+                            lunes = (lunes + 7) - diasMes[mes];
+                            mes++;
+                            }
+                            else{   lunes = lunes + 7; }
+
+                        break;
+
+                        default:
+                        //return;
+                        break;
+
+                        }
+
+                        if(mes == 2)
+                        {
+                            if(bisiesto(t->tm_year))
+                            {
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
+                            }else
+                            {
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
+                            }
+                        }
+                        else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+                        {
+                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
+                        }
+                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
+                             }
+                    break;
                     }
                 break;
                 }
@@ -146,7 +201,6 @@ int main()
 
                     case 0: //Menu Actividades
 
-                        //llenarTareas(materias, tareas);
                         menuTareas(materias, hora, tareas, tareaFecha, x, y);
                         formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
@@ -170,13 +224,64 @@ int main()
 
                     case 2: //Calendario
 
-                        //calendario(materias, tareas);
                         ordenarFechas(tareas, tareaFecha);
                         menuCalendario(tareas, tareaFecha);
 
                     break;
-                }
 
+                    case 3: //Exportar archivo semanal
+
+                        time_t actual = time(NULL);
+                        struct tm *t = localtime(&actual);
+
+                        const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
+
+                        if(t->tm_year){ diasMes[1] = 28; }
+
+                        int mes = t->tm_mon + 1;
+
+                        int lunes = (t->tm_mday - t->tm_wday) + 1;
+
+                        switch(menu(opciones, 3, 0, 20, 33))
+                            {
+                            case 0:
+
+                            break;
+
+                            case 1:
+
+                                if(lunes + 7 > diasMes[mes]){
+                                lunes = (lunes + 7) - diasMes[mes];
+                                mes++;
+                                }
+                                else{   lunes = lunes + 7; }
+
+                            break;
+
+                            default:
+                            //return;
+                            break;
+
+                            }
+
+                            if(mes == 2)
+                            {
+                                if(bisiesto(t->tm_year))
+                                {
+                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
+                                }else
+                                {
+                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
+                                }
+                            }
+                            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+                            {
+                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
+                            }
+                            else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
+                                 }
+                    break;
+                }
             break;
         }
 

@@ -1,3 +1,8 @@
+Pequeña version de prueba para un menu interactivo en el calendario. Utilizando las flechas izquierda y derecha se puede seleccionar el rango de actividades que se tienen en el mes, para visualizar mayor cantidad de actividades en el calendario evitando errores
+
+VERSION 0.4.1.1 ORGANIZADOR ACADEMICO
+*Ahora la opción para exportar el archivo está en el menú principal, el primero que aparece cuando se preiona enter
+
 4/10/26
 VERSION 0.4.1 ORGANIZADOR ACADEMICO
 *Añadidas opciones para exportar el archivo de actividades semanales, se puede elegir la semana actual o la semana próxima

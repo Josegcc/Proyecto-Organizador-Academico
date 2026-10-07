@@ -237,7 +237,7 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
 void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana, int diasMes)
 {
     FILE *archivo;
-    archivo = fopen("Ejemplo", "w");
+    archivo = fopen("Actividades Semanales.txt", "w");
     const char* diasSemana[] ={"Lunes", "Martes",
                             "Mi\xE9", "Jueves", "Viernes",
                             "Sabado", "Domingo"};
@@ -246,7 +246,7 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
 
     for(int i = semana; i < semana + DIAS_SEM; i++)
     {
-        snprintf(buffer+strlen(buffer), 1024, "[Dia  %s]\n", diasSemana[i - semana]);
+        snprintf(buffer+strlen(buffer), 1024, "\n[Dia  %s]\n", diasSemana[i - semana]);
         for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
         {
             if(strlen(tareas[0][j]) != 0)
@@ -257,11 +257,11 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
                 {
                     if( tareaFecha[m][j].dia == i && tareaFecha[m][j].mes == mes )
                     {
-                    snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                    snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "\t+%s+\n\t%s\n", tareas[0][j], tareas[m][j]);
                     }else if( i > diasMes ){
                         if( tareaFecha[m][j].dia == i - diasMes && tareaFecha[m][j].mes == mes + 1 )
                         {
-                        snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "%s ---> %s\n", tareas[0][j], tareas[m][j]);
+                        snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "\t+%s+\n\t%s\n", tareas[0][j], tareas[m][j]);
                         }
                     }
 
@@ -273,6 +273,12 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
     }
 
     fprintf(archivo, "%s", buffer);
+
+    imprimir_centrado("Archivo creado exitosamente!", 44, 20, 82 + indice_terminal_anchura()* 8, 16);
+    gotoxy(82 + indice_terminal_anchura() * 8, 20);
+    printf("Presione una tecla para continuar...\r\n");
+    leerTecla();
+
     fclose(archivo);
 }
 

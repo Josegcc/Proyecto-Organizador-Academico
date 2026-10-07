@@ -5,7 +5,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 {
 
     const char* semana[] ={"Hora", "| Lun", "| Mar",
-                            "| Mi\xE9", "| Jue", "| Vie",
+                            "| Mi\u00E9", "| Jue", "| Vie",
                             "| Sab", "| Dom"};
     const char* raya = "_______________________________________________________________";
 
@@ -87,19 +87,21 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], int posX, int posY)
 {
     int op = -1;
-    int tamOpciones = 4;
+    int tamOpciones = 5;
     const char *menuPrinc[] = {
-        "Men\xFA de actividades",
+        "Men\u00FA de actividades",
         "Modificar materias para este d\u00EDa",
-        "Men\xFA Calendario",
+        "Men\u00FA Calendario",
+        "Exportar archivo de actividades semanal",
         "Presione ESC para volver atr\u00E1s"
                               };
     if(posY < 1)                    //Presione ESC para volver atr\xE1s
     {
         menuPrinc[0] ="Modificar materias para este d\u00EDa";
-        menuPrinc[1] = "Men\xFA Calendario";
-        menuPrinc[2] = "Presione ESC para volver atr\u00E1s";
-        tamOpciones = 3;
+        menuPrinc[1] = "Men\u00FA Calendario";
+        menuPrinc[2] = "Exportar archivo de actividades semanal";
+        menuPrinc[3] = "Presione ESC para volver atr\u00E1s";
+        tamOpciones = 4;
     }
 
     do
@@ -107,7 +109,7 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 
     COLOR_PANTALLA;
 
-    op = menu(menuPrinc, tamOpciones, 0, 20, 32);
+    op = menu(menuPrinc, tamOpciones, 0, 20, 31);
 
     switch(op)
         {
@@ -117,7 +119,7 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 
         break;
 
-        case 3:
+        case 4:
 
         return -1;
 
@@ -132,11 +134,9 @@ int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][
 
 void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y)
 {
-    int posicionX = 82;
+    int posicionX = 82 + indice_terminal_anchura() * 8;
     int posicionY = 2;
     COLOR_PANTALLA;
-
-    posicionX += indice_terminal_anchura() * 8;
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
     limpiar_area(posicionX, posicionY+2, 43 + indice_terminal_anchura(), 17);
@@ -169,21 +169,18 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
 {
     //int y = 0;
     int op = -1;
-    const char *menuPrinc[] = {
+    const char *menuTareas[] = {
         "Introducir nueva actividad",
         "Eliminar una actividad",
-        "Exportar archivo de actividades semanal",
         "Presione ESC para volver atr\u00E1s"
                               };
-
-    int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     do
     {
 
     //COLOR_PANTALLA;
 
-    op = menu(menuPrinc, 4, 0, 20, 33);
+    op = menu(menuTareas, 3, 0, 20, 33);
 
         switch(op)
         {
@@ -202,58 +199,6 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
                 break;
 
                 case 2:
-                    time_t actual = time(NULL);
-                    struct tm *t = localtime(&actual);
-
-                    const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
-
-                    if(t->tm_year){ diasMes[1] = 28; }
-
-                    int mes = t->tm_mon + 1;
-
-                    int lunes = (t->tm_mday - t->tm_wday) + 1;
-
-                    switch(menu(opciones, 3, 0, 20, 33))
-                    {
-                    case 0:
-
-                    break;
-
-                    case 1:
-
-                        if(lunes + 7 > diasMes[mes]){
-                        lunes = (lunes + 7) - diasMes[mes];
-                        mes++;
-                        }
-                        else{   lunes = lunes + 7; }
-
-                    break;
-
-                    default:
-                    //return;
-                    break;
-
-                    }
-
-                        if(mes == 2)
-                        {
-                            if(bisiesto(t->tm_year))
-                            {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
-                            }else
-                            {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
-                            }
-                        }
-                        else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
-                        {
-                                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
-                        }
-                        else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
-                             }
-                break;
-
-                case 3:
 
                 return;
 
@@ -359,7 +304,7 @@ void menuEstudiante(const char nombre[40], const char carrera[30], const char cu
     printf(carrera);
 
     gotoxy(posX, posY+9);
-    printf("A\xF1o que cursa");
+    printf("A\u00F1o que cursa");
     gotoxy(posX, posY+10);
     printf(curso);
 }

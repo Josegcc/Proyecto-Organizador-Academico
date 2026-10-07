@@ -104,7 +104,7 @@ int primerDia(int year, int mes)
     return diaSem;
 }
 
-void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
+int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int pagina)
 {
     int counter = 1;
     //bool primero = false;
@@ -112,8 +112,8 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
     int indicesx[TAM_MATERIA_TAREAS] = {0};
     int indicesy[TAM_TAREA-1] = {0};
     int x = 81 + indice_terminal_anchura() * 8; int y = 6;
+    int n = 0;
 
-    int m = 0;
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
         if(strlen(tareas[0][i]) > 0)
@@ -124,10 +124,10 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
                 {
                     if(tareaFecha[j][i].mes == mesEleg)
                     {
-                    fechasTareas[m] = tareaFecha[j][i].dia;
-                    indicesx[m] = j;
-                    indicesy[m] = i;
-                    m++;
+                    fechasTareas[n] = tareaFecha[j][i].dia;
+                    indicesx[n] = j;
+                    indicesy[n] = i;
+                    n++;
                     }
                 }
                 else{   break;  }
@@ -159,23 +159,25 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
 
     for(; counter < diaInicial; counter++);
 
-    m = 101;
+    int m = 101;
+    int pagActual = pagina * 6;
+
     for(int i = 1; i <= diasMes; i++)
     {
         //gotoxy(counter * 6 + (x-4), y);
 
-        for(int j = 0; j < sizeof(fechasTareas) / sizeof(fechasTareas[0]); j++)
+        for(int j = 0 + pagActual; j < sizeof(fechasTareas) / sizeof(fechasTareas[0]); j++)
         {
-            if(fechasTareas[j] == i)
+            if(fechasTareas[j] == i && j < 6 * (pagina+1))
             {
                 printf("\033[%dm", m);
                 printf("\033[30m"); //LETRAS NEGRAS
-                gotoxy(x+1, y+8+(m-101));
-                printf(" %.5s " , tareas[0][indicesy[m-101]]);
-                gotoxy(x+15, y+8+(m-101));
-                printf(" %s ", tareas[indicesx[m-101]][indicesy[m-101]]);
-                gotoxy(x+35, y+8+(m-101));
-                printf("%d-%d-%d", tareaFecha[indicesx[m-101]][indicesy[m-101]].dia, tareaFecha[indicesx[m-101]][indicesy[m-101]].mes, tareaFecha[indicesx[m-101]][indicesy[m-101]].ano);
+                gotoxy(x+1, 14+(j - pagActual));
+                printf(" %.5s..." , tareas[0][indicesy[j]]);
+                gotoxy(x+11, 14+(j - pagActual));
+                printf(" %s ", tareas[indicesx[j]][indicesy[j]]);
+                gotoxy(x+34, 14+(j - pagActual));
+                printf("%d-%d-%d", tareaFecha[indicesx[j]][indicesy[j]].dia, tareaFecha[indicesx[j]][indicesy[j]].mes, tareaFecha[indicesx[j]][indicesy[j]].ano);
                 printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
                 m++;
             }
@@ -196,6 +198,41 @@ void mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][
 
         counter++;
     }
+
+    fflush(stdout);
+
+    char flecha = {0};
+
+    while(flecha != 27)
+    {
+
+    flecha = leerTecla();
+
+        switch(flecha)
+        {
+        case 'C':
+
+            if(pagina + 6 < n)
+            {
+            pagina++;
+            return pagina;
+            }
+
+        break;
+
+        case 'D':
+
+            if(pagina > 0)
+            {
+            pagina--;
+            return pagina;
+            }
+
+        break;
+        }
+    }
+
+    return -1;
 }
 
 void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
@@ -229,27 +266,36 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
 
     diaInicial = primerDia(anoEleg, mesEleg);
 
-    if(mesEleg == 2)
+    int opcion = 0;
+
+    do
     {
-        if(bisiesto(anoEleg))
+
+    limpiar_area(82 + indice_terminal_anchura() * 8, 6, 43 + indice_terminal_anchura(), 15);
+
+        if(mesEleg == 2)
         {
-            mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha);
-        }else
-        {
-            mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha);
+            if(bisiesto(anoEleg))
+            {
+                opcion = mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+            }else
+            {
+                opcion = mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+            }
         }
-    }
-    else if (mesEleg == 4 || mesEleg == 6 || mesEleg == 9 || mesEleg == 11)
-    {
-            mostrarMes(30, diaInicial, mesEleg, tareas, tareaFecha);
-    }
-    else {  mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha);   }
+        else if (mesEleg == 4 || mesEleg == 6 || mesEleg == 9 || mesEleg == 11)
+        {
+                opcion = mostrarMes(30, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+        }
+        else {  opcion = mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha, opcion);   }
+
+    }while (opcion != -1);
 
     printf(AZUL_FONDO);
 
 
-    gotoxy(x+1, y+16);
+    /*gotoxy(x+1, y+16);
     printf("Presione una tecla para continuar...\r\n");
-    leerTecla();
+    leerTecla();*/
 
 }
