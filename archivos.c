@@ -36,8 +36,6 @@ void formatearArchivoEstudiante(const char* nombre_archivo, Usuario estudiante)
     FILE *archivo;
     archivo = fopen(nombre_archivo, "wb");
 
-    //fprintf(archivo, "DATOS DEL ESTUDIANTE");
-    //fprintf(archivo, "%s\n%s\n%s", nombre, carrera, curso);
     fwrite(&estudiante, sizeof(Usuario), 1, archivo);
 
     fclose(archivo);
@@ -291,11 +289,7 @@ void leerArchivoEstudiante(const char* nombre_archivo, Usuario *estudiante)
     FILE *archivo;
     archivo = fopen(nombre_archivo, "rb");
 
-    if (archivo == NULL) {
-
-        //printf("No se encontr%c un archivo de datos de estudiante\n", 162);
-        return;
-                         }
+    if (archivo == NULL) {  return;  }
 
     fread(estudiante, sizeof(Usuario), 1, archivo);
 

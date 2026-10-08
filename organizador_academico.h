@@ -5,6 +5,8 @@
 #include <ctype.h>      //Funcion toupper (Para convertir un caracter de minuscula a mayuscula)
 #include <time.h>       //Funciones y variables para manejo del tiempo, fechas, etc. Usadas en el archivo calendario.c (localtime, time)
 
+#define LOGEO
+
 #ifdef _WIN32               //Librerias Windows
 #include <conio.h>      //Para funcion _getch
 #include <windows.h>    //Para funciones de color y tamaño de pantalla (GetStdHandle, FillConsoleOutputCharacter, SetConsoleCursorPosition, SetConsoleWindowInfo, SetConsoleTextAttribute)
@@ -36,6 +38,9 @@ typedef struct
     char nombre[50];
     char carrera[40];
     int curso;
+    #ifdef LOGEO
+    char contrasena[30];
+    #endif // LOGEO
 } Usuario;
 
 
@@ -75,6 +80,7 @@ void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][T
 void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y);                                                      //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
 void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);
 void menuExportarArchivo(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);
+bool login(Usuario estudiante);
 void menuEstudiante(Usuario estudiante, const char nombre[50], const char carrera[40], const int curso);
 int menuPricipal(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], int posX, int posY); //Menu que aparece en la parte inferior cuando se presiona 'enter'
 

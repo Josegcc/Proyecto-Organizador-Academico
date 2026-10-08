@@ -1,3 +1,10 @@
+08/10/26
+VERSION 0.4.3 ORGANIZADOR ACADEMICO
+*Añadido un logeo, para esto se crea la funcion "login" en el archivo "menu.c" y se añade una variable de tipo cadena al arreglo de datos del estudiante.
+-El logeo se puede desactivar en el codigo comentando o eliminando la linea:
+#define LOGEO
+En el archivo "organizador.academico.h". Esto obviamente solo afecta la compilacion
+
 VERSION 0.4.2 ORGANIZADOR ACADEMICO
 *Mejorada la lectura de datos de estudiante al principio del programa
 -Ahora el archivo "Datos_Estudiante" es de tipo binario, asimismo los datos del estudiante 'nombre', 'carrera' y 'curso' se incluyeron en un struct.

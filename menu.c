@@ -213,7 +213,7 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
 {
     const char *opciones[] = {"Ver el calendario para este mes",
                               "Ver el calendario para otro mes",
-                              "Presione ESC para volver atr\xE1s"};
+                              "Presione ESC para volver atr\u00E1s"};
 
     const char *meses[] = {
     "Enero", "Febrero", "Marzo",
@@ -334,6 +334,72 @@ void menuExportarArchivo(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], F
                             }
                             else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
                                  }
+}
+
+bool login(Usuario estudiante)
+{
+    int x = 82 + indice_terminal_anchura() * 8;
+    char tecla;
+    char asteriscos[30];
+    char temp[30];
+
+    limpiar_area(x, 6, 30, 2);
+
+    gotoxy(x, 4);
+    printf("Bienvenido %s", estudiante.nombre);
+    gotoxy(x, 5);
+    printf("Por favor introduce tu contrase\u00F1a");
+    gotoxy(x, 7);
+    fflush(stdout);
+
+  unsigned int i = 0;
+  while(true)
+  {
+  	tecla = leerTecla();
+
+  	if(tecla == 27){
+
+  	temp[0] = '\0';
+  	break;
+
+  	}
+  	else if(tecla == 127){
+  		if(strlen(temp) > 0)
+  		{
+  		limpiar_area(x,7, strlen(temp),1);
+
+  		temp[i-1] = '\0';
+  		asteriscos[i-1] = '\0';
+
+  		gotoxy(x,7);
+  		printf("%s", asteriscos);
+  		fflush(stdout);
+  		i--;
+  		}
+  	}
+  	else if(tecla == '\n'){ break; }
+  	else{
+  		if(i < 30-1)
+  		{
+  			temp[i] = tecla;
+  			temp[i+1] = '\0';
+  			asteriscos[i] = '*';
+  			printf("%c", asteriscos[i]);
+  			fflush(stdout);
+  			i++;
+  		}
+  	}
+
+  }
+
+    if(strcmp(temp, estudiante.contrasena))
+    {
+    return true;
+    }
+    else
+    {
+    return false;
+    }
 }
 
 void menuEstudiante(Usuario estudiante, const char nombre[50], const char carrera[40], const int curso)

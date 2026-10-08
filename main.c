@@ -26,27 +26,27 @@ int main()
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
         {                                                                  //El usuario confirma si es correcto el archivo existente
 
-        limpiarArreglo(materias, hora, true, true);                        //Si no lo es, se procede a leer los datos y crear el archivo desde 0
-        limpiarPantalla();
+            limpiarArreglo(materias, hora, true, true);                    //Si no lo es, se procede a leer los datos y crear el archivo desde 0
+            limpiarPantalla();
 
-        calcHora(hora);
+            calcHora(hora);
 
-        casilla(64 - indice_terminal_anchura(), 26, 7, 5);
-        casilla(64 - indice_terminal_anchura(),3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
-        casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-        imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
-        menuHorario(false, materias, hora, 100, 100);
-        leerEstudiante(&estudiante);
-        formatearArchivoEstudiante(nombre_archivo_estudiante, estudiante);
+            casilla(64 - indice_terminal_anchura(), 26, 7, 5);
+            casilla(64 - indice_terminal_anchura(),3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
+            casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
+            imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+            menuHorario(false, materias, hora, 100, 100);
+            leerEstudiante(&estudiante);
+            formatearArchivoEstudiante(nombre_archivo_estudiante, estudiante);
 
 
-        for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
-        {
-            leerMaterias(i, materias, tareas, hora);
-        }
+            for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
+            {
+                leerMaterias(i, materias, tareas, hora);
+            }
 
-        formatearArchivoHorario(nombre_archivo_horario, materias, hora);
-        formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
+            formatearArchivoHorario(nombre_archivo_horario, materias, hora);
+            formatearArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
         }
 
@@ -67,6 +67,20 @@ int main()
     casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+
+    #ifdef LOGEO
+    int counter = 0;
+    while(login(estudiante)){
+    counter++;
+    if(counter>2){
+    gotoxy(82 + indice_terminal_anchura() * 8, 8);
+    printf("Contrase\u00F1a errada multiples veces");
+    gotoxy(82 + indice_terminal_anchura() * 8, 9);
+    printf("Saliendo del programa...");
+    return 0;
+                }
+    }
+    #endif // LOGEO
 
     menuEstudiante(estudiante, estudiante.nombre, estudiante.carrera, estudiante.curso);
 
@@ -513,9 +527,27 @@ void leerEstudiante(Usuario *estudiante)
 
     mostrarCursor(false);
     gotoxy(posX, posY+7);
-    printf("Seleccione el  año que cursa\n");
+    printf("Seleccione el  a\u00F1o que cursa\n");
     const char* opciones[] = {"1", "2", "3", "4", "5", "6"};
 
        do{estudiante->curso = menu(opciones, 6, 0, posX+15, posY+7) + 1;}
     while(estudiante->curso == 28);
+
+    #ifdef LOGEO
+    limpiar_area(82, 4, 43 + indice_terminal_anchura(), 17);
+
+    fflush(stdout);
+
+    mostrarCursor(true);
+
+    gotoxy(posX, posY);
+    printf("Introduce una contrase\u00F1a");
+    gotoxy(posX, posY+1);
+    printf("Trata de recordarla porque");
+    gotoxy(posX, posY+2);
+    printf("no la volver\u00E1s a ver!");
+    gotoxy(posX, posY+3);
+    scanf("%s", estudiante->contrasena);
+    estudiante->contrasena[strlen(estudiante->contrasena)-1] = '\0';
+    #endif // LOGEO
 }
