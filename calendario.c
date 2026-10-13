@@ -175,7 +175,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
                 gotoxy(x+1, 13+(j - pagActual));
                 printf(" %.5s..." , tareas[0][indicesy[j]]);
                 gotoxy(x+11, 13+(j - pagActual));
-                printf(" %s ", tareas[indicesx[j]][indicesy[j]]);
+                printf(" %.20s ", tareas[indicesx[j]][indicesy[j]]);
                 gotoxy(x+34, 13+(j - pagActual));
                 printf("%d-%d-%d", tareaFecha[indicesx[j]][indicesy[j]].dia, tareaFecha[indicesx[j]][indicesy[j]].mes, tareaFecha[indicesx[j]][indicesy[j]].ano);
                 printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO

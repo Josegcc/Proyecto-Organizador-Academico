@@ -55,6 +55,7 @@ char leerTecla();           //Lee una sola tecla que el usuario presione sin esp
 void gotoxy(int x, int y);  //Mueve el cursor al área de la pantalla indicada
 int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y);
 bool leerTexto(char cadena[], size_t lon_cadena, int x, int y);
+int imprimirCadenaGrande(const char cadena[], int lon_maxima, int x, int y);
 void imprimir_centrado(const char *cadena, int baseCas, int altCas, int posX, int posY);
 int indice_terminal_altura();
 int indice_terminal_anchura();
@@ -72,7 +73,6 @@ void leerArchivoEstudiante(const char* nombre_archivo, Usuario *estudiante);
 bool materiaRepet(const char materias[TAM_HORA][DIAS_SEM][30], const char* materia);
 void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int mes, int semana, int diasMes);
 void calcHora(int hora[2][TAM_HORA]);                                                                                               //Realiza el cómputo de todos los horarios académicos tomando como referencia los dos primeros que el usuario introduce
-void imprimirVerificacionMaterias(); //Solo para evitar muchas lineas de codigo en el ciclo principal
 
 /*menu.c - Diferentes menus*/
 bool menuHorario(bool verific,const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY);                                          //Menu para mostrar el horario completo, con materias, horas y dias de la semana
@@ -90,6 +90,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[T
 void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int x, int y);        //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia
 void leerEstudiante(Usuario *estudiante);
 void elimTarea(const char materia[30], char tareas[10][10][50]);
+void imprimirVerificacionMaterias(); //Solo para evitar muchas lineas de codigo en el ciclo principal
 
 /*calendario.c*/
 void calendario(int anoEleg, int mesEleg, const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);

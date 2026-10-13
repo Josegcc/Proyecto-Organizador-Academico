@@ -551,3 +551,22 @@ void leerEstudiante(Usuario *estudiante)
     estudiante->contrasena[strlen(estudiante->contrasena)-1] = '\0';
     #endif // LOGEO
 }
+
+void imprimirVerificacionMaterias() //Solo para evitar muchas lineas de codigo en el ciclo principal
+{
+    limpiar_area(82 + indice_terminal_anchura(), 4, 43 + indice_terminal_anchura(), 17);
+
+    gotoxy(84,4);
+    printf("Seguro que desea modificar las ");
+    gotoxy(88,5);
+    printf("materias de este dia?");
+    gotoxy(84,7);
+    printf("Esto eliminará todas las materias");
+    gotoxy(84,8);
+    printf("y actividades del dia seleccionado");
+    gotoxy(88,9);
+    printf("(Toda la columna)");
+    gotoxy(96, 12);
+    printf("(S/N)");
+    fflush(stdout);
+}

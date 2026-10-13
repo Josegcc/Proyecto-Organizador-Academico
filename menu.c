@@ -14,7 +14,6 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
         for(int j = 0; j < DIAS_SEM+1; j++)
         {
 
-
         gotoxy(11 + (j*10), 7);
         if(posX == j && posY == 0){
         printf("%s%s%s", ROJO, semana[j], AZUL_FONDO);
@@ -26,7 +25,6 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 
         gotoxy(8, 8);
         printf("%s", raya);
-
 
         int minDescanso = 0;
         int horaDescanso = 0;
@@ -68,7 +66,6 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
                 gotoxy(8, 8 + i*3);
                 printf("%s", raya);
                                           }
-
     if(verific)
     {
 
@@ -80,7 +77,6 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
     return respuesta;
 
     }
-
     return false;
 }
 
@@ -136,6 +132,8 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
 {
     int posicionX = 82 + indice_terminal_anchura() * 8;
     int posicionY = 2;
+    int salto = 0;
+    char temp[128] = {0};
     COLOR_PANTALLA;
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
@@ -149,14 +147,15 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
         if(strcmp(tareas[0][i], materia) == 0)
         {
 
-        for(int j = 1; j < 10; j++)
+            for(int j = 1; j < 10; j++)
             {
                 if(strlen(tareas[j][i]) > 0)
                 {
-                gotoxy(posicionX+1, posicionY+4+j);
-                printf("%s", tareas[j][i]);
-                gotoxy(posicionX+26, posicionY+4+j);
+                gotoxy(posicionX+26, posicionY+4+j+salto);
                 printf("Fecha: %d-%d-%d", tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+
+                snprintf(temp, 128, "%s", tareas[j][i]);
+                salto += imprimirCadenaGrande(temp, 21, posicionX+1, posicionY+4+j+salto);
                 }
             }
 
@@ -167,19 +166,14 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
 
 void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int posX, int posY)
 {
-    //int y = 0;
     int op = -1;
     const char *menuTareas[] = {
         "Introducir nueva actividad",
         "Eliminar una actividad",
         "Presione ESC para volver atr\u00E1s"
                               };
-
     do
     {
-
-    //COLOR_PANTALLA;
-
     op = menu(menuTareas, 3, 0, 20, 33);
 
         switch(op)
@@ -285,55 +279,53 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
 void menuExportarArchivo(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
 {
     time_t actual = time(NULL);
-                        struct tm *t = localtime(&actual);
+    struct tm *t = localtime(&actual);
 
-                        const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
-                        int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        const char *opciones[] = {"Semana Actual", "Semana Proxima", "Cancelar"};
+        int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-                        if(t->tm_year){ diasMes[1] = 28; }
+        if(t->tm_year){ diasMes[1] = 28; }
 
-                        int mes = t->tm_mon + 1;
+            int mes = t->tm_mon + 1;
 
-                        int lunes = (t->tm_mday - t->tm_wday) + 1;
+            int lunes = (t->tm_mday - t->tm_wday) + 1;
 
-                        switch(menu(opciones, 3, 0, 20, 33))
-                            {
-                            case 0:
+            switch(menu(opciones, 3, 0, 20, 33))
+            {
+                case 0:
 
-                            break;
+                break;
 
-                            case 1:
+                case 1:
 
-                                if(lunes + 7 > diasMes[mes]){
-                                lunes = (lunes + 7) - diasMes[mes];
-                                mes++;
-                                }
-                                else{   lunes = lunes + 7; }
+                if(lunes + 7 > diasMes[mes]){
+                lunes = (lunes + 7) - diasMes[mes];
+                mes++;
+                }
+                else{   lunes = lunes + 7; }
 
-                            break;
+                break;
 
-                            default:
-                            return;
-                            break;
+                default:
+                return;
+                break;
+            }
 
-                            }
-
-                            if(mes == 2)
-                            {
-                                if(bisiesto(t->tm_year))
-                                {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
-                                }else
-                                {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
-                                }
-                            }
-                            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
-                            {
-                                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
-                            }
-                            else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);
-                                 }
+            if(mes == 2)
+            {
+                if(bisiesto(t->tm_year))
+                {
+                    exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 28);
+                }else
+                {
+                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 29);
+                }
+            }
+            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+            {
+                exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 30);
+            }
+            else {  exportarArchivoTareas(tareas, tareaFecha, mes, lunes, 31);  }
 }
 
 bool login(Usuario estudiante)

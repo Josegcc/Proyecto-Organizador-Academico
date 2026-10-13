@@ -1,3 +1,8 @@
+12/10/26
+VERSION 0.4.3.1 ORGANIZADOR ACADEMICO
+*Pequeño arreglo para imprimir cadenas de texto muy grandes en diferentes lineas, principalmente para actividades que aparecen en el menú secundario (el recuadro de la derecha). Se crea la función "imprimirCadenaGrande" el archivo "utiles.c"
+Se está intentando solucionar el problema de la escala, el programa no funciona bien cuando se abre con un tamaño de pantalla diferente al definido
+
 08/10/26
 VERSION 0.4.3 ORGANIZADOR ACADEMICO
 *Añadido un logeo, para esto se crea la funcion "login" en el archivo "menu.c" y se añade una variable de tipo cadena al arreglo de datos del estudiante.

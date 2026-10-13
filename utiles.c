@@ -6,8 +6,8 @@
 #define INF_IZ  "+"
 #define INF_DER "+"
 #define HORIZONTAL "-"
-#define VERTICAL "|"*/
-
+#define VERTICAL "|"
+*/
 
 #define SUP_IZ  "\u250C"
 #define SUP_DER "\u2514"
@@ -284,7 +284,6 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     while(true)
     {
-
     	for(int i = desc_opcion; i < tamOpciones; i++)
     	{
     		gotoxy(x+1, y+2+i - desc_opcion);
@@ -400,6 +399,41 @@ bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
   return false;
 }
 
+int imprimirCadenaGrande(const char cadena[], int lon_maxima, int x, int y)
+{
+    int cantDivisiones = 0;
+
+    int tamanoParte = strlen(cadena);
+
+    if(tamanoParte < lon_maxima)        //En el caso de que la cadena se encuentra en el rango correcto, se imprime normalmente
+    {
+    gotoxy(x,y);
+    printf("%s", cadena);
+    return 0;
+    }
+
+    while(true)
+    {
+        if(tamanoParte > lon_maxima)
+        {
+        tamanoParte = tamanoParte - lon_maxima;
+        cantDivisiones++;
+        }else{
+        cantDivisiones++;
+        break;
+        }
+    }
+
+    for(int i = 0; i < cantDivisiones; i++)
+    {
+    gotoxy(x,y+i);
+    fwrite(cadena + i*lon_maxima, 1, lon_maxima, stdout);
+    if(i < cantDivisiones-1){    printf("-");    }
+    }
+
+    return cantDivisiones;
+}
+
 void gotoxy(int x, int y)
 {
 #ifdef _WIN32
@@ -459,30 +493,33 @@ void tamanoPantalla()
 
    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
    HWND consoleWindow = GetConsoleWindow();
+   DWORD dwMode = 0;
+   GetConsoleMode(hStdOut, &dwMode);
+
+   dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+   SetConsoleMode(hStdOut, dwMode);
+
+   SetConsoleOutputCP(CP_UTF8);
 
     COORD bufferSize = {140, 40};
     SMALL_RECT windowSize = {0, 0, 139, 39};
 
-    //SetConsoleMode(hStdOut, ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-
     SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
     SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
 
-    // Combine text color (Foreground) and background color using bitwise OR (|)
-    //SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
-    COLOR_PANTALLA;
-
-    SetConsoleOutputCP(CP_UTF8);
-
     /*Desactivar rezigin de la ventana*/
-    /*LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+    LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
 
     style &= ~WS_MAXIMIZEBOX;
-    style &= ~WS_SIZEBOX;*/
+    style &= ~WS_SIZEBOX;
 
     SetWindowLong(consoleWindow, GWL_STYLE, style);
 
     SetWindowPos(consoleWindow, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+
+    // Combine text color (Foreground) and background color using bitwise OR (|)
+    //SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+    COLOR_PANTALLA;
 
 #else
 
@@ -519,7 +556,7 @@ void casilla(int base, int altura, int posX, int posY)
         if(i == 1)
         {
         printf(SUP_IZ);
-            for(int j = 0; j < base; j ++)
+            for(int j = 0; j < base-1; j ++)
             {
             printf(HORIZONTAL);
             }
@@ -527,7 +564,7 @@ void casilla(int base, int altura, int posX, int posY)
         else if (i == altura)
         {
         printf(SUP_DER);
-            for(int j = 0; j < base; j ++)
+            for(int j = 0; j < base-1; j ++)
             {
             printf(HORIZONTAL);
             }
@@ -619,8 +656,6 @@ void limpiar_area(int posX, int posY, int base, int altura)
     //free(blankLine);
 }
 
-
-
 void limpiarPantalla()
 {
 #ifdef _WIN32
@@ -668,25 +703,4 @@ void mostrarCursor(bool mostrar)    //Verdadero para mostrar el cursor, false pa
     else       {    printf("\033[?25l");}
 
 #endif // _WIN32
-
-
-}
-
-void imprimirVerificacionMaterias() //Solo para evitar muchas lineas de codigo en el ciclo principal
-{
-    limpiar_area(82 + indice_terminal_anchura(), 4, 43 + indice_terminal_anchura(), 17);
-
-    gotoxy(84,4);
-    printf("Seguro que desea modificar las ");
-    gotoxy(88,5);
-    printf("materias de este dia?");
-    gotoxy(84,7);
-    printf("Esto eliminará todas las materias");
-    gotoxy(84,8);
-    printf("y actividades del dia seleccionado");
-    gotoxy(88,9);
-    printf("(Toda la columna)");
-    gotoxy(96, 12);
-    printf("(S/N)");
-    fflush(stdout);
 }
