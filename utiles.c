@@ -352,7 +352,64 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     return 0;
 }
 
-bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
+bool leerContrasena(char cadena[], bool ocultar, size_t lon_cadena, int x, int y)
+{
+    char tecla;
+    gotoxy(x, y);
+    fflush(stdout);
+
+
+    unsigned int i = 0;
+    while(true)
+    {
+        tecla = leerTecla();
+
+        if(tecla == 27) { // ESC para cancelar
+            cadena[0] = '\0';
+            return true;
+        }
+        else if(tecla == 127) {
+            if(strlen(cadena) > 0 && i > 0)
+            {
+                // Limpiamos el área ocupada actualmente en pantalla
+                limpiar_area(x, y, i, 1);
+
+                i--;
+                cadena[i] = '\0';
+
+                gotoxy(x, y);
+                if(ocultar)
+                {
+                    for(unsigned int j = 0; j < i; j++) {   printf("*");   }
+                } else
+                {
+                    printf("%s", cadena);
+                }
+                fflush(stdout);
+            }
+        }
+        else if(tecla == '\n' ) {    if(i > 0) break;   }
+        else{
+            if(i < lon_cadena - 1)
+            {
+                cadena[i] = tecla;
+                cadena[i + 1] = '\0';
+
+                if(ocultar) {
+                    printf("*");
+                } else {
+                    printf("%c", tecla);
+                }
+                fflush(stdout);
+                i++;
+            }
+        }
+    }
+
+    return false; // Retorna false si finalizó con Enter de forma normal
+}
+
+bool leerTexto(char cadena[], size_t lon_cadena, size_t margen, int x, int y)
 {
   char tecla;
   gotoxy(x,y);
@@ -370,30 +427,44 @@ bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
 
   	}
   	else if(tecla == 127){
-  		if(strlen(cadena) > 0)
+  		if(strlen(cadena) > 0 && i > 0)
   		{
-  		limpiar_area(x,y, strlen(cadena),1);
-
   		cadena[i-1] = '\0';
 
+  		if(i >= margen)
+  		{
+  		limpiar_area(x,y + (i/margen), margen,1);
+  		gotoxy(x, y + (i/margen));
+  		printf ("%s", &(cadena[i - (i%margen)]));
+  		}else{
+  		limpiar_area(x,y, strlen(cadena) + 2,1);
   		gotoxy(x,y);
   		printf("%s", cadena);
+  		}
+
   		fflush(stdout);
   		i--;
   		}
   	}
   	else if(tecla == '\n'){
 
-  	return false;
+    if(i > 2)
+        return false;
 
   	}else{
   		if(i < lon_cadena-1)
   		{
   			cadena[i] = tecla;
-  			cadena[i+1] = '\0';
-  			printf("%c", tecla);
-  			fflush(stdout);
-  			i++;
+            cadena[i + 1] = '\0';
+
+            if(i >= margen && (i % margen == 0))
+            {
+            gotoxy(x, y + (i / margen));
+            }
+
+            printf("%c", tecla);
+            fflush(stdout);
+            i++;
   		}
   	}
 

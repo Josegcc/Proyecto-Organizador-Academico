@@ -1,3 +1,10 @@
+17/10/26
+VERSION 0.4.3.2 ORGANIZADOR ACADEMICO
+*Mejoras a nivel de codigo
+-La funcion "leerTexto" ahora permite leer una cadena en varias lineas
+-Se crea la funcion "leerContrasena" en el archivo "utiles.c" para modularizar la lectura de la contraseña, anteriormente se leía con un scanf al registrarse y con un método propio en la funcion "logeo", esto era un error que podría causar que el usuario no pudiera ingresar con la contraseña que se registró
+-Añadidos indicadores visuales en la parte inferior del programa, símbolos de flechas y de la tecla enter para indicarle al usuario como interactuar con el programa
+
 12/10/26
 VERSION 0.4.3.1 ORGANIZADOR ACADEMICO
 *Pequeño arreglo para imprimir cadenas de texto muy grandes en diferentes lineas, principalmente para actividades que aparecen en el menú secundario (el recuadro de la derecha). Se crea la función "imprimirCadenaGrande" el archivo "utiles.c"

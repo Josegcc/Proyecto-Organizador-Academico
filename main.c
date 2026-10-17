@@ -21,7 +21,7 @@ int main()
     casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
     casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
 
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
         {                                                                  //El usuario confirma si es correcto el archivo existente
@@ -34,7 +34,7 @@ int main()
             casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
             casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
             casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-            imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+            imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
             menuHorario(false, materias, hora, 100, 100);
             leerEstudiante(&estudiante);
             formatearArchivoEstudiante(nombre_archivo_estudiante, estudiante);
@@ -66,7 +66,7 @@ int main()
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
 
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7+indice_terminal_anchura(), 4);
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
 
     #ifdef LOGEO
     int counter = 0;
@@ -294,7 +294,7 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[T
                 gotoxy(posicionX, posicionY+3);
                 fflush(stdout);
 
-                    if(leerTexto(temp, 30, posicionX, posicionY+3))
+                    if(leerTexto(temp, 30, 42, posicionX, posicionY+3))
                     {
                         gotoxy(posicionX, posicionY+9);
                         printf("Seguro que desea cancelar? (S/N)");
@@ -379,7 +379,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
         printf("Para esta materia:");
         fflush(stdout);
 
-        if(leerTexto(temp, 30, posicionX+1, 8))
+        if(leerTexto(temp, 50, 42, posicionX+1, 8))
         {
             gotoxy(posicionX, 17);
             printf("Seguro que desea cancelar? (S/N)");
@@ -531,11 +531,11 @@ void leerEstudiante(Usuario *estudiante)
     printf("Introduzca su primer nombre\n");
     gotoxy(posX, posY+1);
     printf("y su primer apellido\n");
-    while(leerTexto(estudiante->nombre, 40, posX, posY+2)){  limpiar_area(posX, posY+2, 40, 1);  fflush(stdout); };
+    while(leerTexto(estudiante->nombre, 40, 42, posX, posY+2)){  limpiar_area(posX, posY+2, 40, 1);  fflush(stdout); };
 
     gotoxy(posX, posY+4);
     printf("Introduzca la carrera que está cursando\n");
-    while(leerTexto(estudiante->carrera, 40, posX, posY+5)){  limpiar_area(posX, posY+5, 40, 1); fflush(stdout); };
+    while(leerTexto(estudiante->carrera, 40, 42, posX, posY+5)){  limpiar_area(posX, posY+5, 40, 1); fflush(stdout); };
 
     mostrarCursor(false);
     gotoxy(posX, posY+7);
@@ -546,7 +546,7 @@ void leerEstudiante(Usuario *estudiante)
     while(estudiante->curso == 28);
 
     #ifdef LOGEO
-    limpiar_area(82, 4, 43 + indice_terminal_anchura(), 17);
+    limpiar_area(83 + indice_terminal_anchura()*8, 4, 42 + indice_terminal_anchura(), 17);
 
     fflush(stdout);
 
@@ -559,7 +559,7 @@ void leerEstudiante(Usuario *estudiante)
     gotoxy(posX, posY+2);
     printf("no la volver\u00E1s a ver!");
     gotoxy(posX, posY+3);
-    scanf("%s", estudiante->contrasena);
+    leerContrasena(estudiante->contrasena, false, 30, posX,posY+4);
     estudiante->contrasena[strlen(estudiante->contrasena)] = '\0';
     #endif // LOGEO
 }

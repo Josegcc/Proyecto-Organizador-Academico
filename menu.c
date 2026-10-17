@@ -331,8 +331,6 @@ void menuExportarArchivo(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], F
 bool login(Usuario estudiante)
 {
     int x = 82 + indice_terminal_anchura() * 8;
-    char tecla;
-    char asteriscos[30];
     char temp[30];
 
     limpiar_area(x, 6, 30, 2);
@@ -344,45 +342,7 @@ bool login(Usuario estudiante)
     gotoxy(x, 7);
     fflush(stdout);
 
-  unsigned int i = 0;
-  while(true)
-  {
-  	tecla = leerTecla();
-
-  	if(tecla == 27){
-
-  	temp[0] = '\0';
-  	break;
-
-  	}
-  	else if(tecla == 127){
-  		if(strlen(temp) > 0)
-  		{
-  		limpiar_area(x,7, strlen(temp),1);
-
-  		temp[i-1] = '\0';
-  		asteriscos[i-1] = '\0';
-
-  		gotoxy(x,7);
-  		printf("%s", asteriscos);
-  		fflush(stdout);
-  		i--;
-  		}
-  	}
-  	else if(tecla == '\n'){ break; }
-  	else{
-  		if(i < 30-1)
-  		{
-  			temp[i] = tecla;
-  			temp[i+1] = '\0';
-  			asteriscos[i] = '*';
-  			printf("*");
-  			fflush(stdout);
-  			i++;
-  		}
-  	}
-
-  }
+    leerContrasena(temp, true, 30, x, 7);
 
     if(strcmp(temp, estudiante.contrasena))
     {
