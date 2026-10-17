@@ -1,4 +1,9 @@
 17/10/26
+VERSION 0.4.5 ORGANIZADOR ACADEMICO
+*Añadida una pantalla personalizada de logeo
+Simplemente se añadieron casillas y se movieron posiciones al inicio de la función 'main' y en la funcion "login". Esta pantalla se visualiza cuando se abre el programa por segunda vez, por ejemplo
+
+17/10/26
 VERSION 0.4.4 ORGANIZADOR ACADEMICO
 *Experimentando mejoras visuales
 -Se cambiaron los colores de la pantalla y los diferentes menús

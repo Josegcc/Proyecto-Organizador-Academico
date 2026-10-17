@@ -14,7 +14,6 @@ int main()
     const char* nombre_archivo_estudiante = "Datos_Estudiante.dat";
     Usuario estudiante;
 
-
     tamanoPantalla();
     limpiarPantalla();
 
@@ -49,36 +48,40 @@ int main()
     leerArchivoEstudiante(nombre_archivo_estudiante, &estudiante);
     leerArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
-    limpiar_area(82 + indice_terminal_anchura()*8, 4, 43 + indice_terminal_anchura(), 17);
-    limpiar_area(8+indice_terminal_anchura(), 5, 64 - indice_terminal_anchura(), 26);
+    limpiar_area(81 + indice_terminal_anchura()*8, 3, 45 + indice_terminal_anchura(), 20);
+    limpiar_area(7+indice_terminal_anchura(), 2, 66 - indice_terminal_anchura(), 30);
 
-    //Una vez lleno el horario, se entra al menu principal
+    //Una vez lleno el horario, se entra al menu principal (o al logeo)
+
+    #ifdef LOGEO
+    casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 35 + indice_terminal_anchura(), 4);
+    casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura(), 6);
+
+    int counter = 0;
+    while(login(estudiante)){
+    counter++;
+    if(counter>2){
+    gotoxy(45 + indice_terminal_anchura() * 8, 11);
+    printf("Contrase\u00F1a errada multiples veces");
+    gotoxy(45 + indice_terminal_anchura() * 8, 12);
+    printf("Saliendo del programa...");
+    return 0;
+                }
+    }
+
+    limpiar_area(32 + indice_terminal_anchura(), 2, 70 + indice_terminal_anchura(), 15);
+    #endif // LOGEO
 
     char op = '\0';
     int x = 0;
     int y = 1;
 
-    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
     casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
-    casilla(139 + indice_terminal_anchura() * 18, 40 + indice_terminal_altura() * 2, 0, 0);//CASILLA contorno
-
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
-
-    #ifdef LOGEO
-    int counter = 0;
-    while(login(estudiante)){
-    counter++;
-    if(counter>2){
-    gotoxy(82 + indice_terminal_anchura() * 8, 8);
-    printf("Contrase\u00F1a errada multiples veces");
-    gotoxy(82 + indice_terminal_anchura() * 8, 9);
-    printf("Saliendo del programa...");
-    return 0;
-                }
-    }
-    #endif // LOGEO
 
     menuEstudiante(estudiante, estudiante.nombre, estudiante.carrera, estudiante.curso);
 
@@ -573,7 +576,7 @@ void imprimirVerificacionMaterias() //Solo para evitar muchas lineas de codigo e
     gotoxy(88+indice_terminal_anchura() * 8,5);
     printf("materias de este dia?");
     gotoxy(84+indice_terminal_anchura() * 8,7);
-    printf("Esto eliminará todas las materias");
+    printf("Esto eliminar\u00E1 todas las materias");
     gotoxy(84+indice_terminal_anchura() * 8,8);
     printf("y actividades del dia seleccionado");
     gotoxy(88+indice_terminal_anchura() * 8,9);

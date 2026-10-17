@@ -328,22 +328,23 @@ void menuExportarArchivo(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], F
 
 bool login(Usuario estudiante)
 {
-    int x = 82 + indice_terminal_anchura() * 8;
+    int x = 45 + indice_terminal_anchura() * 8;
     char temp[30];
 
-    limpiar_area(x, 6, 30, 2);
+    limpiar_area(x, 10, 30, 1);
 
-    gotoxy(x, 4);
+    gotoxy(x, 8);
     printf("Bienvenido %s", estudiante.nombre);
-    gotoxy(x, 5);
+    gotoxy(x, 9);
     printf("Por favor introduce tu contrase\u00F1a");
-    gotoxy(x, 7);
     fflush(stdout);
 
-    leerContrasena(temp, true, 30, x, 7);
+    leerContrasena(temp, true, 30, x, 10);
 
     if(strcmp(temp, estudiante.contrasena))
     {
+    gotoxy(x, 11);
+    printf("Contrase\u00F1a inv\u00E1lida introducida");
     return true;
     }
     else
