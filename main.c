@@ -89,14 +89,19 @@ int main()
     do
     {
         printf("%s", ROJO);
-        gotoxy(12, 33);
+        gotoxy(10, 33);
         printf("\u2190");
         printf("\u2193");
         printf("\u2192");
-        printf("\t\t\u23CE");
-        gotoxy(13,32);
+        gotoxy(11,32);
         printf("\u2191");
+        gotoxy(10,36);
+        printf("\u23CE");
         printf("%s", AZUL_FONDO);
+        gotoxy(10,34);
+        printf("Para navegar por los men\u00FAs");
+        gotoxy(10,37);
+        printf("Abrir menu para interactuar con una casilla");
 
         menuSecundario(materias[y-1][x-1], tareas, tareaFecha, x, y);
         menuHorario(false, materias, hora, x, y);
@@ -125,7 +130,7 @@ int main()
 
             case '\n':  //Tecla 'enter'
 
-            limpiar_area(10, 32, 20, 6);
+            limpiar_area(10, 32, 60, 6);
 
                 if (y < 1 && x > 0) //CUANDO SE PRESIONA UN DIA DE LA SEMANA
                 {
