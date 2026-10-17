@@ -188,7 +188,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         //gotoxy()
 
-        printf(AZUL_FONDO);
+        printf(COLOR_RESET);
 
             if(counter%7== 0)
             {
@@ -198,6 +198,8 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         counter++;
     }
+
+    printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
 
     fflush(stdout);
 
@@ -295,6 +297,6 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
 
     }while (opcion != -1);
 
-    printf(AZUL_FONDO);
+    printf(COLOR_RESET);
 
 }

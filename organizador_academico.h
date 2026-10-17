@@ -17,9 +17,11 @@
 #include <fcntl.h>
 #endif
 
-#define COLOR_PANTALLA printf("\033[44m");
+#define COLOR_PANTALLA printf("\033[0m");
 #define ROJO "\033[0;101m"
-#define AZUL_FONDO "\033[44m"
+#define BLANCO "\033[47m"
+#define VERDE "\033[0;92m"
+#define AZUL "\033[44m"
 #define COLOR_RESET "\033[0m"
 #define DIAS_SEM 5
 #define TAM_HORA 8

@@ -292,7 +292,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     		gotoxy(x+1, y+2+i - desc_opcion);
     		if(opcion == i)
     		{
-    		printf("%s%s%s", ROJO, opciones[i], AZUL_FONDO);
+    		printf("%s%s%s", BLANCO, opciones[i], COLOR_RESET);
     		}
     		else
     		{
@@ -625,8 +625,7 @@ void casilla(int base, int altura, int posX, int posY)
     //altura += indice_terminal_altura();
     base +=   indice_terminal_anchura();
 
-    //posX += indice_terminal_anchura() * 3;
-    //posY -= indice_terminal_altura * 2;
+    printf("%s", VERDE);
 
     for(int i = 1; i <= altura; i++)
     {
@@ -669,6 +668,7 @@ void casilla(int base, int altura, int posX, int posY)
         }
     }
 
+    printf("%s", COLOR_RESET);
 }
 
 int indice_terminal_altura()
@@ -689,7 +689,7 @@ int indice_terminal_altura()
     terminal_height = w.ws_row;
     #endif
 
-    int indice_terminal_altura  = (terminal_height - 40) / 10;
+    int indice_terminal_altura  = (terminal_height - 40) / 2;
 
     return indice_terminal_altura;
 }

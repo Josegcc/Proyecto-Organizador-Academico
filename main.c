@@ -21,24 +21,20 @@ int main()
     casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
     casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
+    casilla(139 + indice_terminal_anchura() * 18, 40 + indice_terminal_altura() * 2, 0, 0);//CASILLA contorno
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
 
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
         {                                                                  //El usuario confirma si es correcto el archivo existente
 
             limpiarArreglo(materias, hora, true, true);                    //Si no lo es, se procede a leer los datos y crear el archivo desde 0
-            limpiarPantalla();
+            limpiar_area(82 + indice_terminal_anchura()*8, 4, 43 + indice_terminal_anchura(), 17);
 
             calcHora(hora);
 
-            casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
-            casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-            casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-            imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
             menuHorario(false, materias, hora, 100, 100);
             leerEstudiante(&estudiante);
             formatearArchivoEstudiante(nombre_archivo_estudiante, estudiante);
-
 
             for(int i = 0; i < DIAS_SEM; i++)      //LECTURA DE MATERIAS
             {
@@ -53,7 +49,8 @@ int main()
     leerArchivoEstudiante(nombre_archivo_estudiante, &estudiante);
     leerArchivoTareas(nombre_archivo_tareas, tareas, tareaFecha);
 
-    limpiarPantalla();
+    limpiar_area(82 + indice_terminal_anchura()*8, 4, 43 + indice_terminal_anchura(), 17);
+    limpiar_area(8+indice_terminal_anchura(), 5, 64 - indice_terminal_anchura(), 26);
 
     //Una vez lleno el horario, se entra al menu principal
 
@@ -65,6 +62,7 @@ int main()
     casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
+    casilla(139 + indice_terminal_anchura() * 18, 40 + indice_terminal_altura() * 2, 0, 0);//CASILLA contorno
 
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 7 + indice_terminal_anchura(), 4);
 
@@ -88,7 +86,7 @@ int main()
 
     do
     {
-        printf("%s", ROJO);
+        printf("%s", BLANCO);
         gotoxy(10, 33);
         printf("\u2190");
         printf("\u2193");
@@ -97,11 +95,13 @@ int main()
         printf("\u2191");
         gotoxy(10,36);
         printf("\u23CE");
-        printf("%s", AZUL_FONDO);
+        printf("%s", COLOR_RESET);
         gotoxy(10,34);
         printf("Para navegar por los men\u00FAs");
         gotoxy(10,37);
         printf("Abrir menu para interactuar con una casilla");
+        gotoxy(10, 39);
+        printf("%sESC%s para salir del programa", BLANCO, COLOR_RESET);
 
         menuSecundario(materias[y-1][x-1], tareas, tareaFecha, x, y);
         menuHorario(false, materias, hora, x, y);
@@ -130,7 +130,7 @@ int main()
 
             case '\n':  //Tecla 'enter'
 
-            limpiar_area(10, 32, 60, 6);
+            limpiar_area(10, 32, 60, 8);
 
                 if (y < 1 && x > 0) //CUANDO SE PRESIONA UN DIA DE LA SEMANA
                 {
@@ -429,19 +429,19 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                         case 0:
                                  if(tecla == 'A' && tareaFecha[j][i].dia < diasMes[ tareaFecha[j][i].mes - 1] ) (tareaFecha[j][i].dia)++;
                             else if(tecla == 'B' && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
-                            printf("%s%02d%s-%02d-%02d",ROJO, tareaFecha[j][i].dia ,AZUL_FONDO, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
+                            printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[j][i].dia ,COLOR_RESET, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
                         break;
 
                         case 1:
                                  if(tecla == 'A' && tareaFecha[j][i].mes < 12){ tareaFecha[j][i].mes++; tareaFecha[j][i].dia = 1;}
                             else if(tecla == 'B' && tareaFecha[j][i].mes > 1) { tareaFecha[j][i].mes--; tareaFecha[j][i].dia = 1;}
-                            printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,ROJO, tareaFecha[j][i].mes ,AZUL_FONDO, tareaFecha[j][i].ano);
+                            printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,BLANCO, tareaFecha[j][i].mes ,COLOR_RESET, tareaFecha[j][i].ano);
                         break;
 
                         case 2:
                                  if(tecla == 'A'){ tareaFecha[j][i].ano++;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
                             else if(tecla == 'B'){ tareaFecha[j][i].ano--;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
-                            printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,ROJO, tareaFecha[j][i].ano ,AZUL_FONDO);
+                            printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,BLANCO, tareaFecha[j][i].ano ,COLOR_RESET);
                         break;
 
                         }

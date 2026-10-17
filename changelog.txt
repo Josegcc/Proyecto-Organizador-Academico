@@ -1,4 +1,10 @@
 17/10/26
+VERSION 0.4.4 ORGANIZADOR ACADEMICO
+*Experimentando mejoras visuales
+-Se cambiaron los colores de la pantalla y los diferentes menús
+-Añadida una casilla de contorno que cubre toda la pantalla
+
+17/10/26
 VERSION 0.4.3.2 ORGANIZADOR ACADEMICO
 *Mejoras a nivel de codigo
 -La funcion "leerTexto" ahora permite leer una cadena en varias lineas

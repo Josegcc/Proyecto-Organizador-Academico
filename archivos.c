@@ -171,7 +171,7 @@ bool leerArchivoHorario(const char *nombre_archivo, char materias[TAM_HORA][DIAS
 
     if (archivo == NULL) {
 
-        printf("No se encontr%c un archivo de horario\n", 162);
+        //printf("No se encontr%c un archivo de horario\n", 162);
         return false;
                          }
 

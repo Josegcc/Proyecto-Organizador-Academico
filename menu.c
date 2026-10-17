@@ -9,14 +9,12 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
                             "| Sab", "| Dom"};
     const char* raya = "_______________________________________________________________";
 
-    //COLOR_PANTALLA;
-
         for(int j = 0; j < DIAS_SEM+1; j++)
         {
 
         gotoxy(11 + (j*10) + indice_terminal_anchura(), 7);
         if(posX == j && posY == 0){
-        printf("%s%s%s", ROJO, semana[j], AZUL_FONDO);
+        printf("%s%s%s", BLANCO, semana[j], COLOR_RESET);
                                   }
         else{
         printf("%s", semana[j]);
@@ -49,7 +47,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
             }
 
             if(posX == 0 && posY == i){
-            snprintf(buffer+strlen(buffer), 256, "%s%02d:%02d-%02d:%02d%s\u2502",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], AZUL_FONDO);
+            snprintf(buffer+strlen(buffer), 256, "%s%02d:%02d-%02d:%02d%s\u2502",BLANCO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], COLOR_RESET);
                                       }
             else{
                 snprintf(buffer+strlen(buffer), 256, "%02d:%02d-%02d:%02d\u2502",hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i]);
@@ -57,7 +55,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 
                 for (int j = 0; j < DIAS_SEM; j++){
 
-                    if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], AZUL_FONDO);                  }
+                    if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", BLANCO, materias[i-1][j], COLOR_RESET);                  }
                     else                        {    snprintf(buffer+strlen(buffer), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
                                                   }
                 gotoxy(10+indice_terminal_anchura(), 7+i*3);  //AL PRINCIPIO DE LA LINEA
