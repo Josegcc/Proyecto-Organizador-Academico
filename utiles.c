@@ -203,14 +203,17 @@ char leerTecla()
                 break;
 
             }
+        }else if(ch == '\b')
+        {
+        tecla = 127;
         }else if (ch == 13) //Tecla Enter
         {
         tecla = '\n';
-        }else if(ch == 27)  //Tecla ESC
+        }
+        else if(ch == 27)  //Tecla ESC
         {
         tecla = 27;
         }
-
         else if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D')
         {}
         else    //Cualquier otra tecla
@@ -329,14 +332,14 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     	case '\n':
 
-    	limpiar_area(x, y+1, tamCasilla+3, tamOpciones+2);
+    	limpiar_area(x, y+1, tamCasilla+3+indice_terminal_anchura(), tamOpciones+2);
     	return opcion;
 
     	break;
 
     	case 27:
 
-        limpiar_area(x, y+1, tamCasilla+3, tamOpciones+2);
+        limpiar_area(x, y+1, tamCasilla+3+indice_terminal_anchura(), tamOpciones+2);
     	return 27;
 
     	break;
@@ -402,6 +405,8 @@ bool leerTexto(char cadena[], size_t lon_cadena, int x, int y)
 int imprimirCadenaGrande(const char cadena[], int lon_maxima, int x, int y)
 {
     int cantDivisiones = 0;
+
+    lon_maxima += indice_terminal_anchura();
 
     int tamanoParte = strlen(cadena);
 
@@ -496,16 +501,19 @@ void tamanoPantalla()
    DWORD dwMode = 0;
    GetConsoleMode(hStdOut, &dwMode);
 
-   dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+   //dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
    SetConsoleMode(hStdOut, dwMode);
 
-   SetConsoleOutputCP(CP_UTF8);
+   SetConsoleOutputCP(CP_UTF8); //Try 65001 for utf-8
 
+   if(indice_terminal_anchura() <= 1)
+    {
     COORD bufferSize = {140, 40};
     SMALL_RECT windowSize = {0, 0, 139, 39};
 
     SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
     SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
+    }
 
     /*Desactivar rezigin de la ventana*/
     LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
@@ -543,7 +551,7 @@ void imprimir_centrado(const char *cadena, int baseCas, int altCas, int posX, in
 
 void casilla(int base, int altura, int posX, int posY)
 {
-    altura += indice_terminal_altura();
+    //altura += indice_terminal_altura();
     base +=   indice_terminal_anchura();
 
     //posX += indice_terminal_anchura() * 3;

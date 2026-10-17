@@ -14,7 +14,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
         for(int j = 0; j < DIAS_SEM+1; j++)
         {
 
-        gotoxy(11 + (j*10), 7);
+        gotoxy(11 + (j*10) + indice_terminal_anchura(), 7);
         if(posX == j && posY == 0){
         printf("%s%s%s", ROJO, semana[j], AZUL_FONDO);
                                   }
@@ -23,7 +23,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
             }
         }
 
-        gotoxy(8, 8);
+        gotoxy(8+indice_terminal_anchura(), 8);
         printf("%s", raya);
 
         int minDescanso = 0;
@@ -60,17 +60,17 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
                     if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], AZUL_FONDO);                  }
                     else                        {    snprintf(buffer+strlen(buffer), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
                                                   }
-                gotoxy(10, 7+i*3);  //AL PRINCIPIO DE LA LINEA
+                gotoxy(10+indice_terminal_anchura(), 7+i*3);  //AL PRINCIPIO DE LA LINEA
                 printf("%s", buffer);
 
-                gotoxy(8, 8 + i*3);
+                gotoxy(8+indice_terminal_anchura(), 8 + i*3);
                 printf("%s", raya);
                                           }
     if(verific)
     {
 
-    casilla(39, 5, 20, 31);
-    gotoxy(24,34);
+    casilla(39+indice_terminal_anchura(), 5, 20, 31);
+    gotoxy(24+indice_terminal_anchura(),34);
     printf("%cEs correcto el horario%c\t(S / N)\r\n",168, 63);
     bool respuesta = pregunta();
     limpiar_area(20,32, 43, 5);
@@ -235,7 +235,7 @@ void menuCalendario(const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha 
 
                 break;
 
-                case 1:
+                case 1: ;
                     char opc[4][10] = {0};
                     int j = 0;
                     int mes = mes_actual;
@@ -376,7 +376,7 @@ bool login(Usuario estudiante)
   			temp[i] = tecla;
   			temp[i+1] = '\0';
   			asteriscos[i] = '*';
-  			printf("%c", asteriscos[i]);
+  			printf("*");
   			fflush(stdout);
   			i++;
   		}

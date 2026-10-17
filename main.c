@@ -18,8 +18,8 @@ int main()
     tamanoPantalla();
     limpiarPantalla();
 
-    casilla(64 - indice_terminal_anchura(), 26, 7, 5); //CASILLA menuHorario
-    casilla(64 - indice_terminal_anchura(),3,7,2);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
+    casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
 
@@ -31,8 +31,8 @@ int main()
 
             calcHora(hora);
 
-            casilla(64 - indice_terminal_anchura(), 26, 7, 5);
-            casilla(64 - indice_terminal_anchura(),3,7,2);      //CASILLA CABECERA (HORARIO ACADEMICO)
+            casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
+            casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
             casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
             imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
             menuHorario(false, materias, hora, 100, 100);
@@ -61,12 +61,12 @@ int main()
     int x = 0;
     int y = 1;
 
-    casilla(64 - indice_terminal_anchura(), 26, 7, 5);                                   //CASILLA menuHorario
-    casilla(64 - indice_terminal_anchura(),3,7,2);                                       //CASILLA CABECERA (HORARIO ACADEMICO)
+    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
+    casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
     casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
     casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
 
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7, 4);
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 63, 3, 7+indice_terminal_anchura(), 4);
 
     #ifdef LOGEO
     int counter = 0;
@@ -88,6 +88,15 @@ int main()
 
     do
     {
+        printf("%s", ROJO);
+        gotoxy(12, 33);
+        printf("\u2190");
+        printf("\u2193");
+        printf("\u2192");
+        printf("\t\t\u23CE");
+        gotoxy(13,32);
+        printf("\u2191");
+        printf("%s", AZUL_FONDO);
 
         menuSecundario(materias[y-1][x-1], tareas, tareaFecha, x, y);
         menuHorario(false, materias, hora, x, y);
@@ -115,6 +124,8 @@ int main()
             break;
 
             case '\n':  //Tecla 'enter'
+
+            limpiar_area(10, 32, 20, 6);
 
                 if (y < 1 && x > 0) //CUANDO SE PRESIONA UN DIA DE LA SEMANA
                 {
@@ -461,10 +472,6 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
                     strcpy(temps[j], tareas[j][i]);
                     cantidad_actividades++;
                     }
-                    else
-                    {
-                    break;
-                    }
                 }
             break;
             }
@@ -548,25 +555,25 @@ void leerEstudiante(Usuario *estudiante)
     printf("no la volver\u00E1s a ver!");
     gotoxy(posX, posY+3);
     scanf("%s", estudiante->contrasena);
-    estudiante->contrasena[strlen(estudiante->contrasena)-1] = '\0';
+    estudiante->contrasena[strlen(estudiante->contrasena)] = '\0';
     #endif // LOGEO
 }
 
 void imprimirVerificacionMaterias() //Solo para evitar muchas lineas de codigo en el ciclo principal
 {
-    limpiar_area(82 + indice_terminal_anchura(), 4, 43 + indice_terminal_anchura(), 17);
+    limpiar_area(84 + indice_terminal_anchura() * 8, 4, 41, 17);
 
-    gotoxy(84,4);
+    gotoxy(84+indice_terminal_anchura() * 8,4);
     printf("Seguro que desea modificar las ");
-    gotoxy(88,5);
+    gotoxy(88+indice_terminal_anchura() * 8,5);
     printf("materias de este dia?");
-    gotoxy(84,7);
+    gotoxy(84+indice_terminal_anchura() * 8,7);
     printf("Esto eliminará todas las materias");
-    gotoxy(84,8);
+    gotoxy(84+indice_terminal_anchura() * 8,8);
     printf("y actividades del dia seleccionado");
-    gotoxy(88,9);
+    gotoxy(88+indice_terminal_anchura() * 8,9);
     printf("(Toda la columna)");
-    gotoxy(96, 12);
+    gotoxy(96+indice_terminal_anchura() * 8, 12);
     printf("(S/N)");
     fflush(stdout);
 }
