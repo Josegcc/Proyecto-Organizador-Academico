@@ -115,19 +115,19 @@ int main()
 
         switch(op)
         {
-            case 'B':   //Flecha abajo
+            case 80:   //Flecha abajo
                 if(y < TAM_HORA-1){y++;}
             break;
 
-            case 'A':   //Flecha arriba
+            case 72:   //Flecha arriba
                 if(y > 0){y--;}
             break;
 
-            case 'C':   //Flecha derecha
+            case 77:   //Flecha derecha
                 if(x < DIAS_SEM){x++;}
             break;
 
-            case 'D':   //Flecha izquierda
+            case 75:   //Flecha izquierda
                 if(x > 0){x--;}
             break;
 
@@ -260,12 +260,13 @@ void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[T
     menuHorario(false, materias, hora, 100, 100);
 
     char temps[TAM_HORA][7];
+    const char *horas[TAM_HORA];
     for(int i = 0; i < TAM_HORA; i++)
-    {                                                           //TESTING
-        snprintf(temps[i], 7, "%02d:%02d", hora[0][i], hora[1][i]); //TESTING
-    }                                                           //TESTING
+    {
+        snprintf(temps[i], 7, "%02d:%02d", hora[0][i], hora[1][i]);
+        horas[i] = temps[i];
+    }
 
-    const char *horas[] = {temps[0], temps[1], temps[2], temps[3], temps[4], temps[5], temps[6], temps[7]};
     const char *numeros[] ={"Ninguna","1","2","3","4","5"};
 
         mostrarCursor(false);
@@ -413,41 +414,47 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                 tareaFecha[j][i].ano = t->tm_year + 1900;
 
                 int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                const char* Semana[] = {"Domingo","Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
                 if(bisiesto(tareaFecha[j][i].ano)){ diasMes[1] = 28; }
 
                 gotoxy(posicionX+1, 9);
                 printf("Seleccione la fecha de la actividad");
                     while(tecla != '\n')
                     {
-                        //limpiar_area(posicionX, 5, 43 + indice_terminal_anchura(), 16);
+                        limpiar_area(posicionX, 10, 43 + indice_terminal_anchura(), 10);
+
                         gotoxy(posicionX+15, 10);
 
+                             if(tecla == 77 && seleccion < 2) {seleccion++;}
 
-                             if(tecla == 'C' && seleccion < 2) {seleccion++;}
-
-                        else if(tecla == 'D' && seleccion > 0) {seleccion--;}
+                        else if(tecla == 75 && seleccion > 0) {seleccion--;}
 
                         switch(seleccion)
                         {
                         case 0:
-                                 if(tecla == 'A' && tareaFecha[j][i].dia < diasMes[ tareaFecha[j][i].mes - 1] ) (tareaFecha[j][i].dia)++;
-                            else if(tecla == 'B' && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
+                                 if(tecla == 72 && tareaFecha[j][i].dia < diasMes[ tareaFecha[j][i].mes - 1] ) (tareaFecha[j][i].dia)++;
+                            else if(tecla == 80 && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
                             printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[j][i].dia ,COLOR_RESET, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
                         break;
 
                         case 1:
-                                 if(tecla == 'A' && tareaFecha[j][i].mes < 12){ tareaFecha[j][i].mes++; tareaFecha[j][i].dia = 1;}
-                            else if(tecla == 'B' && tareaFecha[j][i].mes > 1) { tareaFecha[j][i].mes--; tareaFecha[j][i].dia = 1;}
+                                 if(tecla == 72 && tareaFecha[j][i].mes < 12){ tareaFecha[j][i].mes++; tareaFecha[j][i].dia = 1;}
+                            else if(tecla == 80 && tareaFecha[j][i].mes > 1) { tareaFecha[j][i].mes--; tareaFecha[j][i].dia = 1;}
                             printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,BLANCO, tareaFecha[j][i].mes ,COLOR_RESET, tareaFecha[j][i].ano);
                         break;
 
                         case 2:
-                                 if(tecla == 'A'){ tareaFecha[j][i].ano++;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
-                            else if(tecla == 'B'){ tareaFecha[j][i].ano--;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
+                                 if(tecla == 72){ tareaFecha[j][i].ano++;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
+                            else if(tecla == 80){ tareaFecha[j][i].ano--;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
                             printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,BLANCO, tareaFecha[j][i].ano ,COLOR_RESET);
                         break;
 
                         }
+
+                        int diaSem = diaSemana(tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                        gotoxy(posicionX+16,12);
+                        printf("%s", Semana[diaSem]);
+
                         fflush(stdout);
                         tecla = leerTecla();
                     }
@@ -461,7 +468,8 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
 
 void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
 {
-    char temps[10][30] = {0};
+    char temps[TAM_TAREA][50] = {0};
+    int indicesReales[TAM_TAREA] = {0};
     int cantidad_actividades = 0;
 
     int posicionX = 90 + indice_terminal_anchura() * 8;
@@ -469,15 +477,16 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
 
     limpiar_area(posicionX-8, posicionY, 43 + indice_terminal_anchura(), 17);
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
         {
             if(strcmp(materia, tareas[0][i]) == 0)
             {
-                for(int j = 0; j < 10; j++)
+                for(int j = 1; j < TAM_TAREA; j++)
                 {
                     if( !(strlen(tareas[j][i]) == 0))
                     {
-                    strcpy(temps[j], tareas[j][i]);
+                    strcpy(temps[cantidad_actividades], tareas[j][i]);
+                    indicesReales[cantidad_actividades] = j;
                     cantidad_actividades++;
                     }
                 }
@@ -485,7 +494,7 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
             }
         }
 
-    if(cantidad_actividades <= 1)
+    if(cantidad_actividades == 0)
     {
     gotoxy(posicionX, posicionY);
     printf("No se encontraron actividades\n");
@@ -499,7 +508,10 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
     return;
     }
 
-    const char *opciones[] = {temps[1], temps[2], temps[3], temps[4], temps[5], temps[6], temps[7], temps[8], temps[9]};
+    const char *opciones[10];
+    for(int i = 0; i < cantidad_actividades; i++) {
+        opciones[i] = temps[i];
+    }
 
     gotoxy(posicionX, posicionY);
     printf("Seleccione la actividad\n");
@@ -513,11 +525,11 @@ void elimTarea(const char materia[30], char tareas[TAM_MATERIA_TAREAS][TAM_TAREA
         return;
         }
 
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
         {
             if(strcmp(materia, tareas[0][i]) == 0)
             {
-            tareas[codigo + 1][i][0] = '\0';
+            tareas[indicesReales[codigo]][i][0] = '\0';
             }
         }
 

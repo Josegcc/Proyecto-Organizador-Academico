@@ -70,6 +70,13 @@ void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFe
 	}
 }
 
+int diaSemana(int dia, int mes, int ano)
+{
+    int result = (dia += mes < 3 ? ano-- : ano - 2, 23*mes/9 + dia + 4 + ano/4- ano/100 + ano/400)%7;
+
+    return result;
+}
+
 bool bisiesto(int year)
 {
     if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
@@ -212,7 +219,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         switch(flecha)
         {
-        case 'C':
+        case 77:
 
             if(pagina + 6 < n)
             {
@@ -222,7 +229,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         break;
 
-        case 'D':
+        case 75:
 
             if(pagina > 0)
             {

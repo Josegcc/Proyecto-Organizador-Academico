@@ -107,3 +107,4 @@ bool bisiesto(int year);    //Retorna False si el año indicado como parametro e
 void intercambiarFechas(Fecha *fechaTarea1, Fecha *fechaTarea2);    //Intercambia dos fechas de lugar
 bool compararFechas(const Fecha fechaTarea1, const Fecha fechaTarea2);  //Devuelve True si la primera fecha indicada como parametro es mayor que la segunda
 void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1]);  //Intercambia de lugar las fechas y tareas para mantener el arreglo ordenado
+int diaSemana(int dia, int mes, int ano);

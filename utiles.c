@@ -91,7 +91,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     	switch(tecla)
     	{
-    	case 'B':
+    	case 80:
 
     		opcion++;
 
@@ -102,7 +102,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
     	break;
 
-    	case 'A':
+    	case 72:
 
     		opcion--;
 

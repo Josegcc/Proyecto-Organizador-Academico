@@ -14,10 +14,8 @@ char leerLetra()
     {
         ch = _getch();
 
-        if (ch == 0 || ch == 224)   //Teclas especiales (flechas)
-        {
-
-        }else if(ch == '\b'){
+        if (ch == 0 || ch == 224){} //Teclas especiales (flechas)
+        else if(ch == '\b'){
         tecla = 127;
         }
         else if (ch == 13) //Tecla Enter
@@ -107,22 +105,7 @@ char leerTecla()
             int arrow = _getch();
             switch (arrow)
             {
-                case 72:
-                tecla = 'A';
-                break;
-
-                case 80:
-                tecla = 'B';
-                break;
-
-                case 77:
-                tecla = 'C';
-                break;
-
-                case 75:
-                tecla = 'D';
-                break;
-
+                tecla = arrow;
             }
         }else if(ch == '\b')
         {
@@ -135,8 +118,6 @@ char leerTecla()
         {
         tecla = 27;
         }
-        else if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D')
-        {}
         else    //Cualquier otra tecla
         {
         tecla = ch;
@@ -175,9 +156,26 @@ char leerTecla()
                 //printf("Result: Escape sequence detected (Length: %d)\n", n_extra + 1);
                 // buf[1] will typically be '[', and buf[2] will be 'A', 'B', 'C', or 'D'
                 tecla = buf[2];
+                switch(buf[2])
+                {
+                case 'A': ;
+                tecla = 72;
+                break;
+
+                case 'B': ;
+                tecla = 80;
+                break;
+
+                case 'C': ;
+                tecla = 77;
+                break;
+
+                case 'D': ;
+                tecla = 75;
+                break;
+                }
             }
-        }else if(tecla == 'A' || tecla == 'B' || tecla == 'C' || tecla == 'D'){}
-        else{   //Cualquier otra tecla
+        }else{   //Cualquier otra tecla
             tecla = buf[0];
         }
     }

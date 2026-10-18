@@ -1,3 +1,5 @@
+Ahora cuando se introduce una fecha el programa muestra que dia de la semana corresponde a esa fecha, para que el usuario se guíe más fácil
+
 18/10/26
 VERSION 0.5.0 ORGANIZADOR ACADEMICO
 *Se decidió cambiar un poco la estructura del programa. Se creó un archivo llamado "entrada.c" que contiene funciones relacionadas con la entrada de datos por teclado. Esto porque el archivo "utiles.c" contenía ya más de 700 líneas de código. De todas formas, estas funciones de leer por teclado tienen código muy redundante...
