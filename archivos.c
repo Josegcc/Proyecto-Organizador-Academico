@@ -2,7 +2,6 @@
 
 void formatearArchivoHorario(const char* nombre_archivo, const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA])
 {
-
         FILE *archivo;
         archivo = fopen(nombre_archivo, "w");
 
@@ -69,7 +68,6 @@ bool materiaRepet(const char materias[TAM_HORA][DIAS_SEM][30], const char* mater
         {
         return false;
         }
-
 
         return false;
 }
@@ -294,4 +292,29 @@ void leerArchivoEstudiante(const char* nombre_archivo, Usuario *estudiante)
     fread(estudiante, sizeof(Usuario), 1, archivo);
 
     fclose(archivo);
+}
+
+void calcHora(int hora[2][TAM_HORA])
+{
+    int horaDif = 45;
+
+    hora[0][0] = 8; hora[1][0] = 00;
+
+    for(int i = 0; i < TAM_HORA-1; ++i){
+
+        if((horaDif + hora[1][i]) >= 60)
+        {
+        hora[0][i+1] = ((horaDif + hora[1][i]) / 60) + hora[0][i];  //Actualizar hora
+        hora[1][i+1] = (horaDif + hora[1][i]) % 60;                 //Actualizar minuto
+        }
+        else
+        {
+        hora[0][i+1] = hora[0][i];
+        hora[1][i+1] = hora[1][i] + horaDif;
+        }
+        if(i != 0)  //Ajuste por horas de descanso entre bloques horarios
+        {
+            hora[1][i+1] += 5;
+        }
+                                       }
 }
