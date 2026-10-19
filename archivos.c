@@ -88,7 +88,7 @@ void formatearArchivoTareas(const char* nombre_archivo, const char tareas[TAM_MA
             {
                 if(strlen(tareas[j][i]) != 0)
                 {
-                fprintf(archivo, ",%s_%d-%d-%d", tareas[j][i], tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                fprintf(archivo, ",%s_%d-%d-%d", tareas[j][i], tareaFecha[j-1][i].dia, tareaFecha[j-1][i].mes, tareaFecha[j-1][i].ano);
                 }
             }
         fprintf(archivo, "\n");
@@ -141,7 +141,7 @@ void leerArchivoTareas(const char *nombre_archivo, char tareas[TAM_MATERIA_TAREA
             }
 
             if (j - 1 < TAM_TAREA) {
-                sscanf(line_ptr, "%59[^_]_%d-%d-%d", tareas[i][j - 1], &tareaFecha[i][j-1].dia, &tareaFecha[i][j-1].mes, &tareaFecha[i][j-1].ano);
+                sscanf(line_ptr, "%59[^_]_%d-%d-%d", tareas[i][j - 1], &tareaFecha[i-1][j-1].dia, &tareaFecha[i-1][j-1].mes, &tareaFecha[i-1][j-1].ano);
 
                 //tareas[i][j - 1][49] = '\0'; // Asegurar el fin de cadena
             }
@@ -254,13 +254,13 @@ void exportarArchivoTareas (const char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50]
             {
                 for(int m = 1; m < TAM_TAREA; m++)
                 {
-                if(strlen(tareas[m][j]) > 0)
+                if(strlen(tareas[m-1][j]) > 0)
                 {
-                    if( tareaFecha[m][j].dia == i && tareaFecha[m][j].mes == mes )
+                    if( tareaFecha[m-1][j].dia == i && tareaFecha[m-1][j].mes == mes )
                     {
                     snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "\t+%s+\n\t%s\n", tareas[0][j], tareas[m][j]);
                     }else if( i > diasMes ){
-                        if( tareaFecha[m][j].dia == i - diasMes && tareaFecha[m][j].mes == mes + 1 )
+                        if( tareaFecha[m-1][j].dia == i - diasMes && tareaFecha[m-1][j].mes == mes + 1 )
                         {
                         snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer), "\t+%s+\n\t%s\n", tareas[0][j], tareas[m][j]);
                         }

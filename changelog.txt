@@ -1,3 +1,7 @@
+19/10/26
+VERSION 0.5.1 ORGANIZADOR ACADEMICO
+Se modificó parte del código para mejorar la lógica del arreglo "tareaFecha". Este almacenaba un espacio extra innecesario cuando se lo relacionaba con el arreglo "tareas"
+
 Ahora cuando se introduce una fecha el programa muestra que dia de la semana corresponde a esa fecha, para que el usuario se guíe más fácil
 
 18/10/26

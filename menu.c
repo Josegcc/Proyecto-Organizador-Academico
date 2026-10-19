@@ -132,7 +132,6 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
     int posicionY = 2;
     int salto = 0;
     char temp[128] = {0};
-    COLOR_PANTALLA;
 
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
     limpiar_area(posicionX, posicionY+2, 43 + indice_terminal_anchura(), 17);
@@ -145,12 +144,12 @@ void menuSecundario(const char materia[30], const char tareas[TAM_MATERIA_TAREAS
         if(strcmp(tareas[0][i], materia) == 0)
         {
 
-            for(int j = 1; j < 10; j++)
+            for(int j = 1; j < TAM_TAREA; j++)
             {
                 if(strlen(tareas[j][i]) > 0)
                 {
                 gotoxy(posicionX+26, posicionY+4+j+salto);
-                printf("Fecha: %d-%d-%d", tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                printf("Fecha: %d-%d-%d", tareaFecha[j-1][i].dia, tareaFecha[j-1][i].mes, tareaFecha[j-1][i].ano);
 
                 snprintf(temp, 128, "%s", tareas[j][i]);
                 salto += imprimirCadenaGrande(temp, 21, posicionX+1, posicionY+4+j+salto);

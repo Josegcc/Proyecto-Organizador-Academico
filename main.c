@@ -54,9 +54,9 @@ int main()
     //Una vez lleno el horario, se entra al menu principal (o al logeo)
 
     #ifdef LOGEO
-    casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 35 + indice_terminal_anchura(), 4);
-    casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura(), 6);
+    casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura()*8,2);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 3, 35 + indice_terminal_anchura()*8, 4);
+    casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura()*8, 6);
 
     int counter = 0;
     while(login(estudiante)){
@@ -395,7 +395,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
         }
 
 
-            for(int j = 1; j < TAM_TAREA; j++)
+            for(int j = 1; j < TAM_TAREA-1; j++)
             {
                 if(strlen(tareas[j][i]) == 0)
                 {
@@ -409,13 +409,13 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                 time_t actual = time(NULL);
                 struct tm *t = localtime(&actual);
 
-                tareaFecha[j][i].dia = t->tm_mday;
-                tareaFecha[j][i].mes = t->tm_mon + 1;
-                tareaFecha[j][i].ano = t->tm_year + 1900;
+                tareaFecha[j-1][i].dia = t->tm_mday;
+                tareaFecha[j-1][i].mes = t->tm_mon + 1;
+                tareaFecha[j-1][i].ano = t->tm_year + 1900;
 
                 int diasMes[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
                 const char* Semana[] = {"Domingo","Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
-                if(bisiesto(tareaFecha[j][i].ano)){ diasMes[1] = 28; }
+                if(bisiesto(tareaFecha[j-1][i].ano)){ diasMes[1] = 28; }
 
                 gotoxy(posicionX+1, 9);
                 printf("Seleccione la fecha de la actividad");
@@ -432,26 +432,26 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                         switch(seleccion)
                         {
                         case 0:
-                                 if(tecla == 72 && tareaFecha[j][i].dia < diasMes[ tareaFecha[j][i].mes - 1] ) (tareaFecha[j][i].dia)++;
-                            else if(tecla == 80 && tareaFecha[j][i].dia > 1) (tareaFecha[j][i].dia)--;
-                            printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[j][i].dia ,COLOR_RESET, tareaFecha[j][i].mes , tareaFecha[j][i].ano);
+                                 if(tecla == 72 && tareaFecha[j-1][i].dia < diasMes[ tareaFecha[j-1][i].mes - 1] ) (tareaFecha[j-1][i].dia)++;
+                            else if(tecla == 80 && tareaFecha[j-1][i].dia > 1) (tareaFecha[j-1][i].dia)--;
+                            printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[j-1][i].dia ,COLOR_RESET, tareaFecha[j-1][i].mes , tareaFecha[j-1][i].ano);
                         break;
 
                         case 1:
-                                 if(tecla == 72 && tareaFecha[j][i].mes < 12){ tareaFecha[j][i].mes++; tareaFecha[j][i].dia = 1;}
-                            else if(tecla == 80 && tareaFecha[j][i].mes > 1) { tareaFecha[j][i].mes--; tareaFecha[j][i].dia = 1;}
-                            printf("%02d-%s%02d%s-%02d", tareaFecha[j][i].dia ,BLANCO, tareaFecha[j][i].mes ,COLOR_RESET, tareaFecha[j][i].ano);
+                                 if(tecla == 72 && tareaFecha[j-1][i].mes < 12){ tareaFecha[j-1][i].mes++; tareaFecha[j-1][i].dia = 1;}
+                            else if(tecla == 80 && tareaFecha[j-1][i].mes > 1) { tareaFecha[j-1][i].mes--; tareaFecha[j-1][i].dia = 1;}
+                            printf("%02d-%s%02d%s-%02d", tareaFecha[j-1][i].dia ,BLANCO, tareaFecha[j][i].mes ,COLOR_RESET, tareaFecha[j][i].ano);
                         break;
 
                         case 2:
-                                 if(tecla == 72){ tareaFecha[j][i].ano++;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
-                            else if(tecla == 80){ tareaFecha[j][i].ano--;  tareaFecha[j][i].mes = 1; tareaFecha[j][i].dia = 1;}
-                            printf("%02d-%02d-%s%02d%s", tareaFecha[j][i].dia , tareaFecha[j][i].mes ,BLANCO, tareaFecha[j][i].ano ,COLOR_RESET);
+                                 if(tecla == 72){ tareaFecha[j-1][i].ano++;  tareaFecha[j-1][i].mes = 1; tareaFecha[j-1][i].dia = 1;}
+                            else if(tecla == 80){ tareaFecha[j-1][i].ano--;  tareaFecha[j-1][i].mes = 1; tareaFecha[j-1][i].dia = 1;}
+                            printf("%02d-%02d-%s%02d%s", tareaFecha[j-1][i].dia , tareaFecha[j-1][i].mes ,BLANCO, tareaFecha[j-1][i].ano ,COLOR_RESET);
                         break;
 
                         }
 
-                        int diaSem = diaSemana(tareaFecha[j][i].dia, tareaFecha[j][i].mes, tareaFecha[j][i].ano);
+                        int diaSem = diaSemana(tareaFecha[j-1][i].dia, tareaFecha[j-1][i].mes, tareaFecha[j-1][i].ano);
                         gotoxy(posicionX+16,12);
                         printf("%s", Semana[diaSem]);
 
@@ -461,6 +461,7 @@ void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_MATE
                 break;
                 }
               }
+         break;
         }
 
     }

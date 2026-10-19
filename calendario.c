@@ -48,7 +48,7 @@ void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFe
 	//EL PRIMER ALGORITMO ORDENA LAS COLUMNAS (LAS FECHAS DE CADA MATERIA)
     for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
     {
-        int tamArreglo = TAM_TAREA-1;
+        int tamArreglo = TAM_TAREA;
 
         while (flag == false)
         {
@@ -115,9 +115,9 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 {
     int counter = 1;
     //bool primero = false;
-    int fechasTareas[TAM_MATERIA_TAREAS * (TAM_TAREA-1)] = {0};
+    int fechasTareas[TAM_MATERIA_TAREAS * (TAM_TAREA)] = {0};
     int indicesx[TAM_MATERIA_TAREAS] = {0};
-    int indicesy[TAM_TAREA-1] = {0};
+    int indicesy[TAM_TAREA] = {0};
     int x = 81 + indice_terminal_anchura() * 8; int y = 6;
     int n = 0;
 
@@ -129,10 +129,10 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
             {
                 if(strlen(tareas[j][i]) > 0)
                 {
-                    if(tareaFecha[j][i].mes == mesEleg)
+                    if(tareaFecha[j-1][i].mes == mesEleg)
                     {
-                    fechasTareas[n] = tareaFecha[j][i].dia;
-                    indicesx[n] = j;
+                    fechasTareas[n] = tareaFecha[j-1][i].dia;
+                    indicesx[n] = j-1;
                     indicesy[n] = i;
                     n++;
                     }
@@ -171,7 +171,6 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
     for(int i = 1; i <= diasMes; i++)
     {
-        //gotoxy(counter * 6 + (x-4), y);
 
         for(int j = 0 + pagActual; j < sizeof(fechasTareas) / sizeof(fechasTareas[0]); j++)
         {
@@ -185,7 +184,6 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
                 printf(" %.20s ", tareas[indicesx[j]][indicesy[j]]);
                 gotoxy(x+34, 13+(j - pagActual));
                 printf("%d-%d-%d", tareaFecha[indicesx[j]][indicesy[j]].dia, tareaFecha[indicesx[j]][indicesy[j]].mes, tareaFecha[indicesx[j]][indicesy[j]].ano);
-                printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
                 m++;
             }
         }
@@ -193,9 +191,8 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         printf("%d", i);
 
-        //gotoxy()
-
         printf(COLOR_RESET);
+        printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
 
             if(counter%7== 0)
             {
@@ -205,8 +202,6 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
 
         counter++;
     }
-
-    printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
 
     fflush(stdout);
 
