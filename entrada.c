@@ -14,7 +14,7 @@ char leerLetra()
     {
         ch = _getch();
 
-        if (ch == 0 || ch == 224){} //Teclas especiales (flechas)
+        if (ch == 0 || ch == 224){	_getch();	} //Teclas especiales (flechas)
         else if(ch == '\b'){
         tecla = 127;
         }
@@ -29,7 +29,6 @@ char leerLetra()
         {
         tecla = ch;
         }
-
     }
 
 #else
@@ -102,11 +101,10 @@ char leerTecla()
 
         if (ch == 0 || ch == 224)   //Teclas especiales (flechas)
         {
-            int arrow = _getch();
-            switch (arrow)
-            {
-                tecla = arrow;
-            }
+        int arrow = _getch();
+
+        tecla = arrow;
+
         }else if(ch == '\b')
         {
         tecla = 127;

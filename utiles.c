@@ -29,7 +29,7 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
 
         if(elimMaterias)
         {
-            for(int j = 0; j < 7; j++)
+            for(int j = 0; j < DIAS_SEM; j++)
             {
                 materias[i][j][0] = '\0';
             }
@@ -37,7 +37,7 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
     }
 }
 
-void limpiarTareas(const char* materia, char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50])
+void limpiarTareas(const char* materia, char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50])
 {
     for(int i = 0; i < TAM_MATERIA_TAREAS; i++)
     {
@@ -137,7 +137,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
 
 //posX y posY deben coincidir exactamente con las coordenadas del cuadro o casilla donde se imprimirá la cadena
 //O al menos estar dentro del rango del cuadro (LA POSICION Y ES LA QUE MAS PUEDE VARIAR)
-void imprimir_centrado(const char *cadena, int baseCas, int altCas, int posX, int posY)
+void imprimir_centrado(const char *cadena, int baseCas, int posX, int posY)
 {
     int padding = (baseCas + strlen(cadena)) / 2;
 
@@ -212,7 +212,7 @@ void tamanoPantalla()
    DWORD dwMode = 0;
    GetConsoleMode(hStdOut, &dwMode);
 
-   //dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+   dwMode |= 0x0004;
    SetConsoleMode(hStdOut, dwMode);
 
    SetConsoleOutputCP(CP_UTF8); //Try 65001 for utf-8

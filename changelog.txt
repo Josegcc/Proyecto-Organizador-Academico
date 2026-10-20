@@ -1,3 +1,7 @@
+20/10/26
+VERSION 0.5.2 ORGANIZADOR ACADEMICO
+Múltiples correciones de errores lógicos y de memoria realizadas con Claude
+
 19/10/26
 VERSION 0.5.1 ORGANIZADOR ACADEMICO
 Se modificó parte del código para mejorar la lógica del arreglo "tareaFecha". Este almacenaba un espacio extra innecesario cuando se lo relacionaba con el arreglo "tareas"

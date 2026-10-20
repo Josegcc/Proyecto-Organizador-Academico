@@ -41,35 +41,6 @@ bool compararFechas(const Fecha fechaTarea1, const Fecha fechaTarea2)
 	return false;
 }
 
-void ordenarFechas(char tareas[TAM_MATERIA_TAREAS][TAM_TAREA][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
-{
-	bool flag = false;
-
-	//EL PRIMER ALGORITMO ORDENA LAS COLUMNAS (LAS FECHAS DE CADA MATERIA)
-    for(int j = 0; j < TAM_MATERIA_TAREAS; j++)
-    {
-        int tamArreglo = TAM_TAREA;
-
-        while (flag == false)
-        {
-        flag = true;
-            for (int i = 1; i < tamArreglo-1; i++)
-            {
-                if(tareaFecha[i][j].dia != 0 && tareaFecha[i + 1][j].dia != 0)
-                {
-
-                    if (compararFechas(tareaFecha[i][j], tareaFecha[i + 1][j]))
-                    {
-                        intercambiarFechas(&tareaFecha[i][j], &tareaFecha[i + 1][j]);
-                        flag = false;
-                    }
-                }
-            }
-            tamArreglo--;
-		}
-	}
-}
-
 int diaSemana(int dia, int mes, int ano)
 {
     int result = (dia += mes < 3 ? ano-- : ano - 2, 23*mes/9 + dia + 4 + ano/4- ano/100 + ano/400)%7;
@@ -87,37 +58,26 @@ bool bisiesto(int year)
 
 int primerDia(int year, int mes)
 {
-    int siglo = 20;
-    year = year % 100;
+    int d = diaSemana(1, mes, year);
 
-    if(mes == 1)
-    {
-        year -= 1;
-        mes = 13;
+    if(d == 0){
+    return 7;
 
-    }else if(mes == 2)
-    {
-        year -= 1;
-        mes = 14;
+    }else{
+    return d;
+
     }
 
-    int diaSem = ( (1 + (13 * (mes + 1)/5) + year + (year / 4) + (siglo/4) - 2 * siglo) % 7)-1;
-
-    if(diaSem <= 0)
-    {
-        diaSem = 7;
-    }
-
-    return diaSem;
+    return 0;
 }
 
-int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1], int pagina)
+int mostrarMes(int diasMes, int diaInicial, int mesEleg, int anoEleg, const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS], int pagina)
 {
     int counter = 1;
     //bool primero = false;
     int fechasTareas[TAM_MATERIA_TAREAS * (TAM_TAREA)] = {0};
-    int indicesx[TAM_MATERIA_TAREAS] = {0};
-    int indicesy[TAM_TAREA] = {0};
+    int indicesx[TAM_MATERIA_TAREAS * TAM_TAREA] = {0};
+    int indicesy[TAM_MATERIA_TAREAS * TAM_TAREA] = {0};
     int x = 81 + indice_terminal_anchura() * 8; int y = 6;
     int n = 0;
 
@@ -129,15 +89,18 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
             {
                 if(strlen(tareas[j][i]) > 0)
                 {
-                    if(tareaFecha[j-1][i].mes == mesEleg)
+                    if(tareaFecha[j-1][i].ano == anoEleg)
                     {
-                    fechasTareas[n] = tareaFecha[j-1][i].dia;
-                    indicesx[n] = j-1;
-                    indicesy[n] = i;
-                    n++;
+                        if(tareaFecha[j-1][i].mes == mesEleg)
+                        {
+                        fechasTareas[n] = tareaFecha[j-1][i].dia;
+                        indicesx[n] = j-1;
+                        indicesy[n] = i;
+                        n++;
+                        }
                     }
                 }
-                else{   break;  }
+                //else{   break;  }
             }
         }
         else{  break;  }
@@ -172,7 +135,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
     for(int i = 1; i <= diasMes; i++)
     {
 
-        for(int j = 0 + pagActual; j < sizeof(fechasTareas) / sizeof(fechasTareas[0]); j++)
+        for(int j = 0 + pagActual; j < (sizeof(fechasTareas) / sizeof(fechasTareas[0])); j++)
         {
             if(fechasTareas[j] == i && j < 6 * (pagina+1))
             {
@@ -181,7 +144,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
                 gotoxy(x+1, 13+(j - pagActual));
                 printf(" %.5s..." , tareas[0][indicesy[j]]);
                 gotoxy(x+11, 13+(j - pagActual));
-                printf(" %.20s ", tareas[indicesx[j]][indicesy[j]]);
+                printf(" %.20s ", tareas[indicesx[j] + 1][indicesy[j]]);
                 gotoxy(x+34, 13+(j - pagActual));
                 printf("%d-%d-%d", tareaFecha[indicesx[j]][indicesy[j]].dia, tareaFecha[indicesx[j]][indicesy[j]].mes, tareaFecha[indicesx[j]][indicesy[j]].ano);
                 m++;
@@ -216,7 +179,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
         {
         case 77:
 
-            if(pagina + 6 < n)
+            if((pagina + 1) * 6 < n)  //pagina + 6 < n
             {
             pagina++;
             return pagina;
@@ -239,7 +202,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, const char tareas[10][1
     return -1;
 }
 
-void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha tareaFecha[TAM_MATERIA_TAREAS][TAM_TAREA-1])
+void calendario(int anoEleg, int mesEleg, const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS])
 {
     int x = 81 + indice_terminal_anchura() * 8, y = 4;
     int diaInicial;
@@ -268,7 +231,7 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
         printf(" %.3s", dias[i]);
     }
 
-    diaInicial = primerDia(anoEleg, mesEleg);
+    diaInicial = primerDia(anoEleg, mesEleg);   //CAMBIAR POR diaSemana
 
     int opcion = 0;
 
@@ -278,24 +241,24 @@ void calendario(int anoEleg, int mesEleg, const char tareas[10][10][50], Fecha t
     limpiar_area(82 + indice_terminal_anchura() * 8, 6, 43 + indice_terminal_anchura(), 15);
 
     gotoxy(x+1, y+16); printf("<-");
-    imprimir_centrado("ESC para Salir", 44, 19, x+1, y+16);
+    imprimir_centrado("ESC para Salir", 44, x+1, y+16);
     gotoxy(x+42, y+16); printf("->");
 
         if(mesEleg == 2)
         {
             if(bisiesto(anoEleg))
             {
-                opcion = mostrarMes(28, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+                opcion = mostrarMes(28, diaInicial, mesEleg, anoEleg, tareas, tareaFecha, opcion);
             }else
             {
-                opcion = mostrarMes(29, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+                opcion = mostrarMes(29, diaInicial, mesEleg, anoEleg, tareas, tareaFecha, opcion);
             }
         }
         else if (mesEleg == 4 || mesEleg == 6 || mesEleg == 9 || mesEleg == 11)
         {
-                opcion = mostrarMes(30, diaInicial, mesEleg, tareas, tareaFecha, opcion);
+                opcion = mostrarMes(30, diaInicial, mesEleg, anoEleg, tareas, tareaFecha, opcion);
         }
-        else {  opcion = mostrarMes(31, diaInicial, mesEleg, tareas, tareaFecha, opcion);   }
+        else {  opcion = mostrarMes(31, diaInicial, mesEleg, anoEleg, tareas, tareaFecha, opcion);   }
 
     }while (opcion != -1);
 

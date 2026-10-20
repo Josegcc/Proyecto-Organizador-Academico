@@ -1,3 +1,5 @@
+Programa diseñado para organizar actividades, horarios y calendarios académicos de los estudiantes (De la UPTJFR). Con archivos .csv y menús interactivos
+
 El programa crea un archivo horarios.csv organizando las entradas del usuario y correspondientes a su horario académico.
 También permite introducir actividades académicas con su fecha correspondiente. Y posteriormente exportar estas actividades en un archivo de actividades semanal
 
@@ -8,9 +10,12 @@ El programa primero verificará si ya existe un archivo "horarios.csv", esto a t
 
 La función "main" en el archivo "main.c" se encarga de recibir la entrada de datos del usuario. Primero se pide el horario:
 
+Primero el programa solicita los datos del estudiante (Nombre, Carrera, y Trayecto), el programa confía en el usuario, ya que no existe una base de datos compleja que permita elegir entre un conjunto de opciones, ni una manera de verificar el nombre del estudiante como registrado en la carrera. En fin, la aplicación es totalmente personalizable en este apartado.
+Posteriormente se debe definir una contraseña. El usuario la deberá introducir pronto así que conviene recordarla. Todos estos datos se guardan en un archivo binario simple
+
 El programa pedirá al usuario el número de clases correspondientes a cada día de la semana, y el usuario deberá introducir primero la clase que corresponde a la primera hora del primer dia, luego el programa pedirá qué horario tiene esta primera clase, después se realiza lo mismo con el segundo dia, y así cíclicamente hasta completar los 5 dias de la semana. Todas las asignaturas introducidas se almacenan en un arreglo bidimensional llamado "materias". Este mismo arreglo es el que se guarda tal cual en el archivo "horarios.csv"
 
-Entonces el programa llama a la función "formatearArchivo" del archivo "archivos.c". Esta funcion procesa los datos introducidos por el usuario y crea le archivo: "horarios.csv". El formato será:
+Entonces el programa llama a la función "formatearArchivo" del archivo "archivos.c". Esta funcion crea el archivo: "horarios.csv". El formato será:
 Horarios,Lunes,Martes,... <--- Esto es la cabecera, es constante 
 HORA1-HORA2,MATERIA1,MATERIA2,MATERIA3...
 HORA2-HORA3,MATERIA4,MATERIA5,MATERIA6...
@@ -38,7 +43,7 @@ Detalles técnicos:
 Las macros "TAM_MATERIAS" y "DIAS_SEM" tienen el valor máximo de sus respectivos arreglos, "materias" y "horas". Esto hace el programa más modular, ya no se utiliza la macro "sizeof" de versiones anteriores, sino que se cambia el valor de la macro en cada archivo cuando se quiere realizar un cambio.
 Estas dos macros mencionadas definen el tamaño del arreglo "materias", donde la cantidad de columnas viene dada por los dias de la semana (Deberían ser 5 o 7) y las filas por la cantidad de horas máximas guardadas
 
-Luego tenemos los arreglos "tareas" y "tareaFecha". El primero tiene un tamaño definido en la macro "TAM_MATERIA_TAREAS," dependiendo de la cantidad de materias posibles que haya. En este caso, se definió como si un cuarto de todas las casillas contivueran una asignatura distinta. Esto es para las filas.
+Luego tenemos los arreglos "tareas" y "tareaFecha". El primero tiene un tamaño definido en la macro "TAM_MATERIA_TAREAS," dependiendo de la cantidad de materias posibles que haya. En este caso, se definió como si un cuarto de todas las casillas contuvieran una asignatura distinta. Esto es para las filas.
 Las columnas de este arreglo se definen con una macro más sencilla "TAM_TAREA" para un máximo de 10 actividades que se pueden registrar POR CADA MATERIA
 Además, el arreglo tareas está diseñado para almacenar en su primer índice, siempre, a la materia que corresponde a todas las demás actividades. Es decir, la primera fila siempre está reservada para el nombre de las materias
 El arreglo "tareaFecha" toma esto en cuenta para su estructura, como en él no se guarda el nombre de la materia, se utiliza el mismo tamaño que el el arreglo "tareas", pero a las columnas se les resta 1. Además este es un arreglo de estructuras. Donde se guardan todos los datos de una fecha en particular, en sus atributos "dia", "mes" y "ano"
