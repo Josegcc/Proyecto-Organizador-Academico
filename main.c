@@ -1,5 +1,5 @@
 /*ORGANIZADOR ACADEMICO - VERSION 0.5.0
-  COMPILAR USANDO GCC 14 o MINGW          
+  COMPILAR USANDO GCC 14 o MINGW
   En linux simplemente: gcc *.c -o nombre_archivo	--- Ejecutamos ./nombre_archivo
   En windows debemos linkear estaticamente algunas librerias: gcc *.c -o main.exe --static		--- Recomendado ejecutar con powershell para mayor compatibilidad
   El programa ha sido testeado en Windows 10 y MX Linux 25 - ambos de 64 bits
@@ -58,24 +58,25 @@ int main()
     //Una vez lleno el horario, se entra al menu principal (o al logeo)
 
     #ifdef LOGEO
-    casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura()*8,2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 35 + indice_terminal_anchura()*8, 4);
-    casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura()*8, 6);
+    casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura()*8,12);     //CASILLA CABECERA (HORARIO ACADEMICO)
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 35 + indice_terminal_anchura()*8, 14);
+    casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura()*8, 16);
+    logoUPT(105 + indice_terminal_anchura()*20, 2);
 
     int counter = 0;
     while(login(estudiante)){
     counter++;
     if(counter>2){
-    gotoxy(45 + indice_terminal_anchura() * 8, 11);
+    gotoxy(45 + indice_terminal_anchura() * 8, 22);
     printf("Contrase\u00F1a errada multiples veces");
-    gotoxy(45 + indice_terminal_anchura() * 8, 12);
+    gotoxy(45 + indice_terminal_anchura() * 8, 23);
     printf("Saliendo del programa...");
     fflush(stdout);
     return 0;
                 }
     }
-
-    limpiar_area(32 + indice_terminal_anchura(), 2, 70 + indice_terminal_anchura(), 15);
+    limpiar_area(105 + indice_terminal_anchura()*20, 2, 30, 18);
+    limpiar_area(35 + indice_terminal_anchura(), 12, 71 + indice_terminal_anchura(), 15);
     #endif // LOGEO
 
     char op = '\0';

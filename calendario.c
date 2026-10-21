@@ -103,7 +103,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, int anoEleg, const char
                 //else{   break;  }
             }
         }
-        else{  break;  }
+        //else{  break;  }
     }
 
     bool flag = false;

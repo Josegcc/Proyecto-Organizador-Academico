@@ -1,3 +1,7 @@
+21/10/26
+Version 0.5.3 ORGANIZADOR ACADEMICO
+Se agregó el logo de la universidad (UPTJFR) a la pantalla de inicio (logeo)
+
 20/10/26
 VERSION 0.5.2 ORGANIZADOR ACADEMICO
 Múltiples correciones de errores lógicos y de memoria realizadas con Claude
