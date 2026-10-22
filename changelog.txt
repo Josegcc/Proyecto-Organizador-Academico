@@ -1,4 +1,22 @@
 21/10/26
+Actualizacion de directorios en Git
+	¿Cómo optimizamos el código?
+-Al momento de probar el programa, se detectó una falla gravísima de rendimiento cada que se interactuaba con cualquier menú. El programa esperaba de 1 a 3 segundos cada que el usuario presionaba una tecla para responder a esa acción, durante ese tiempo se desdibujaba la pantalla y se volvían a cargar elementos que estaban en ella.
+
+-Limpiar partes de la pantalla vs Limpiar todo en pantalla
+El programa inicialmente utilizaba funciones del tipo 'system("cls")' para limpiar la pantalla y actualizar datos que hubiera que escribir. Esto era una falla de rendimiento, ya que el programa tenía que volver a renderizar en pantalla cada uno de los elementos que se eliminó (En resoluciones grandes es aún mayor el efecto en el rendimiento). Por lo tanto se crea y se optimiza una función llamada "limpiarArea". Esta limpia sólo una parte de la pantalla, la que sabemos que vamos a actualizar. De esta manera reducimos la complejidad del programa y mejoramos el rendimiento.
+
+-Buffereado de cadenas cortas
+Pero por sí solo esto no es suficiente, a pesar de que en teoría esto debería haber ayudado, el programa seguía sufriendo el mismo problema, por lo que tuvimos que optimizar más a fondo la función que nos estaba causando problemas, 'menuHorario'
+Esta función imprime el horario académico, es decir, cada una de las materias y su hora correspondiente, pero se trabaja a través de celdas. Por lo que se tenía que escribir cada uno de los elementos individualmente, en su propio 'printf', de manera que cada que queríamos imprimir el horario, llamabamos a la función 'printf' unas 30 veces. Esta función podrá ser muy buena por su compatibilidad y portabilidad, pero llamarla tantas veces cada vez que se presionaba una tecla era una carga gigantezca para el sistema operativo. Por lo que creamos un buffer.
+Básicamente, los 'printf' de cada linea los guardamos en una variable auxiliar 'buf' la cual imprimiremos posteriormente al inicio de la fila, es decir, imprimimos toda la fila con un solo 'printf'. Este truco tan sencillo reduce la complejidad en un 100%. (Incluso más, ya no se llama a 'printf' 30 veces sino 7), solucionando por fin el problema de rendimiento (Parpadeo o "flickering")
+
+-Entrada de datos de usuario
+Por último, un problema que no surgió pero que se anticipa en programas de este tipo, es con la entrada de datos de usuario. Si usamos funciones muy básicas como 'scanf', el usuario podrá introducir cualquier dato, aunque este sea erróneo o de plano rompa nuestro programa. Una manera de solucionar esto es con verificaciones, si el usuario introduce un dato inválido se cancela y se vuelve a pedir el dato, por ejemplo.
+Los verificadores son buenos, pero otra forma de solucionar esto es restringiendo la entrada de datos del usuario. Básicamente, nuestro programa se desarrolla para desconfiar del usuario lo más posible. Por ejemplo, para introducir una fecha para una actividad, se abre un menú interactivo en el que el usuario se deplaza por los las cuatro opciones (dia, mes, año) con las flechas derecha o izquierda, y con las flechas de arriba o abajo cambia ese valor en especifico, decrementandolo o incrementandolo. Además de que esto es más fácil para el usuario que estar introduciendo cada número uno por uno desde el teclado, nos permite controlar qué datos se reciben, quedando excluidos totalmente datos inválidos
+Otras funciones del programa reciben, por ejemplo, cadenas de texto pero no reciben ni carácteres especiales ni números.
+
+21/10/26
 Version 0.5.3 ORGANIZADOR ACADEMICO
 Se agregó el logo de la universidad (UPTJFR) a la pantalla de inicio (logeo)
 

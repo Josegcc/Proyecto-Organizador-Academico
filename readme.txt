@@ -5,6 +5,12 @@ También permite introducir actividades académicas con su fecha correspondiente
 
 Versión 0.5.0
 
+ORGANIZADOR ACADEMICO - VERSION 0.5.0
+  COMPILAR USANDO GCC 14 o MINGW
+  En linux simplemente: gcc *.c -o nombre_archivo	--- Ejecutamos ./nombre_archivo
+  En windows debemos linkear estaticamente algunas librerias: gcc *.c -o main.exe --static		--- Recomendado ejecutar con powershell para mayor compatibilidad
+  El programa ha sido testeado en Windows 10 y MX Linux 25 - ambos de 64 bits
+
 Funcionamiento:
 El programa primero verificará si ya existe un archivo "horarios.csv", esto a través de la función "leerArchivo". En caso de que el archivo ya exista el programa lo lee y continua. En caso de que el archivo no exista se le notifica al usuario y el programa  procede a pedir los horarios desde 0:
 
