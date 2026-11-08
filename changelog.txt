@@ -1,3 +1,11 @@
+08/11/26
+Version 0.5.4 ORGANIZADOR ACADEMICO
+*Añadido módulo para modificar la fecha de una actividad ya introducida, se creó la función "modificarFecha" en el archivo "main.c"
+*Añadido menú de opciones cuando el usuario presiona la tecla ESC, por ahora solo se puede cambiar el tamaño de la consola. Esta opción podría no funcionar en Linux por la forma en que este sistema maneja su terminal.
+*Ahora el menu secundario donde se muestran las actividades resalta las actividades en color rojo cuando están atrasadas, y en color amarillo cuando queda 1 dia para entregarla
+-El menú secundario ahora también se prepara para el caso de que la cantidad de materias introducidas (y su longitud) superen a la de el recuadro en donde se encuentra. Esta parte se encuentra en fase de prueba
+*Mas experimentación con la paleta de colores. Lo ideal sería darle al usuario opciones para que el mismo eliga entre varias paletas de colores, pero por la forma en que está escrito el programa esto es difícil
+
 21/10/26
 Actualizacion de directorios en Git
 	¿Cómo optimizamos el código?

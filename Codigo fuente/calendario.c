@@ -154,7 +154,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, int anoEleg, const char
 
         printf("%d", i);
 
-        printf(COLOR_RESET);
+        printf(NEGRO);
         printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
 
             if(counter%7== 0)
@@ -262,6 +262,6 @@ void calendario(int anoEleg, int mesEleg, const char tareas[TAM_TAREA][TAM_MATER
 
     }while (opcion != -1);
 
-    printf(COLOR_RESET);
+    printf(NEGRO);
 
 }

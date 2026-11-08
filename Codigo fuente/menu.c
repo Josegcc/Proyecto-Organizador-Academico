@@ -14,7 +14,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 
         gotoxy(11 + (j*10) + indice_terminal_anchura(), 7);
         if(posX == j && posY == 0){
-        printf("%s%s%s", BLANCO, semana[j], COLOR_RESET);
+        printf("%s%s%s", ROJO, semana[j], NEGRO);
                                   }
         else{
         printf("%s", semana[j]);
@@ -47,7 +47,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
             }
 
             if(posX == 0 && posY == i){
-            snprintf(buffer+strlen(buffer), 256, "%s%02d:%02d-%02d:%02d%s\u2502",BLANCO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], COLOR_RESET);
+            snprintf(buffer+strlen(buffer), 256, "%s%02d:%02d-%02d:%02d%s\u2502",ROJO, hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i], NEGRO);
                                       }
             else{
                 snprintf(buffer+strlen(buffer), 256, "%02d:%02d-%02d:%02d\u2502",hora[0][i-1] + horaDescanso, hora[1][i-1] + minDescanso, hora[0][i], hora[1][i]);
@@ -55,7 +55,7 @@ bool menuHorario(bool verific, const char materias[TAM_HORA][DIAS_SEM][30], cons
 
                 for (int j = 0; j < DIAS_SEM; j++){
 
-                    if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", BLANCO, materias[i-1][j], COLOR_RESET);                  }
+                    if(posX-1 == j && posY == i){    snprintf(buffer+strlen(buffer), 256, "%s%-9.5s%s\u2502", ROJO, materias[i-1][j], NEGRO);                  }
                     else                        {    snprintf(buffer+strlen(buffer), 256, "%-9.5s\u2502", materias[i-1][j]);                                        }
                                                   }
                 gotoxy(10+indice_terminal_anchura(), 7+i*3);  //AL PRINCIPIO DE LA LINEA
@@ -133,6 +133,15 @@ void menuSecundario(const char materia[30], const char tareas[TAM_TAREA][TAM_MAT
     int salto = 0;
     char temp[128] = {0};
 
+    time_t actual = time(NULL);
+    struct tm *t = localtime(&actual);
+
+    Fecha fechaActual;
+
+    fechaActual.dia = t->tm_mday;
+    fechaActual.mes = t->tm_mon + 1;
+    fechaActual.ano = t->tm_year + 1900;
+
     //MENU SECUNDARIO DE ACTIVIDADES Y MATERIAS
     limpiar_area(posicionX, posicionY+2, 43 + indice_terminal_anchura(), 17);
 
@@ -143,16 +152,29 @@ void menuSecundario(const char materia[30], const char tareas[TAM_TAREA][TAM_MAT
     {
         if(strcmp(tareas[0][i], materia) == 0)
         {
-
             for(int j = 1; j < TAM_TAREA; j++)
             {
                 if(strlen(tareas[j][i]) > 0)
                 {
+                    if(j+salto >= 14)
+                    {
+                    imprimir_centrado("MAS ACTIVIDADES REGISTRADAS...", 44, posicionX+1, posicionY+18);
+                    break;
+                    }
+
+                if(compararFechas(fechaActual, tareaFecha[j-1][i])){
+                printf("%s", ROJO);
+                }else if(tareaFecha[j-1][i].dia == fechaActual.dia+1 && tareaFecha[j-1][i].mes == fechaActual.mes){
+                printf("%s", AMARILLO);
+                }
+
                 gotoxy(posicionX+26, posicionY+4+j+salto);
                 printf("Fecha: %02d-%02d-%02d", tareaFecha[j-1][i].dia, tareaFecha[j-1][i].mes, tareaFecha[j-1][i].ano);
 
                 snprintf(temp, 128, "%s", tareas[j][i]);
                 salto += imprimirCadenaGrande(temp, 21, posicionX+1, posicionY+4+j+salto);
+
+                printf("%s", COLOR_RESET);
                 }
             }
 
@@ -161,35 +183,42 @@ void menuSecundario(const char materia[30], const char tareas[TAM_TAREA][TAM_MAT
     }
 }
 
-void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS], int posX, int posY)
+void menuTareas(const char materia[30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS])
 {
     int op = -1;
     const char *menuTareas[] = {
         "Introducir nueva actividad",
         "Eliminar una actividad",
+        "Modificar fecha de actividad",
         "Presione ESC para volver atr\u00E1s"
                               };
     do
     {
-    op = menu(menuTareas, 3, 0, 20, 33);
+    op = menu(menuTareas, 4, 0, 20, 33);
 
         switch(op)
         {
                 case 0:
 
-                leerTarea(materias, tareas, tareaFecha, posX, posY);
+                leerTarea(materia, tareas, tareaFecha);
                 return;
 
                 break;
 
                 case 1:
 
-                elimTarea(materias[posY-1][posX-1], tareas);
+                elimTarea(materia, tareas);
                 return;
 
                 break;
 
                 case 2:
+
+                modificarFecha(materia, tareas, tareaFecha);
+
+                break;
+
+                case 3:
 
                 return;
 
@@ -284,6 +313,7 @@ void menuExportarArchivo(const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], F
 
 }
 
+#ifdef LOGEO
 bool login(Usuario estudiante)
 {
     int x = 45 + indice_terminal_anchura() * 8;
@@ -309,6 +339,48 @@ bool login(Usuario estudiante)
     {
     return false;
     }
+}
+#endif // LOGEO
+
+int menuOpciones()
+{
+    int op = -1;
+    const char *opciones[] = {
+        "Cambiar resolucion",
+        "Preione ESC para salir del programa"
+                              };
+    op = menu(opciones, 2, 0, 20, 31);
+
+    switch(op)
+    {
+
+        case 0:
+
+            const char *tamano[] = {"Cambiar a pantalla completa", "Resolucion por defecto"
+                                    "ESC para cancelar"};
+            op = menu(tamano, 3, 0, 20, 31);
+
+            switch(op)
+            {
+            case 0:
+                limpiarPantalla();
+                tamanoPantalla(true);
+            break;
+
+            case 1:
+                limpiarPantalla();
+                tamanoPantalla(false);
+            break;
+            }
+
+        break;
+
+        default:
+            return 27;
+        break;
+
+    }
+    return 0;
 }
 
 void menuEstudiante(Usuario estudiante)

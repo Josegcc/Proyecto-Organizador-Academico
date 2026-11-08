@@ -17,11 +17,13 @@
 #include <fcntl.h>
 #endif
 
-#define COLOR_PANTALLA printf("\033[0m");
-#define ROJO "\033[0;101m"
+#define COLOR_PANTALLA printf("\033[0;97;40m");
+#define ROJO "\033[1;97;101m"
 #define BLANCO "\033[30;47m"       //Para blanco con letras blancas: "\033[47m"
-#define VERDE "\033[0;92m"
-#define AZUL "\033[44m"
+#define VERDE "\033[1;97;102m"
+#define AMARILLO "\033[30;103m"
+#define AZUL "\033[39;44m"
+#define NEGRO "\033[0;97;40m"
 #define COLOR_RESET "\033[0m"
 #define DIAS_SEM 5
 #define TAM_HORA 8
@@ -51,7 +53,7 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
 void limpiarTareas(const char* materia, char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50]);    //Recibe una cadena especifica, que es la tarea que se va a eliminar, entonces realiza una busqueda lineal para eliminar la primera coincidencia
 void limpiarPantalla(); //Elimina todos lo que haya escrito o se muestre en consola
 void casilla(int base, int altura, int posX, int posY); //Muestra un cuadro en la consola, la posicion depende de las variables 'pos'
-void tamanoPantalla();  //Para definir el tamaño y color de la consola
+void tamanoPantalla(bool pantCompleta);  //Para definir el tamaño y color de la consola
 void gotoxy(int x, int y);  //Mueve el cursor al área de la pantalla indicada
 int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y);   //Recibe un arreglo de cadenas que serian las opciones de un menu interactivo
 int imprimirCadenaGrande(const char cadena[], int margen, int x, int y);    //Imprime una cadena en varias lineas, dependiendo de el margen, retorna el numero de lineas que se saltaron para imprimir la cadena
@@ -82,22 +84,24 @@ void calcHora(int hora[2][TAM_HORA]); //Realiza el computo de todas las horas ac
 
 /*menu.c - Diferentes menus*/
 bool menuHorario(bool verific,const char materias[TAM_HORA][DIAS_SEM][30], const int hora[2][TAM_HORA], int posX, int posY);    //Menu para mostrar el horario completo, con materias, horas y dias de la semana, interactibilidad del usuario con las flechas direccionales del teclado
-void menuTareas(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS], int posX, int posY);   //Menu desplegable con opciones relacionadas a las Actividades
+void menuTareas(const char materia[30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]);   //Menu desplegable con opciones relacionadas a las Actividades
 void menuSecundario(const char materia[30], const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]); //Menu que aparece en la parte derecha de la consola, se utiliza principalmente para mostrar las actividades de la materia seleccionada
 void menuCalendario(const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]);   //Menu desplegable utilizado para seleccionar el mes del que el usuario quiere ver las actividades academicas
 void menuExportarArchivo(const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]);  //Menu desplegable con opciones para exportar el archivo "Actividades_Semanales.txt"
 bool login(Usuario estudiante); //Pantalla de inicio de sesión. Solo se pide contraseña porque el nombre de usuario es único en la base de datos. Devuelve true si la contrasena es errada
 void menuEstudiante(Usuario estudiante); //Menu secundario que aparece en la parte inferior derecha, con los datos del estudiante
 int menuPricipal(int posY); //Menu que aparece en la parte inferior cuando se presiona 'enter'
+int menuOpciones();
 void logoUPT(int x, int y);
 
 /*main.c - Lectura de datos*/
 void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]); //[SIN USO] Lee las horas académicas, tambíén llama a la función "leerMaterias" la cantidad de veces que corresponde a los dias de la semana. Y almacena los datos en el arreglo 'horas'
 void leerMaterias(int dia , char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], const int hora[2][TAM_HORA]); //Lee las materias que el estudiante cursa en el horario indicado, almacena los datos en la variable 'materias'.
                                                                                                                                                  //El parametro "dia" representa el dia de la semana a leer
-void leerTarea(const char materias[TAM_HORA][DIAS_SEM][30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS], int x, int y); //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia.
+void leerTarea(const char materia[30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]); //Lee una actividad que el usuario introduzca, por ahora el limite son 10 actividades por materia.
                                                                                                                                                                               //También lee la fecha de esta actividad con un menu interactivo
 void leerEstudiante(Usuario *estudiante);   //Lee los datos del estudiante: Nombre, Carrera, Año, y una Contraseña
+void modificarFecha(const char materia[30], const char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50], Fecha tareaFecha[TAM_TAREA-1][TAM_MATERIA_TAREAS]);
 void elimTarea(const char materia[30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50]);    //Despliega un menu con todas las actividades para la materia seleccionada, y da al usuario la opcion de eliminar una
 void imprimirVerificacionMaterias(); //Solo para evitar muchas lineas de codigo en el ciclo principal
 

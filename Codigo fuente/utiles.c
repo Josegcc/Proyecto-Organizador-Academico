@@ -75,7 +75,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     		gotoxy(x+1, y+2+i - desc_opcion);
     		if(opcion == i)
     		{
-    		printf("%s%s%s", BLANCO, opciones[i], COLOR_RESET);
+    		printf("%s%s%s", ROJO, opciones[i], NEGRO);
     		}
     		else
     		{
@@ -203,7 +203,7 @@ void gotoxy(int x, int y)
 
 }
 
-void tamanoPantalla()
+void tamanoPantalla(bool pantCompleta)
 {
 #ifdef _WIN32
 
@@ -213,17 +213,25 @@ void tamanoPantalla()
    GetConsoleMode(hStdOut, &dwMode);
 
    dwMode |= 0x0004;
+   dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
    SetConsoleMode(hStdOut, dwMode);
 
    SetConsoleOutputCP(CP_UTF8); //Try 65001 for utf-8
+   system("chcp 65001");
 
    if(indice_terminal_anchura() <= 1)
     {
-    COORD bufferSize = {140, 40};
-    SMALL_RECT windowSize = {0, 0, 139, 39};
-
-    SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
-    SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
+        if(pantCompleta)
+        {
+        ShowWindow(consoleWindow, SW_MAXIMIZE);
+        }
+        else
+        {
+        COORD bufferSize = {140, 40};
+        SMALL_RECT windowSize = {0, 0, 139, 39};
+        SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
+        SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
+        }
     }
 
     /*Desactivar rezigin de la ventana*/
@@ -242,7 +250,14 @@ void tamanoPantalla()
 
 #else
 
-   printf("\e[8;40;140t");
+    if(pantCompleta)
+    {
+    printf("\e[9;1t");
+    }else
+    {
+    printf("\e[8;40;140t");
+    }
+
    fflush(stdout);
    COLOR_PANTALLA;
 
@@ -255,7 +270,7 @@ void casilla(int base, int altura, int posX, int posY)
     //altura += indice_terminal_altura();
     base +=   indice_terminal_anchura();
 
-    printf("%s", VERDE);
+    printf("%s", NEGRO);
 
     for(int i = 1; i <= altura; i++)
     {
@@ -297,7 +312,7 @@ void casilla(int base, int altura, int posX, int posY)
         printf(VERTICAL);
         }
     }
-    printf("%s", COLOR_RESET);
+    printf("%s", NEGRO);
 }
 
 int indice_terminal_altura()
