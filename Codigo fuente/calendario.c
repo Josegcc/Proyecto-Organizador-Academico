@@ -155,7 +155,7 @@ int mostrarMes(int diasMes, int diaInicial, int mesEleg, int anoEleg, const char
         printf("%d", i);
 
         printf(BLANCO);
-        printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
+        //printf("\033[39m"); //LETRAS BLANCAS POR DEFECTO
 
             if(counter%7== 0)
             {

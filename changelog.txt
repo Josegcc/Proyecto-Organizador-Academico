@@ -1,4 +1,7 @@
 09/11/26
+Se puede pulsar ESC para cancelar al introducir una fecha en el menú interactivo
+
+09/11/26
 *Interfaz de color blanco
 *Solucionado pequeño error visual cuando se introducía una contraseña equivocada
 

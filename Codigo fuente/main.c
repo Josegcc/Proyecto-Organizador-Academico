@@ -444,32 +444,45 @@ void leerTarea(const char materia[30], char tareas[TAM_TAREA][TAM_MATERIA_TAREAS
                 printf("Seleccione la fecha de la actividad");
                     while(tecla != '\n')
                     {
-                        limpiar_area(posicionX, 10, 43 + indice_terminal_anchura(), 10);
-
-                        gotoxy(posicionX+15, 10);
 
                              if(tecla == 77 && seleccion < 2) {seleccion++;}
 
                         else if(tecla == 75 && seleccion > 0) {seleccion--;}
+
+                        else if(tecla == 27)
+                        {
+                            gotoxy(posicionX, 17);
+                            printf("Seguro que desea cancelar? (S/N)");
+                            fflush(stdout);
+                            confirmacion = pregunta();
+
+                            if(confirmacion){
+                            tareas[j][i][0] = '\0';
+                            return;
+                            }
+                        }
+
+                        limpiar_area(posicionX, 10, 43 + indice_terminal_anchura(), 10);
+                        gotoxy(posicionX+15, 10);
 
                         switch(seleccion)
                         {
                         case 0:
                                  if(tecla == 72 && tareaFecha[j-1][i].dia < diasMes[ tareaFecha[j-1][i].mes - 1] ) (tareaFecha[j-1][i].dia)++;
                             else if(tecla == 80 && tareaFecha[j-1][i].dia > 1) (tareaFecha[j-1][i].dia)--;
-                            printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[j-1][i].dia ,BLANCO, tareaFecha[j-1][i].mes , tareaFecha[j-1][i].ano);
+                            printf("%s%02d%s-%02d-%02d",ROJO, tareaFecha[j-1][i].dia ,BLANCO, tareaFecha[j-1][i].mes , tareaFecha[j-1][i].ano);
                         break;
 
                         case 1:
                                  if(tecla == 72 && tareaFecha[j-1][i].mes < 12){ tareaFecha[j-1][i].mes++; tareaFecha[j-1][i].dia = 1;}
                             else if(tecla == 80 && tareaFecha[j-1][i].mes > 1) { tareaFecha[j-1][i].mes--; tareaFecha[j-1][i].dia = 1;}
-                            printf("%02d-%s%02d%s-%02d", tareaFecha[j-1][i].dia ,BLANCO, tareaFecha[j-1][i].mes ,BLANCO, tareaFecha[j-1][i].ano);
+                            printf("%02d-%s%02d%s-%02d", tareaFecha[j-1][i].dia ,ROJO, tareaFecha[j-1][i].mes ,BLANCO, tareaFecha[j-1][i].ano);
                         break;
 
                         case 2:
                                  if(tecla == 72){ tareaFecha[j-1][i].ano++;  tareaFecha[j-1][i].mes = 1; tareaFecha[j-1][i].dia = 1;}
                             else if(tecla == 80){ tareaFecha[j-1][i].ano--;  tareaFecha[j-1][i].mes = 1; tareaFecha[j-1][i].dia = 1;}
-                            printf("%02d-%02d-%s%02d%s", tareaFecha[j-1][i].dia , tareaFecha[j-1][i].mes ,BLANCO, tareaFecha[j-1][i].ano ,BLANCO);
+                            printf("%02d-%02d-%s%02d%s", tareaFecha[j-1][i].dia , tareaFecha[j-1][i].mes ,ROJO, tareaFecha[j-1][i].ano ,BLANCO);
                         break;
 
                         }
@@ -590,19 +603,19 @@ void modificarFecha(const char materia[30], const char tareas[TAM_TAREA][TAM_MAT
                         case 0:
                                  if(tecla == 72 && tareaFecha[indicesReales[codigo+1]][i].dia < diasMes[ tareaFecha[indicesReales[codigo+1]][i].mes - 1] ) (tareaFecha[indicesReales[codigo+1]][i].dia)++;
                             else if(tecla == 80 && tareaFecha[indicesReales[codigo+1]][i].dia > 1) (tareaFecha[indicesReales[codigo+1]][i].dia)--;
-                            printf("%s%02d%s-%02d-%02d",BLANCO, tareaFecha[indicesReales[codigo+1]][i].dia ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].mes , tareaFecha[indicesReales[codigo+1]][i].ano);
+                            printf("%s%02d%s-%02d-%02d",ROJO, tareaFecha[indicesReales[codigo+1]][i].dia ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].mes , tareaFecha[indicesReales[codigo+1]][i].ano);
                         break;
 
                         case 1:
                                  if(tecla == 72 && tareaFecha[indicesReales[codigo+1]][i].mes < 12){ tareaFecha[indicesReales[codigo+1]][i].mes++; tareaFecha[indicesReales[codigo+1]][i].dia = 1;}
                             else if(tecla == 80 && tareaFecha[indicesReales[codigo+1]][i].mes > 1) { tareaFecha[indicesReales[codigo+1]][i].mes--; tareaFecha[indicesReales[codigo+1]][i].dia = 1;}
-                            printf("%02d-%s%02d%s-%02d", tareaFecha[indicesReales[codigo+1]][i].dia ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].mes ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].ano);
+                            printf("%02d-%s%02d%s-%02d", tareaFecha[indicesReales[codigo+1]][i].dia ,ROJO, tareaFecha[indicesReales[codigo+1]][i].mes ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].ano);
                         break;
 
                         case 2:
                                  if(tecla == 72){ tareaFecha[indicesReales[codigo+1]][i].ano++;  tareaFecha[indicesReales[codigo+1]][i].mes = 1; tareaFecha[indicesReales[codigo+1]][i].dia = 1;}
                             else if(tecla == 80){ tareaFecha[indicesReales[codigo+1]][i].ano--;  tareaFecha[indicesReales[codigo+1]][i].mes = 1; tareaFecha[indicesReales[codigo+1]][i].dia = 1;}
-                            printf("%02d-%02d-%s%02d%s", tareaFecha[indicesReales[codigo+1]][i].dia , tareaFecha[indicesReales[codigo+1]][i].mes ,BLANCO, tareaFecha[indicesReales[codigo+1]][i].ano ,BLANCO);
+                            printf("%02d-%02d-%s%02d%s", tareaFecha[indicesReales[codigo+1]][i].dia , tareaFecha[indicesReales[codigo+1]][i].mes ,ROJO, tareaFecha[indicesReales[codigo+1]][i].ano ,BLANCO);
                         break;
 
                         }
