@@ -75,7 +75,7 @@ int menu(const char* opciones[], int tamOpciones, int desc_opcion, int x, int y)
     		gotoxy(x+1, y+2+i - desc_opcion);
     		if(opcion == i)
     		{
-    		printf("%s%s%s", ROJO, opciones[i], NEGRO);
+    		printf("%s%s%s", ROJO, opciones[i], BLANCO);
     		}
     		else
     		{
@@ -258,8 +258,8 @@ void tamanoPantalla(bool pantCompleta)
     printf("\e[8;40;140t");
     }
 
-   fflush(stdout);
    COLOR_PANTALLA;
+   fflush(stdout);
 
 #endif
 
@@ -270,7 +270,7 @@ void casilla(int base, int altura, int posX, int posY)
     //altura += indice_terminal_altura();
     base +=   indice_terminal_anchura();
 
-    printf("%s", NEGRO);
+    printf("%s", BLANCO);
 
     for(int i = 1; i <= altura; i++)
     {
@@ -312,7 +312,7 @@ void casilla(int base, int altura, int posX, int posY)
         printf(VERTICAL);
         }
     }
-    printf("%s", NEGRO);
+    printf("%s", BLANCO);
 }
 
 int indice_terminal_altura()

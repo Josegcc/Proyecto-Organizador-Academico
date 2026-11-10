@@ -1,3 +1,7 @@
+09/11/26
+*Interfaz de color blanco
+*Solucionado pequeño error visual cuando se introducía una contraseña equivocada
+
 08/11/26
 Version 0.5.4 ORGANIZADOR ACADEMICO
 *Añadido módulo para modificar la fecha de una actividad ya introducida, se creó la función "modificarFecha" en el archivo "main.c"

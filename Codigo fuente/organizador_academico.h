@@ -17,9 +17,9 @@
 #include <fcntl.h>
 #endif
 
-#define COLOR_PANTALLA printf("\033[0;97;40m");
+#define COLOR_PANTALLA printf("\033[0;90;107m");
 #define ROJO "\033[1;97;101m"
-#define BLANCO "\033[30;47m"       //Para blanco con letras blancas: "\033[47m"
+#define BLANCO "\033[0;90;107m"       //Para blanco con letras blancas: "\033[47m"
 #define VERDE "\033[1;97;102m"
 #define AMARILLO "\033[30;103m"
 #define AZUL "\033[39;44m"
