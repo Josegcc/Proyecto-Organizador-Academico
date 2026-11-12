@@ -47,6 +47,7 @@ Dentro del menú principal el usuario tiene múltiples opciones:
 -Le da al usuario dos opciones, "Semana Actual" o "Semana Proxima" (Además de la opción de salir). Dependiendo de esto crea un archivo llamado "Actividades Semanales.txt" donde se le da un formato a las actividades que el estudiante tiene esa semana, ordenandolas por materias, por día de la semana, etc.
 
 ![texto.jpg](Anexos/Texto.jpg)
+
 *Ejemplo de archivo de actividades semanales*
 
 <a id="calendario"></a>
@@ -54,6 +55,7 @@ Dentro del menú principal el usuario tiene múltiples opciones:
 -Le da al usuario dos opciones "Ver calendario para este mes" o "Ver calendario para otro mes". 
 El usuario selecciona el mes y se muestra en la parte derecha de la pantalla el mes correspondiente, con colores indicando en qué fecha hay una actividad. Debajo de este calendario aparecen las actividades y su materia correspondiente, remarcadas con el color que les corresponde. Si el mes está muy ocupado, el usuario puede presionar las flechas direccionales para ver todas las actividades que hay en el mes.
 No se puede seleccionar un mes en el pasado
+
 ![calendario.jpg](Anexos/Calendario.jpeg)
 
 <a id="modifMaterias"></a>
@@ -66,6 +68,7 @@ No se puede seleccionar un mes en el pasado
 Despliega un menú con dos opciones: "Introducir nueva actividad" o "Eliminar una actividad"
 - 	Introducir nueva actividad: Pedirá al usuario el nombre de esta actividad, y posteriormente la fecha.
 - 	Eliminar una actividad: Despliega un menu con todas las actividades guardadas para esa materia. Y el usuario selecciona cual desea eliminar
+
 ![menuprincipal.jpg](Anexos/MenuPrincipal.jpg) ![menutareas.jpg](Anexos/MenuTareas.jpg)
 
 ## Detalles técnicos:
