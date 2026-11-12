@@ -93,6 +93,7 @@ void menuEstudiante(Usuario estudiante); //Menu secundario que aparece en la par
 int menuPricipal(int posY); //Menu que aparece en la parte inferior cuando se presiona 'enter'
 int menuOpciones();
 void logoUPT(int x, int y);
+void titulo(int x, int y);
 
 /*main.c - Lectura de datos*/
 void leerHorario(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]); //[SIN USO] Lee las horas académicas, tambíén llama a la función "leerMaterias" la cantidad de veces que corresponde a los dias de la semana. Y almacena los datos en el arreglo 'horas'

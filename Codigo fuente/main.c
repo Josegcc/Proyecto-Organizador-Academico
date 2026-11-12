@@ -61,7 +61,8 @@ int main()
     casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura()*8,12);     //CASILLA CABECERA (HORARIO ACADEMICO)
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 35 + indice_terminal_anchura()*8, 14);
     casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura()*8, 16);
-    logoUPT(110 + indice_terminal_anchura()*20, 2);
+    logoUPT(112 + indice_terminal_anchura()*20, 2);
+    titulo(2 + indice_terminal_anchura()*20, 2);
 
     int counter = 0;
     while(login(estudiante)){
