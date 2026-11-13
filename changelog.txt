@@ -1,3 +1,7 @@
+12/11/26
+Version 0.5.5 ORGANIZADOR ACADEMICO
+Arreglo de problemas de compatibilidad con la resolución del programa
+
 11/11/26
 Añadido titulo personalizado en la pantalla de inicio, o de logeo
 

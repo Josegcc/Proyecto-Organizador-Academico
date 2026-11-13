@@ -53,6 +53,7 @@ void limpiarArreglo(char materias[TAM_HORA][DIAS_SEM][30], int hora[2][TAM_HORA]
 void limpiarTareas(const char* materia, char tareas[TAM_TAREA][TAM_MATERIA_TAREAS][50]);    //Recibe una cadena especifica, que es la tarea que se va a eliminar, entonces realiza una busqueda lineal para eliminar la primera coincidencia
 void limpiarPantalla(); //Elimina todos lo que haya escrito o se muestre en consola
 void casilla(int base, int altura, int posX, int posY); //Muestra un cuadro en la consola, la posicion depende de las variables 'pos'
+void dibujarCasillas();
 void tamanoPantalla(bool pantCompleta);  //Para definir el tamaño y color de la consola
 void gotoxy(int x, int y);  //Mueve el cursor al área de la pantalla indicada
 int menu(const char *opciones[], int tamOpciones, int desc_opcion, int x, int y);   //Recibe un arreglo de cadenas que serian las opciones de un menu interactivo
@@ -62,6 +63,7 @@ int indice_terminal_altura();   //Retorna un numero que indica que tanto ha camb
 int indice_terminal_anchura();  //O que tanto se ha maximizado la terminal
 void limpiar_area(int posX, int posY, int altura, int base);    //Elimina todo lo que se encuentre en un area rectangular de la pantalla
 void mostrarCursor(bool mostrar);   //Oculta o muestra el cursor
+void restaurarTerminal();
 
 /*entrada.c - Diferentes funciones relacionadas con la lectura de datos*/
 char leerTecla(); //Lee una sola tecla que el usuario presione sin esperar que este preione enter y sin ECHO

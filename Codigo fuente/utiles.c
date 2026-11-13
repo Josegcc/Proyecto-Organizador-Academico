@@ -184,68 +184,47 @@ int imprimirCadenaGrande(const char cadena[], int margen, int x, int y)
 
 void gotoxy(int x, int y)
 {
-#ifdef _WIN32
-
-    static HANDLE hConsole = NULL;
-    if (!hConsole) hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    COORD coord;
-    coord.X = x;
-    coord.Y = y;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-
-#else
-
+    if (x < 1) x = 1;      // Ajuste de Windows
+    if (y < 1) y = 1;
     printf("\033[%d;%dH", y, x);
-
-#endif
-
-
 }
 
 void tamanoPantalla(bool pantCompleta)
 {
 #ifdef _WIN32
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    HWND ventana = GetConsoleWindow();
 
-   HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-   HWND consoleWindow = GetConsoleWindow();
-   DWORD dwMode = 0;
-   GetConsoleMode(hStdOut, &dwMode);
+    DWORD modo = 0;
+    GetConsoleMode(hOut, &modo);
+    SetConsoleMode(hOut, modo | 0x0004);     // ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    SetConsoleOutputCP(CP_UTF8);
 
-   dwMode |= 0x0004;
-   dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-   SetConsoleMode(hStdOut, dwMode);
-
-   SetConsoleOutputCP(CP_UTF8); //Try 65001 for utf-8
-   system("chcp 65001");
-
-   if(indice_terminal_anchura() <= 1)
+    if (pantCompleta)
     {
-        if(pantCompleta)
-        {
-        ShowWindow(consoleWindow, SW_MAXIMIZE);
-        }
-        else
-        {
-        COORD bufferSize = {140, 40};
-        SMALL_RECT windowSize = {0, 0, 139, 39};
-        SetConsoleScreenBufferSize(hStdOut, bufferSize);              //PARA CAMBIAR EL TAMAÑO DE LA CONSOLA
-        SetConsoleWindowInfo(hStdOut, TRUE, &windowSize);
-        }
+        COORD maximo = GetLargestConsoleWindowSize(hOut);        // en celdas, segun fuente y monitor
+        SetConsoleScreenBufferSize(hOut, maximo);                // buffer == ventana: sin scrollbars
+        SMALL_RECT r = {0, 0, (SHORT)(maximo.X - 1), (SHORT)(maximo.Y - 1)};
+        SetConsoleWindowInfo(hOut, TRUE, &r);
+        SetWindowPos(ventana, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);   // esquina superior izquierda
     }
-
-    /*Desactivar rezigin de la ventana*/
-    LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+    else
+    {
+        ShowWindow(ventana, SW_RESTORE);
+        SMALL_RECT minimo = {0, 0, 1, 1};
+        SetConsoleWindowInfo(hOut, TRUE, &minimo);               // 1) encoger la ventana
+        COORD buffer = {140, 40};
+        SetConsoleScreenBufferSize(hOut, buffer);                // 2) buffer al tamaño final
+        SMALL_RECT final = {0, 0, 139, 39};
+        SetConsoleWindowInfo(hOut, TRUE, &final);                // 3) ventana al tamaño final
+    }
 
     style &= ~WS_MAXIMIZEBOX;
     style &= ~WS_SIZEBOX;
 
     SetWindowLong(consoleWindow, GWL_STYLE, style);
+    //SetWindowPos(consoleWindow, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
-    SetWindowPos(consoleWindow, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-
-    // Combine text color (Foreground) and background color using bitwise OR (|)
-    //SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
     COLOR_PANTALLA;
 
 #else
@@ -259,9 +238,11 @@ void tamanoPantalla(bool pantCompleta)
     }
 
    COLOR_PANTALLA;
-   fflush(stdout);
 
 #endif
+
+    printf("\033[?7l");
+    fflush(stdout);
 
 }
 
@@ -315,49 +296,34 @@ void casilla(int base, int altura, int posX, int posY)
     printf("%s", BLANCO);
 }
 
-int indice_terminal_altura()
+void dibujarCasillas()
 {
-    int terminal_height;
-
-	#ifdef _WIN32
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-    // Get the structural console details
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    terminal_height = csbi.srWindow.Bottom - csbi.srWindow.Top;
-	#else
-	struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w); // Fetch terminal dimensions
-
-    terminal_height = w.ws_row;
-    #endif
-
-    int indice_terminal_altura  = (terminal_height - 40) / 2;
-
-    return indice_terminal_altura;
+    int a = indice_terminal_anchura();
+    casilla(64 - a, 3, 7 + a, 2);                  // cabecera
+    casilla(64 - a, 26, 7 + a, 5);                 // horario
+    casilla(44, 19, 81 + a * 8, 2);                // menuSecundario
+    casilla(44, 15, 81 + a * 8, 21);               // menuEstudiante
+    casilla(140 + a * 16, 40 + indice_terminal_altura() * 2, 0, 0);   // contorno
+    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - a, 7 + a, 4);
 }
 
-int indice_terminal_anchura()
+static void tamanoTerminal(int *ancho, int *alto)
 {
-    int terminal_width;
-
-	#ifdef _WIN32
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-    // Get the structural console details
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    terminal_width = csbi.srWindow.Right - csbi.srWindow.Left;
-	#else
-	struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w); // Fetch terminal dimensions
-
-    terminal_width = w.ws_col;
-    #endif
-
-    int indice_terminal_anchura = (terminal_width - 140) / 10;
-
-    return indice_terminal_anchura;
+    *ancho = csbi.srWindow.Right  - csbi.srWindow.Left + 1;   // +1: indices inclusivos
+    *alto  = csbi.srWindow.Bottom - csbi.srWindow.Top  + 1;
+#else
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    *ancho = w.ws_col;
+    *alto  = w.ws_row;
+#endif
 }
+
+int indice_terminal_anchura() { int a, h; tamanoTerminal(&a, &h); return (a - 140) / 10; }
+int indice_terminal_altura()  { int a, h; tamanoTerminal(&a, &h); return (h - 40) / 2;   }
 
 void limpiar_area(int posX, int posY, int base, int altura)
 {
@@ -419,4 +385,13 @@ void mostrarCursor(bool mostrar)    //Verdadero para mostrar el cursor, false pa
     if(mostrar){    printf("\033[?25h");}
     else       {    printf("\033[?25l");}
 #endif // _WIN32
+}
+
+void restaurarTerminal()
+{
+    printf("\033[?7h\033[0m");
+    limpiarPantalla();
+    gotoxy(1, 1);
+    mostrarCursor(true);
+    fflush(stdout);
 }

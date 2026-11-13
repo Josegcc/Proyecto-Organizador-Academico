@@ -21,11 +21,7 @@ int main()
     tamanoPantalla(false);
     limpiarPantalla();
 
-    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
-    casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-    casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-    casilla(139 + indice_terminal_anchura() * 18, 40 + indice_terminal_altura() * 2, 0, 0);//CASILLA contorno
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 7 + indice_terminal_anchura(), 4);
+    dibujarCasillas();
 
         if (!leerArchivoHorario(nombre_archivo_horario, materias, hora))   //Si existe el archivo, leerlo y mostrarlo
         {                                                                  //El usuario confirma si es correcto el archivo existente
@@ -54,6 +50,7 @@ int main()
 
     limpiar_area(81 + indice_terminal_anchura()*8, 3, 45 + indice_terminal_anchura(), 20);
     limpiar_area(7+indice_terminal_anchura(), 2, 66 - indice_terminal_anchura(), 30);
+    limpiar_area(81 + indice_terminal_anchura()*8, 21, 45 + indice_terminal_anchura(), 20);
 
     //Una vez lleno el horario, se entra al menu principal (o al logeo)
 
@@ -61,8 +58,8 @@ int main()
     casilla(64 - indice_terminal_anchura(),3,35+indice_terminal_anchura()*8,12);     //CASILLA CABECERA (HORARIO ACADEMICO)
     imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 35 + indice_terminal_anchura()*8, 14);
     casilla(64 - indice_terminal_anchura(), 10, 35 + indice_terminal_anchura()*8, 16);
-    logoUPT(112 + indice_terminal_anchura()*20, 2);
-    titulo(2 + indice_terminal_anchura()*20, 2);
+    logoUPT(112 + indice_terminal_anchura()*18, 2);
+    titulo(2 + indice_terminal_anchura()*18, 2);
 
     int counter = 0;
     while(login(estudiante)){
@@ -72,23 +69,20 @@ int main()
     printf("Contrase\u00F1a errada multiples veces");
     gotoxy(45 + indice_terminal_anchura() * 8, 23);
     printf("Saliendo del programa...");
+    printf("\033[?7h\033[0m");
     fflush(stdout);
     return 0;
                 }
     }
-    limpiar_area(110 + indice_terminal_anchura()*20, 2, 30, 18);
-    limpiar_area(35 + indice_terminal_anchura(), 12, 71 + indice_terminal_anchura(), 15);
+
+    limpiarPantalla();
     #endif // LOGEO
 
     char op = '\0';
     int x = 1;
     int y = 1;
 
-    casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-    casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
-    casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-    casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
-    imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 7 + indice_terminal_anchura(), 4);
+    dibujarCasillas();
 
     menuEstudiante(estudiante);
 
@@ -238,12 +232,7 @@ int main()
                 if( menuOpciones() == 27)  {}
                 else
                 {
-                casilla(64 - indice_terminal_anchura(), 26, 7+indice_terminal_anchura(), 5); //CASILLA menuHorario
-                casilla(64 - indice_terminal_anchura(),3,7+indice_terminal_anchura(),2);     //CASILLA CABECERA (HORARIO ACADEMICO)
-                casilla(44,19,81 + indice_terminal_anchura() * 8, 2);    //CASILLA menuSecundario
-                casilla(139 + indice_terminal_anchura() * 18, 40 + indice_terminal_altura() * 2, 0, 0);//CASILLA contorno
-                casilla(44,15, 81 + indice_terminal_anchura() * 8, 21);  //CASILLA menuEstudiante
-                imprimir_centrado("H O R A R I O   A C A D E M I C O\n", 64 - indice_terminal_anchura(), 7 + indice_terminal_anchura(), 4);
+                dibujarCasillas();
 
                 menuEstudiante(estudiante);
 
@@ -256,8 +245,7 @@ int main()
     }
 
 
-    limpiarPantalla();
-    mostrarCursor(true);
+    restaurarTerminal();
     return 0;
 }
 
